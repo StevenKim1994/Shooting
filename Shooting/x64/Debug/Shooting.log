@@ -1,13 +1,170 @@
 ﻿  App.cpp
-C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(80,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(81,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(110,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(113,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\App.cpp(80,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\App.cpp(81,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\App.cpp(110,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\App.cpp(113,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Game.cpp
-C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Intro.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Intro.cpp(37,28): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Intro.cpp(175,67): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Loading.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Menu.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(32,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(33,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(39,14): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(38,29): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(86,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(87,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(97,6): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(96,13): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(102,32): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(111,41): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(111,26): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\Menu.cpp(85,15): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
+  Proc.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ProcObject.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\ProcObject.cpp(312,18): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\game\ProcObject.cpp(442,29): warning C4244: '인수': 'uint32'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iArray.cpp
+  iFPS.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iGraphics.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(45,75): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(125,39): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(125,27): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(139,24): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(139,17): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(150,72): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(150,57): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(150,46): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(150,33): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(177,20): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(177,17): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(184,20): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(184,17): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(191,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(192,16): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,13): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,20): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,20): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,29): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,29): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,34): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,34): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,39): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(214,39): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(247,48): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(247,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(263,21): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(263,17): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(263,13): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iGraphics.cpp(263,9): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iImage.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iImage.cpp(125,24): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iImage.cpp(125,19): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iImage.cpp(131,24): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iImage.cpp(131,19): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iImage.cpp(148,18): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iImage.cpp(148,6): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iPoint.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iPopup.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iRect.cpp
+  iSize.cpp
+  iSort.cpp
+  iStd.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(5,14): warning C4244: 'return': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(68,15): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(96,43): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(96,22): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(95,60): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(95,41): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(167,55): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(173,54): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(179,43): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(179,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(312,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(313,16): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,13): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,19): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,19): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,27): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,27): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,32): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,32): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,36): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(334,36): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(367,48): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(367,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(381,21): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(381,17): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(381,13): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(381,9): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(392,72): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(392,57): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(392,46): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(392,33): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(471,31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(505,31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(561,34): warning C4244: '인수': 'INT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(561,24): warning C4244: '인수': 'INT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(578,43): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(579,39): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(580,60): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(581,43): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(581,60): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(582,39): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(582,60): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(583,56): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(584,43): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(584,56): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(585,39): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(585,56): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(591,27): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(591,24): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(671,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iStd.cpp(676,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iString.cpp
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(24,35): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(46,27): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(64,31): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(98,41): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(120,45): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(143,41): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib\iString.cpp(164,45): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iType.cpp
   코드를 생성하고 있습니다...
 LINK : warning LNK4044: '/utf-8' 옵션을 인식할 수 없습니다. 무시됩니다.
-  Shooting.vcxproj -> C:\Users\user\Documents\GitHub\Shooting\x64\Debug\Shooting.exe
+  Shooting.vcxproj -> C:\Users\dev\Documents\GitHub\Shooting\x64\Debug\Shooting.exe
