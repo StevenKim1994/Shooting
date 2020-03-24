@@ -104,8 +104,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         keyGame(iKeyStateEnded, convertCoordinate(LOWORD(lParam), HIWORD(lParam)));
         break;
 
-    //case WM_CHAR:
-    //    break;
+        //case WM_CHAR:
+        //    break;
     case WM_KEYDOWN:
         keyLib(iKeyStateBegan, wParam);
         break;

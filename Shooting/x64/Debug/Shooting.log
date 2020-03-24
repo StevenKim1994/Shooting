@@ -1,27 +1,13 @@
-﻿  Game.cpp
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Intro.cpp
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Menu.cpp
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(32,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(33,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(39,14): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(38,29): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(86,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(87,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(97,6): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(96,13): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(102,32): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(111,41): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(111,26): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\game\Menu.cpp(85,15): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
-  Proc.cpp
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  App.cpp
+C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(80,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(81,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(110,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\Shooting\game\App.cpp(113,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Game.cpp
+C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\Shooting\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
 LINK : warning LNK4044: '/utf-8' 옵션을 인식할 수 없습니다. 무시됩니다.
-  Shooting.vcxproj -> C:\Users\user\Documents\GitHub\BusanGameAcademy\20.03.23\x64\Debug\Shooting.exe
+  Shooting.vcxproj -> C:\Users\user\Documents\GitHub\Shooting\x64\Debug\Shooting.exe

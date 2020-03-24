@@ -15,6 +15,7 @@
 
 #include "iArray.h"
 #include "iString.h"
+#include "iPopup.h"
 
 typedef signed char int8;
 typedef unsigned char uint8;
