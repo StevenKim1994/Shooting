@@ -9,7 +9,7 @@ static Bitmap* bitmap;
 //static
 Graphics* g;
 static Graphics* gFromHDC = NULL;
-static int monitorSizeW, monitorSizeH;
+int monitorSizeW, monitorSizeH;
 iSize devSize;
 iRect viewport;
 static float _r, _g, _b, _a;
@@ -767,3 +767,17 @@ void saveFile(const char* filePath, char* buf, int bufLength)
     fclose(pf);
 }
 
+
+
+// 한점에서 선분까지의 거리
+float getDistanceLine1(iPoint p, iPoint sp, iPoint ep)
+{
+    iPoint n = ep - sp;
+    float len = sqrtf(n.x * n.x + n.y * n.y);
+    n /= len;
+
+    iPoint m = p - sp;
+    iPoint proj = n * max(0.0f, min((m.x * n.x + m.y * n.y), len));
+
+    return iPointLength(m - proj);
+}

@@ -10,6 +10,11 @@ void loadIntro()
 {
 	printf("loadIntro()\n");
 
+	//printf("%f\n", getDistanceLine1(iPointMake(2.5, 3.5), iPointMake(0, 0), iPointMake(1.5, 1.5)));
+
+	
+
+	
 	const char* strMenu[3] = {
 		"게임시작",
 		"옵션",

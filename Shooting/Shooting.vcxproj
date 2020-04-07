@@ -103,10 +103,10 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Users\dev\Documents\GitHub\Shooting\Shooting\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\user\Documents\GitHub\Shooting\Shooting\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -164,6 +164,7 @@
     <ClInclude Include="lib\iFPS.h" />
     <ClInclude Include="lib\iGraphics.h" />
     <ClInclude Include="lib\iImage.h" />
+    <ClInclude Include="lib\iOpenGL.h" />
     <ClInclude Include="lib\iPoint.h" />
     <ClInclude Include="lib\iPopup.h" />
     <ClInclude Include="lib\iRect.h" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="game\App.cpp" />
     <ClCompile Include="game\Game.cpp" />
+    <ClCompile Include="game\glew.c" />
     <ClCompile Include="game\Intro.cpp" />
     <ClCompile Include="game\Loading.cpp" />
     <ClCompile Include="game\Menu.cpp" />
@@ -193,6 +195,7 @@
     <ClCompile Include="lib\iFPS.cpp" />
     <ClCompile Include="lib\iGraphics.cpp" />
     <ClCompile Include="lib\iImage.cpp" />
+    <ClCompile Include="lib\iOpenGL.cpp" />
     <ClCompile Include="lib\iPoint.cpp" />
     <ClCompile Include="lib\iPopup.cpp" />
     <ClCompile Include="lib\iRect.cpp" />
