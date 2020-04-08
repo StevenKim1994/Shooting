@@ -69,10 +69,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
             void testRect();
             void testCircle();
             void testTexture();
+            void testTextureforImage();
             //testDot();
             //testLine();
             //testCircle();
-            testTexture();
+            //testTexture();
+            testTextureforImage();
 #endif
             SwapBuffers(hDC);
         }
@@ -353,6 +355,84 @@ void testTexture()
     glDrawElements(GL_TRIANGLES, 6 ,GL_UNSIGNED_BYTE, indices);
 #endif
 	
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glBindTexture(GL_TEXTURE_2D, 0); //OpenGL이 구동시에 가르키는 텍스처를 가르킴
+    glDisable(GL_TEXTURE_2D);
+}
+
+void testTextureforImage()
+{
+    static Texture* tex = NULL;
+
+    if (tex == NULL)
+    {
+        setAntiAliasParameters(true);
+#if 0
+        /* uint8 rgba[16] =
+        { 255,0,0,255,
+          0,255,0,255,
+          0,0,255,255,
+          255,255,0,255
+        };*/
+
+        int width = 2, height = 2;
+        int potWidth = nextPot(width), potHeight = nextPot(height); // 2의 승수로 만든 width, height;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, potWidth, potHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+
+        tex = createImageWithRGBA(rgba, width, height);
+#else
+
+        wchar_t* wPath = utf8_to_utf16("assets/ex.png");
+        Bitmap* bmp = new Bitmap(wPath);
+        free(wPath);
+
+        int width, height;
+        uint8* rgba = bmp2rgba(bmp, width, height);
+
+        delete bmp;
+
+        tex = createImageWithRGBA(rgba, width, height);
+
+        free(rgba);
+#endif
+    }
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, (GLuint)tex->texID);
+
+    static float delta = 0.0f;
+
+    delta += 1 / 60.0f;
+
+    float s = 0.2f * _sin(360 * delta);
+
+	
+    iPoint position[4] = { {-0.3-s,0.3+s}, {-0.3-s,-0.3-s}, {0.3+s, 0.3+s}, {0.3+s, -0.3-s}
+    };
+
+    iPoint texCoorinate[4] = { { 0.0, 0.0 }, { 0.0, 1.0 }, { 1.0,0.0 }, { 1.0,1.0 } };//{ {0.0, 1.0}, {0.0,0.0 }, {1.0,1.0}, {1.0,0.0} };
+
+
+    glVertexPointer(2, GL_FLOAT, 0, position);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoorinate);
+
+
+#if 1
+    uint8 indices[4] = { 0,1,2,3 };
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
+#else
+    uint8 indices[6] = { 0,1,2,    1,2,3 };
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
+#endif
+
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);

@@ -49,6 +49,8 @@ void drawRect(iRect rt, float radius = 0.0f);
 void fillRect(float x, float y, float width, float height, float radius=0.0f);
 void fillRect(iRect rt, float radius=0.0f);
 
+uint8* bmp2rgba(Bitmap* bmp, int& width, int& height);
+
 Texture* createImage(const char* szFormat, ...);
 void freeImage(Texture* tex);
 
