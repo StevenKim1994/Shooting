@@ -102,3 +102,71 @@ void reshapeOpenGL(int width, int height)
 
 
 }
+
+GLuint nextPot(GLuint x)
+{
+	x = x - 1;
+	x = x | (x >> 1);
+	x = x | (x >> 2);
+	x = x | (x >> 4);
+	x = x | (x >> 8);
+	x = x | (x >> 16);
+
+	return x + 1;
+}
+
+struct xTexParam
+{
+	GLuint minFilter;
+	GLuint magFilter;
+	GLuint wrapS;
+	GLuint wrapT;
+};
+
+static xTexParam texParam = { GL_NEAREST,GL_NEAREST,GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
+
+void applyTexParameters()
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texParam.minFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,	texParam.magFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texParam.wrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texParam.wrapT);
+}
+
+void setAntiAliasParameters(bool anti)
+{
+	if(anti == false)
+	{
+		texParam.minFilter = GL_NEAREST;
+		texParam.magFilter = GL_NEAREST;
+	}
+	else
+	{
+		texParam.minFilter = GL_LINEAR;
+		texParam.magFilter = GL_LINEAR;
+	}
+	
+}
+
+Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height)
+{
+	GLuint texID;
+	glGenTextures(1, &texID); // generate(create) Texture;
+	//glActiveTexture(GL_TEXTURE0); // 첫번째 텍스처에 texID를 쓰겠다라는 의미. 이걸 사용하지 않아도 첫번째 텍스처는 0번임.
+
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	applyTexParameters();
+	
+	int potWidth = nextPot(width), potHeight = nextPot(height);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, potWidth, potHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+
+	Texture* tex = (Texture*)malloc(sizeof(Texture));
+	tex->texID = (void*)texID;
+	tex->width = width;
+	tex->height = height;
+	tex->potWidth = potWidth;
+	tex->potHeight = potHeight;
+	tex->retainCount = 1;
+	return tex;
+}

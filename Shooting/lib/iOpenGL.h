@@ -18,6 +18,13 @@ bool startGLEW();
 void initOpenGL();
 void reshapeOpenGL(int width, int height);
 
+GLuint nextPot(GLuint x);
+
+struct Texture; 
+Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height);
+
+void setAntiAliasParameters(bool anti);
+
 #define OPENGL 1
 /* 
   새로운 라이브러리 접근 방법

@@ -67,9 +67,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
             void testDot();
             void testLine();
             void testRect();
+            void testCircle();
+            void testTexture();
             //testDot();
             //testLine();
-            testRect();
+            //testCircle();
+            testTexture();
 #endif
             SwapBuffers(hDC);
         }
@@ -251,4 +254,108 @@ void testRect()
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void testCircle()
+{
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+    iPoint position[720];
+   // float color[720][4];
+
+	for(int i = 0; i < 720; i++)
+	{
+		position[i] = iPointRotate(iPointMake(0.1f, 0), iPointMake(0, 0), i);	
+
+     //   float* c = color[i];
+
+		
+   //     c[0] = (i + 1) / 720;
+     //   c[1] = ((i + 91) % 720) / 720;
+      //  c[2] = ((i + 46) % 720) / 720;
+      //  c[3] = ((i + 181) % 720) / 720;
+		
+	}
+
+    glVertexPointer(2, GL_FLOAT, 0, position);
+    //glColorPointer(4, GL_FLOAT, 0, color);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 720);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    //glDisableClientState(GL_COLOR_ARRAY);
+}
+
+
+void testTexture()
+{
+    static Texture* tex = NULL;
+
+    if (tex == NULL)
+    {
+        setAntiAliasParameters(true);
+        uint8 rgba[16] =
+        { 255,0,0,255,
+          0,255,0,255,
+          0,0,255,255,
+          255,255,0,255
+        };
+
+        int width = 2, height = 2;
+        int potWidth = nextPot(width), potHeight = nextPot(height); // 2의 승수로 만든 width, height;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, potWidth, potHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+
+        tex = createImageWithRGBA(rgba, width, height);
+    }
+	
+/*    GLuint texID;
+    glGenTextures(1, &texID); // generate(create) Texture;
+    //glActiveTexture(GL_TEXTURE0); // 첫번째 텍스처에 texID를 쓰겠다라는 의미. 이걸 사용하지 않아도 첫번째 텍스처는 0번임.
+	glBindTexture(GL_TEXTURE_2D, texID); // use Texture;
+    //glActiveTexture(GL_TEXTURE0+1); // 수가 증가할수록 뒤에 1씩을 더해줌 텍스처 여러개 사용할때에만 두번째 텍스처 사용
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    */
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+	
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, (GLuint)tex->texID);
+	
+    iPoint position[4] = { {-0.3,0.3}, {-0.3,-0.3}, {0.3, 0.3}, {0.3, -0.3}
+    };
+
+	// top|left, bottom|left, top|right, bottom|right
+    iPoint texCoorinate[4] = { {0.0, 1.0}, {0.0,0.0 }, {1.0,1.0}, {1.0,0.0} };
+
+	
+	glVertexPointer(2, GL_FLOAT, 0, position);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoorinate);
+	
+	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	//glBindTexture(GL_TEXTURE_2D, 0); // don't use Texture;
+    //glDeleteTextures(1, &texID); // destroy Texture;
+#if 1
+    uint8 indices[4] = { 0,1,2,3 };
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
+#else
+	uint8 indices[6] = { 0,1,2,    1,2,3 };
+    glDrawElements(GL_TRIANGLES, 6 ,GL_UNSIGNED_BYTE, indices);
+#endif
+	
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glBindTexture(GL_TEXTURE_2D, 0); //OpenGL이 구동시에 가르키는 텍스처를 가르킴
+    glDisable(GL_TEXTURE_2D);
 }
