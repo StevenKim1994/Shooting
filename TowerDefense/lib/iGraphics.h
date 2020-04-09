@@ -13,7 +13,7 @@ typedef Image igImage;
 
 ULONG_PTR startGdiplus();
 void endGdiplus(ULONG_PTR gpToken);
-void setBackBuffer(Bitmap** bmp, Graphics** g, iSize devSize);
+
 
 wchar_t* utf8_to_utf16(const char* szFormat, ...);
 char* utf16_to_utf8(const wchar_t* str);

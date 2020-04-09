@@ -21,11 +21,13 @@
 #define xprintf(...) (void)0
 #endif
 
+extern int monitorSizeW, monitorSizeH;
 extern iSize devSize;
 #define DEVSIZE_WIDTH 960
 #define DEVSIZE_HEIGHT 480
 extern iRect viewport;
 
+void setLineWidth(float lineWidth);
 void loadLib(HDC hDC);
 void freeLib();
 typedef void (*Method_Paint)(float dt);

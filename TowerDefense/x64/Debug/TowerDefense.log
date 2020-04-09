@@ -1,31 +1,16 @@
-﻿  App.cpp
+﻿  iOpenGL.cpp
 C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(107,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(108,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(142,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(145,32): warning C4244: '인수': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(252,83): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(278,69): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(339,52): warning C4311: '형식 캐스트': 'void *'에서 'GLuint'(으)로 포인터가 잘립니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(339,52): warning C4302: '형식 캐스트': 'void *'에서 'GLuint'(으)로 잘립니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(342,5): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(413,52): warning C4311: '형식 캐스트': 'void *'에서 'GLuint'(으)로 포인터가 잘립니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(413,52): warning C4302: '형식 캐스트': 'void *'에서 'GLuint'(으)로 잘립니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,33): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,33): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,39): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,39): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,49): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,49): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,56): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,56): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,65): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,65): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,72): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,72): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,81): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,81): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,89): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\App.cpp(422,89): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(90,49): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(96,48): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(102,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(102,30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(104,85): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(104,64): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(104,47): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(104,28): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(173,15): warning C4244: '=': 'GLuint'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(174,16): warning C4244: '=': 'GLuint'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(175,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iOpenGL.cpp(176,19): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   TowerDefense.vcxproj -> C:\Users\user\Documents\GitHub\Shooting\x64\Debug\TowerDefense.exe

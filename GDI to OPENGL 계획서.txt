@@ -1,0 +1,18 @@
+App.h/cpp 윈도우창 관련된 HINSTANCE, HWND, HDC
+iGraphics.h/cpp		windows,Gdiplus
+iStd.h/cpp		loadLib, freeLib, drawLib, createImage, drawImage, resizeLib: (현재)Gdiplus = > OpenGL로 변경하기
+iOpenGL.h/cpp		HGLRC,
+
+1.  loadLib -> setup(true,hDC), initOpneGL()
+ monitorSize, devSize, viewport
+
+2. freeLib
+ setup(false,NULL);
+
+3. drawLib(drawGame) : complete
+
+4. resizeLib
+ viewport reshapeOpenGL
+
+5. gdi 
+ drawLine, drawRect, fillRect, drawImage

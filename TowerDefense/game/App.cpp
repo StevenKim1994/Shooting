@@ -1,5 +1,4 @@
 #include "App.h"
-
 #include "Game.h"
 
 HINSTANCE hInstance;
@@ -39,18 +38,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
     hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
     hDC = GetDC(hWnd);
+
+	RECT rect;
+	GetClientRect(hWnd,&rect); // GetWindowsRect()는 스크롤바 타이틀바 까지 다받아온다.
+
+    monitorSizeW = rect.right - rect.left;
+    monitorSizeH = rect.bottom - rect.top;
+	
+    loadLib(hDC); // GDI;
+    loadGame();
+	
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
-#if (OPENGL == 0)
-    loadLib(hDC); // GDI;
-    loadGame();
-#else
-    setupOpenGL(true, hDC); // OPENGL;
-    initOpenGL();
-#endif
-    
-    runWnd = true;
+	runWnd = true;
     MSG msg;
     while (runWnd)
     {
@@ -61,35 +62,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         }
         else
         {
-#if (OPENGL == 0)
+
             drawLib(drawGame);
-#else
-            void testDot();
-            void testLine();
-            void testRect();
-            void testCircle();
-            void testTexture();
-            void testTextureforImage();
-        	
-            //testDot();
-            //testLine();
-            //testCircle();
-            //testTexture();
-            testTextureforImage();
-            setAntiAliasParameters(false);
-        
-		
-#endif
             SwapBuffers(hDC);
         }
     }
 
-#if (OPENGL == 0)
     freeLib();
     freeGame();
-#else
-    setupOpenGL(false, NULL);
-#endif
 
     DestroyWindow(hWnd);
     endGdiplus(gpToken);
@@ -118,14 +98,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_SIZE:
-#if (OPENGL==0)
-        resizeLib(LOWORD(lParam), HIWORD(lParam));
-#else
+        //client  rect load
+    	resizeLib(LOWORD(lParam), HIWORD(lParam));
         reshapeOpenGL(LOWORD(lParam), HIWORD(lParam));
-#endif
     	break;
+    case WM_SIZING:
+    case WM_MOVE:
+		// window rect load        
+        RECT rect;
+        GetClientRect(hWnd, &rect);
+        resizeLib(rect.right - rect.left, rect.bottom - rect.top);
 
-#if (OPENGL == 0)
+        drawLib(drawGame);
+        SwapBuffers(hDC);
+        break;
+
+#if 0 // (OPENGL == 0)
     case WM_LBUTTONDOWN:
         keyGame(iKeyStateBegan, convertCoordinate(LOWORD(lParam), HIWORD(lParam)));
         break;
@@ -146,7 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_CLOSE:
-        if (IDYES == MessageBoxW(NULL, TEXT("너 못생겼어?"), TEXT("알림"), MB_YESNO))
+        if (IDYES == MessageBoxW(NULL, TEXT("종료하시겠습니까?"), TEXT("알림"), MB_YESNO))
         {
             runWnd = false;
         }
@@ -337,6 +325,8 @@ void testTexture()
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, (GLuint)tex->texID);
+
+  
 	
     iPoint position[4] = { {-0.3,0.3}, {-0.3,-0.3}, {0.3, 0.3}, {0.3, -0.3}
     };
@@ -422,7 +412,10 @@ void testTextureforImage()
     iPoint position[4] = { {-0.3-s,0.3+s}, {-0.3-s,-0.3-s}, {0.3+s, 0.3+s}, {0.3+s, -0.3-s}
     };
 
-    iPoint texCoorinate[4] = { { 0.0, 0.0 }, { 0.0, 1.0 }, { 1.0,0.0 }, { 1.0,1.0 } };//{ {0.0, 1.0}, {0.0,0.0 }, {1.0,1.0}, {1.0,0.0} };
+    iPoint texCoorinate[4] = { { 0.0, 0.0 },
+    						{ 0.0, 1.0 },
+    						{ 1.0,0.0 },
+    						{ 1.0,1.0 } };//{ {0.0, 1.0}, {0.0,0.0 }, {1.0,1.0}, {1.0,0.0} };
 
 
 	

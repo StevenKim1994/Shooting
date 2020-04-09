@@ -37,9 +37,9 @@ enum iKeyState {
 #define keyboard_space  16
 
 struct Texture {
-    void* texID;// Gluint texID;
-    int width, height;
-    int potWidth, potHeight;
+    uint32 texID;
+    float width, height;
+    float potWidth, potHeight;
     int retainCount;
 };
 
@@ -55,3 +55,5 @@ struct Texture {
 #define REVERSE_WIDTH   1
 #define REVERSE_HEIGHT  2
 
+
+   

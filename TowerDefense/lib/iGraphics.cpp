@@ -16,20 +16,12 @@ void endGdiplus(ULONG_PTR gpToken)
 }
 
 struct GD {
-    Image* bmp;
+    Bitmap* bmp;
     Graphics* g;
 };
 
 GD* gd = NULL;
 
-void setBackBuffer(Bitmap** bmp, Graphics** g, iSize devSize)
-{
-    iGraphics::instance()->init(devSize);
-    *bmp = (Bitmap*)gd->bmp;
-    *g = gd->g;
-    gd->bmp = NULL;
-    gd->g = NULL;
-}
 
 wchar_t* utf8_to_utf16(const char* szFormat, ...)
 {
@@ -389,15 +381,11 @@ void iGraphics::fillRect(float x, float y, float width, float height, float radi
 }
 
 Texture* iGraphics::getTexture()
-{
-	Texture* tex = (Texture*)malloc(sizeof(Texture));
-	tex->texID = gd->bmp;
-	tex->width = gd->bmp->GetWidth();
-	tex->height = gd->bmp->GetHeight();
-	//tex->potWidth;
-	//tex->potHeight;
-	tex->retainCount = 1;
-
-	gd->bmp = NULL;
+{ 
+    int width, height;
+    uint8* rgba = bmp2rgba(gd->bmp, width, height);
+    Texture* tex = createImageWithRGBA(rgba, width, height);
+    free(rgba);
+	
 	return tex;
 }

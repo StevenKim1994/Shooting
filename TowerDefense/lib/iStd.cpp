@@ -5,10 +5,7 @@ uint8 float2uint8(float f)
     return f * 0xFF;
 }
 
-static Bitmap* bitmap;
-//static
-Graphics* g;
-static Graphics* gFromHDC = NULL;
+
 int monitorSizeW, monitorSizeH;
 iSize devSize;
 iRect viewport;
@@ -29,24 +26,16 @@ bool getKeyDown(uint32 key) { return keyDown & key; }
 uint32 getKeyStat() { return keyStat; }
 bool getKeyStat(uint32 key) { return keyStat & key; }
 
-//void setG(Graphics* _g)
-//{
-//    g = _g;
-//}
-//
-//Graphics* getG()
-//{
-//    return g;
-//}
 
 void loadLib(HDC hDC)
 {
+    setupOpenGL(true,hDC);
+    initOpenGL();
     devSize = iSizeMake(DEVSIZE_WIDTH, DEVSIZE_HEIGHT);
-    setBackBuffer(&bitmap, &g, devSize);
+    reshapeOpenGL(monitorSizeW, monitorSizeH);
+	//monitorSizeW,H : App.cpp
 
-    gFromHDC = new Graphics(hDC);
-    gFromHDC->Clear(Color(255, 0, 0, 0));
-
+ 
     _r = 1.0f;
     _g = 1.0f;
     _b = 1.0f;
@@ -59,6 +48,8 @@ void loadLib(HDC hDC)
     setStringBorder(1);
     setStringBorderRGBA(0, 0, 0, 1);
 
+    glEnable(GL_LINE_SMOOTH);
+	
     prevTickCount = GetTickCount();
 
     keys = (bool*)calloc(sizeof(bool), 256);
@@ -72,9 +63,7 @@ void loadLib(HDC hDC)
 
 void freeLib()
 {
-    delete bitmap;
-    delete g;
-    delete gFromHDC;
+    setupOpenGL(false, NULL);
 
     free(keys);
 }
@@ -84,21 +73,33 @@ void drawLib(Method_Paint method)
     DWORD d = GetTickCount();
     float delta = (d - prevTickCount)/1000.f;
     prevTickCount = d;
-
-    // g : bitmap
+	
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+#if 0
     method(delta);
-    keyDown = 0;
+#else
+    setRGBA(0.5, 0.5, 0.5, 1);
+    fillRect(0, 0, devSize.width, devSize.height);
 
-    // gFromHDC 
-    int width = bitmap->GetWidth();
-    int height = bitmap->GetHeight();
-    Rect destinationRect(viewport.origin.x, viewport.origin.y,
-        viewport.size.width, viewport.size.height);
-    gFromHDC->DrawImage(
-        bitmap,
-        destinationRect,
-        0, 0, width, height,
-        UnitPixel);
+    setRGBA(1, 1, 1, 1);
+    drawRect(10, 10, devSize.width-20, devSize.height-20);
+	
+    setRGBA(1, 0, 0, 1);
+    drawLine(0, 0, devSize.width, devSize.height);
+    setRGBA(0, 0, 1, 1);
+    drawLine(devSize.width, 0, 0, devSize.height);
+
+    setRGBA(1, 1, 1, 1);
+    static Texture* tex = createImage("assets/ex.png");
+    static float tt = 0.0f;
+	tt += delta;
+ 
+    drawImage(tex, devSize.width/2, devSize.height/2,0,0, tex->width, tex->height, VCENTER|HCENTER, 1, 1, 2, 360*tt ,REVERSE_NONE);
+	
+#endif
+    keyDown = 0;   
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)
@@ -153,31 +154,8 @@ void keyLib(iKeyState stat, int c)
 
 void resizeLib(int width, int height)
 {
-    if(gFromHDC)
-        gFromHDC->Clear(Color(255, 0, 0, 0));
-
-    float r0 = devSize.width / devSize.height;
-
-    monitorSizeW = width;
-    monitorSizeH = height;
-    float r1 = 1.0f * width / height;
-
-    if (r0 < r1)// 모니터 가로가 큰 경우
-    {
-        viewport.origin.y = 0; viewport.size.height = height;
-        viewport.size.width = devSize.width * height / devSize.height;
-        viewport.origin.x = (width - viewport.size.width) / 2;
-    }
-    else if (r0 > r1)// 모니터 가로가 작은 경우(세로 긴 경우)
-    {
-        viewport.origin.x = 0; viewport.size.width = width;
-        viewport.size.height = devSize.height * width / devSize.width;
-        viewport.origin.y = (height - viewport.size.height) / 2;
-    }
-    else// 정비율
-    {
-        viewport = iRectMake(0, 0, width, height);
-    }
+    reshapeOpenGL(width, height);
+ 
 }
 
 
@@ -189,6 +167,11 @@ void setRGBA(float r, float g, float b, float a)
     _a = a;
 }
 
+void setLineWidth(float lineWidth)
+{
+    glLineWidth(lineWidth);
+}
+
 void getRGBA(float& r, float& g, float& b, float& a)
 {
     r = _r;
@@ -198,63 +181,68 @@ void getRGBA(float& r, float& g, float& b, float& a)
 }
 void drawLine(iPoint sp, iPoint ep)
 {
-    drawLine(sp.x, sp.y, ep.x, ep.y);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+    iPoint position[2] =
+    {
+       sp,ep
+    };
+    float color[2][4] = { {_r,_g,_b,_a} , {_r,_g,_b,_a} };
+
+    glVertexPointer(2, GL_FLOAT, 0, position);
+    glColorPointer(4, GL_FLOAT, 0, color);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void drawLine(float x0, float y0, float x1, float y1)
 {
-    Pen pen(Color(  float2uint8(_a),
-                    float2uint8(_r),
-                    float2uint8(_g),
-                    float2uint8(_b) ));
-    g->DrawLine(&pen, x0, y0, x1, y1);
+    drawLine(iPointMake(x0, y0), iPointMake(x1, y1));
+}
+
+static void drawPoly(iPoint* poly, int num, bool fill)
+{
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+	//float color[num][4];
+    float color[4][4] = { {_r,_g,_b,_a } , {_r,_g,_b,_a } , {_r,_g,_b,_a }, {_r,_g,_b,_a } };
+
+	glVertexPointer(2, GL_FLOAT, 0, poly);
+    glColorPointer(4, GL_FLOAT, 0, color);
+
+    glDrawArrays(fill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, num);
+    //glDrawElements;
+	
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+	
 }
 
 void drawRect(float x, float y, float width, float height, float radius)
 {
-    Pen pen(Color(  float2uint8(_a),
-                    float2uint8(_r),
-                    float2uint8(_g),
-                    float2uint8(_b)));
-
-    GraphicsPath path;
-    path.AddLine(x + radius, y, x + width - (radius * 2), y);
-    path.AddArc(x + width - (radius * 2), y, radius * 2, radius * 2, 270, 90);
-    path.AddLine(x + width, y + radius, x + width, y + height - (radius * 2));
-    path.AddArc(x + width - (radius * 2), y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
-    path.AddLine(x + width - (radius * 2), y + height, x + radius, y + height);
-    path.AddArc(x, y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
-    path.AddLine(x, y + height - (radius * 2), x, y + radius);
-    path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
-    path.CloseFigure();
-
-    g->DrawPath(&pen, &path);
+    iPoint p[4] = {
+         {x, y},                 // top|left
+         {x, y + height},        // bottom|left
+         {x + width, y + height},// bottom|right
+         {x + width, y}          // top|right
+    };
+    drawPoly(p, 4, false);
 }
 
-void drawRect(iRect rt, float radius)
+
+void drawRect(iRect rt, float radius) // opengl1.x 대에서 radius는 무시함
 {
-    drawRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, radius);
+    fillRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, radius);
 }
 
 
 void fillRect(float x, float y, float width, float height, float radius)
 {
-    SolidBrush brush(Color( float2uint8(_a),
-                            float2uint8(_r),
-                            float2uint8(_g),
-                            float2uint8(_b)));
-    GraphicsPath path;
-    path.AddLine(x + radius, y, x + width - (radius * 2), y);
-    path.AddArc(x + width - (radius * 2), y, radius * 2, radius * 2, 270, 90);
-    path.AddLine(x + width, y + radius, x + width, y + height - (radius * 2));
-    path.AddArc(x + width - (radius * 2), y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
-    path.AddLine(x + width - (radius * 2), y + height, x + radius, y + height);
-    path.AddArc(x, y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
-    path.AddLine(x, y + height - (radius * 2), x, y + radius);
-    path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
-    path.CloseFigure();
-
-    g->FillPath(&brush, &path);
+    iPoint p[4] = { {x,y},{ x,y + height}, {x + width, y + height} , {x + width, height} };
+    drawPoly(p, 4, true);
 }
 
 void fillRect(iRect rt, float radius)
@@ -313,18 +301,18 @@ Texture* createImage(const char* szFormat, ...)
     va_end(args);
 
     wchar_t* ws = utf8_to_utf16(szText);
-    Image* img = new Image(ws);
+    Bitmap* bmp = new Bitmap(ws);
     free(ws);
 
-    Texture* tex = (Texture*)malloc(sizeof(Texture));
-    tex->texID = img;
-    tex->width = img->GetWidth();
-    tex->height = img->GetHeight();
-    //tex->potWidth;
-    //tex->potHeight;
-    tex->retainCount = 1;
+    int width, height;
+    uint8* rgba = bmp2rgba(bmp, width, height);
 
-    return tex;
+    delete bmp;
+
+    Texture* tex = createImageWithRGBA(rgba, width, height);
+    free(rgba);
+
+	return tex;
 }
 void freeImage(Texture* tex)
 {
@@ -333,7 +321,8 @@ void freeImage(Texture* tex)
         tex->retainCount--;
         return;
     }
-    delete tex->texID;
+    
+    glDeleteTextures(1, &tex->texID); // 복수일수도 잇어서 주소값을 넘긴다.
     free(tex);
 }
 
@@ -349,7 +338,6 @@ void drawImage(Texture* tex, int x, int y,
     float ratX, float ratY,
     int xyz, float degree, int reverse)
 {
-    Image* img = (Image*)tex->texID;
     int width = tex->width * ratX;
     int height = tex->height * ratY;
     switch (anc) {
@@ -361,16 +349,93 @@ void drawImage(Texture* tex, int x, int y,
     case VCENTER | RIGHT:   x -= width;     y -= height / 2; break;
     case BOTTOM | LEFT:                     y -= height;     break;
     case BOTTOM | HCENTER:  x -= width / 2; y -= height;     break;
-    case BOTTOM | RIGHT:    x -= width;     y -= height;     break; }
+    case BOTTOM | RIGHT:    x -= width;     y -= height;     break;
+    }
 
-    Rect destinationRect(x, y, width, height);
+    iPoint position[4] = { {x,y}, // T | L
+                            {x,y + height}, // B | L
+                            { x + width,y}, // T | R
+                            {x + width, y + height} // B | R
+    };
+
+
+    
+	
+    iPoint texCoorinate[4] =
+    { {ix / tex->potWidth, iy / tex->potHeight},
+        {ix / tex->potWidth, (iy + ih) / tex->potHeight},
+        {(ix + iw) / tex->potWidth, iy / tex->potHeight},
+        {(ix + iw) / tex->potWidth, (iy + ih) / tex->potHeight}
+    };
+    float color[4][4] = 
+    {{_r,_g,_b,_a},
+    	{_r,_g,_b,_a},
+    	{_r,_g,_b,_a},
+    	{_r,_g,_b,_a} } ;
+
+	if(reverse == REVERSE_WIDTH)
+	{
+        iPoint t;
+        for(int i = 0; i <2; i++)
+        {
+            t = position[i];
+            position[i] = position[i + 2];
+            position[i + 2] = t;
+		}
+	}
+    else if(reverse == REVERSE_HEIGHT)
+    {
+        iPoint t;
+        for (int i = 0; i < 2; i++)
+        {
+            t = position[2 * i];
+            position[2 * i] = position[2 * i + 1];
+            position[2 * i + 1] = t;
+    	}
+    }
+
+    glPushMatrix();
+	
+	if(degree)
+	{
+        iPoint t = iPointMake(x + width / 2, y + height / 2);
+
+        for (int i = 0; i < 4; i++)
+            position[i] -= t;
+		
+       glTranslatef(t.x,t.y,0);
+
+       while (degree > 360) degree -= 360;
+           degree =  360- degree;
+		
+		
+        float _xyz[3] = { 0,0,0 };
+        _xyz[xyz] = 1.0f;
+        glRotatef(degree, _xyz[0], _xyz[1], _xyz[2]);
+	}
+
+	
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, tex->texID);
+	
+	glVertexPointer(2, GL_FLOAT, 0, position);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoorinate);
+    glColorPointer(4, GL_FLOAT, 0, color);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glPopMatrix();
+
 #if 0
-    g->DrawImage(
-        img,
-        destinationRect,
-        ix, iy, iw, ih,
-        UnitPixel);
-#endif
     iPoint destPoint[3] = {
         {x, y}, {x+width, y}, {x, y+height}
     };
@@ -420,18 +485,28 @@ void drawImage(Texture* tex, int x, int y,
     g->DrawImage(img,
         (PointF*)destPoint, 3,
         ix, iy, iw, ih, UnitPixel, &attr);
+#endif
 }
 
 void setClip(int x, int y, int width, int height)
 {
-    Region region(Rect(x, y, width, height));
-    g->SetClip(&region, CombineModeReplace);
+    if (x == 0 && y == 0 && width == 0 && height == 0)
+        glDisable(GL_SCISSOR_TEST);
+
+    else
+    {
+        glEnable(GL_SCISSOR_TEST);
+
+    	// monitor 영역 #bug
+    	
+        glScissor(x, y, width, height);
+    }
+    
 }
 
 void setClip(iRect rt)
 {
-    Region region(Rect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height));
-    g->SetClip(&region, CombineModeReplace);
+    setClip(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height);
 }
 
 void setStringName(const char* name)
@@ -602,60 +677,7 @@ iSize sizeOfString(const char* szFormat, ...)
     return iSizeMake(rt.Width, rt.Height);
 }
 
-void drawString(int x, int y, int anc, const char* szFormat, ...)
-{
-    va_list args;
-    va_start(args, szFormat);
 
-    char szText[1024];
-    _vsnprintf(szText, sizeof(szText), szFormat, args);
-    va_end(args);
-
-    iSize size = sizeOfString(szText);
-    float width = size.width;
-    float height = size.height;
-    switch (anc) {
-    case TOP | LEFT:                                         break;
-    case TOP | HCENTER:     x -= width / 2;                  break;
-    case TOP | RIGHT:       x -= width;                      break;
-    case VCENTER | LEFT:                    y -= height / 2; break;
-    case VCENTER | HCENTER: x -= width / 2; y -= height / 2; break;
-    case VCENTER | RIGHT:   x -= width;     y -= height / 2; break;
-    case BOTTOM | LEFT:                     y -= height;     break;
-    case BOTTOM | HCENTER:  x -= width / 2; y -= height;     break;
-    case BOTTOM | RIGHT:    x -= width;     y -= height;     break; }
-
-    wchar_t* wStr = utf8_to_utf16(szText);
-
-    GraphicsPath path;
-    FontFamily  fontFamily;
-    PointF      pointF(x, y);
-    StringFormat sf;
-
-    int fontStyle;
-    checkFontFamily(&fontFamily, fontStyle);
-
-    path.AddString(wStr, lstrlenW(wStr), &fontFamily, fontStyle, 
-        _stringSize, pointF, &sf);
-
-    SolidBrush brush(Color( float2uint8(_stringA),
-                            float2uint8(_stringR),
-                            float2uint8(_stringG),
-                            float2uint8(_stringB)));
-    g->FillPath(&brush, &path);
-
-    if (_stringBorder)
-    {
-        Pen pen(Color(  float2uint8(_stringBorderA),
-                        float2uint8(_stringBorderR),
-                        float2uint8(_stringBorderG),
-                        float2uint8(_stringBorderB)));
-        pen.SetWidth(_stringBorder);
-        g->DrawPath(&pen, &path);
-    }
-
-    free(wStr);
-}
 
 #define W 32
 #define R 16
@@ -684,6 +706,11 @@ void drawString(int x, int y, int anc, const char* szFormat, ...)
 static unsigned int state_i = 0;
 static unsigned int STATE[R];
 static unsigned int z0, z1, z2;
+
+void drawString(int x, int y, int anc, const char* szFormat, ...)
+{
+	//#bug
+}
 
 void sRandom() {
     int j;

@@ -72,8 +72,6 @@ extern int monitorSizeW, monitorSizeH;
 void reshapeOpenGL(int width, int height)
 {
 
-	
-
 	float r0 = devSize.width / devSize.height;
 
 	monitorSizeW = width;
@@ -98,7 +96,7 @@ void reshapeOpenGL(int width, int height)
 	}
 
 	glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
-
+	//viewport 설정
 
 
 }

@@ -48,17 +48,26 @@ bool startGLEW()
 
 
  
-	
-	
 	return true;
 }
 
 void initOpenGL()
 {
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+	
+	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+#if 0
+	glDisable(GL_DEPTH_TEST);
+#else
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_ALWAYS);
+	//glDepthFunc(GL_LEQUAL);
+	glClearDepth(1.0f);
+#endif
 	//glMatrixMode(GL_PROJECTION); 
 	//glOrthof(0, devSize.width, devSize.height, 0, 0, 100);
 	//glMatrixMode(GL_MODELVIEW); // 카메라
@@ -73,7 +82,6 @@ void reshapeOpenGL(int width, int height)
 {
 
 	
-
 	float r0 = devSize.width / devSize.height;
 
 	monitorSizeW = width;
@@ -96,12 +104,15 @@ void reshapeOpenGL(int width, int height)
 	{
 		viewport = iRectMake(0, 0, width, height);
 	}
-
 	glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
 
-
-
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, devSize.width, devSize.height, 0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
+
 
 GLuint nextPot(GLuint x)
 {
@@ -145,7 +156,6 @@ void setAntiAliasParameters(bool anti)
 		texParam.minFilter = GL_LINEAR;
 		texParam.magFilter = GL_LINEAR;
 	}
-	
 }
 
 Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height)
@@ -162,7 +172,7 @@ Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, potWidth, potHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 
 	Texture* tex = (Texture*)malloc(sizeof(Texture));
-	tex->texID = (void*)texID;
+	tex->texID = texID;
 	tex->width = width;
 	tex->height = height;
 	tex->potWidth = potWidth;
