@@ -70,11 +70,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
             void testCircle();
             void testTexture();
             void testTextureforImage();
+        	
             //testDot();
             //testLine();
             //testCircle();
             //testTexture();
-            testTextureforImage();
+            //testTextureforImage();
+            setAntiAliasParameters(false);
+        	
+            glColor3f(1, 0, 0);
+            glBegin(GL_QUAD_STRIP);
+            glVertex2f(-0.3, 0.3);
+        	
+            glVertex2f(0.3, 0.3);
+            glColor3f(0, 1, 0);
+            glVertex2f(0.3, -0.3);
+            glColor3f(1, 1, 0);
+            glVertex2f(-0.3, -0.3);
+            glEnd();
+		
 #endif
             SwapBuffers(hDC);
         }
@@ -421,10 +435,11 @@ void testTextureforImage()
     iPoint texCoorinate[4] = { { 0.0, 0.0 }, { 0.0, 1.0 }, { 1.0,0.0 }, { 1.0,1.0 } };//{ {0.0, 1.0}, {0.0,0.0 }, {1.0,1.0}, {1.0,0.0} };
 
 
+	
     glVertexPointer(2, GL_FLOAT, 0, position);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoorinate);
-
-
+   
+    
 #if 1
     uint8 indices[4] = { 0,1,2,3 };
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
