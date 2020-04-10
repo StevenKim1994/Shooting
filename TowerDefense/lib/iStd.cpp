@@ -68,6 +68,25 @@ void freeLib()
     free(keys);
 }
 
+Texture* aaaaa(const char* str)
+{
+    iGraphics* g = iGraphics::instance();
+    setStringSize(20);
+    setStringBorder(0);
+    iSize sss = sizeOfString(str);
+    iSize size = iSizeMake(sss.width + 20, sss.height + 20);
+    g->init(size);
+
+    setRGBA(1, 1, 1, 1);
+    g->fillRect(0, 0, size.width, size.height, 10);
+
+    setStringRGBA(0, 0, 0, 1);
+    g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str);
+
+    Texture* tex = g->getTexture();
+    return tex;
+}
+
 void drawLib(Method_Paint method)
 {
     DWORD d = GetTickCount();
@@ -80,6 +99,7 @@ void drawLib(Method_Paint method)
 #if 0
     method(delta);
 #else
+	// testCode
     setRGBA(0.5, 0.5, 0.5, 1);
     fillRect(0, 0, devSize.width, devSize.height);
 
@@ -97,9 +117,17 @@ void drawLib(Method_Paint method)
 	tt += delta;
  
     drawImage(tex, devSize.width/2, devSize.height/2,0,0, tex->width, tex->height, VCENTER|HCENTER, 1, 1, 2, 360*tt ,REVERSE_NONE);
+
+    static iStrTex* st = new iStrTex(aaaaa);
+    static int score = 0;
+    score++;
+    st->setString("hello %d", score);
+    st->paint(0, 0, TOP | LEFT);
 	
 #endif
     keyDown = 0;   
+
+	// testCode
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)

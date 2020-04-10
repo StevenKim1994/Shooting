@@ -168,6 +168,7 @@
     <ClInclude Include="lib\iSort.h" />
     <ClInclude Include="lib\iStd.h" />
     <ClInclude Include="lib\iString.h" />
+    <ClInclude Include="lib\iStrTex.h" />
     <ClInclude Include="lib\iType.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
@@ -199,6 +200,7 @@
     <ClCompile Include="lib\iSort.cpp" />
     <ClCompile Include="lib\iStd.cpp" />
     <ClCompile Include="lib\iString.cpp" />
+    <ClCompile Include="lib\iStrTex.cpp" />
     <ClCompile Include="lib\iType.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

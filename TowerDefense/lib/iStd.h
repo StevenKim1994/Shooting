@@ -7,6 +7,7 @@
 
 #include "iImage.h"
 #include "iPopup.h"
+#include "iStrTex.h"
 
 #include "iSort.h"
 

@@ -54,7 +54,7 @@ bool startGLEW()
 void initOpenGL()
 {
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+	//glTexEnvi();
 	
 	
 	glEnable(GL_BLEND);
@@ -65,14 +65,18 @@ void initOpenGL()
 #else
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_ALWAYS);
-	//glDepthFunc(GL_LEQUAL);
+	
 	glClearDepth(1.0f);
 #endif
-	//glMatrixMode(GL_PROJECTION); 
-	//glOrthof(0, devSize.width, devSize.height, 0, 0, 100);
-	//glMatrixMode(GL_MODELVIEW); // 카메라
-	//
-	//glLoadIdentity();
+	
+	//base rgb + img rgb
+	//base- -rgb * (1-a) +img-rgb * a
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	//base-rg +_ img-rgb * a
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glEnable(GL_SMOOTH);
 	
 }
 #include "iStd.h"
