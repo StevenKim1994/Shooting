@@ -70,18 +70,25 @@ void freeLib()
 
 Texture* aaaaa(const char* str)
 {
+    int lineNum;
+    char** line = iString::getStringLine(str, lineNum); // \n 마다 줄별로 나눔
+
     iGraphics* g = iGraphics::instance();
+
     setStringSize(20);
     setStringBorder(0);
-    iSize sss = sizeOfString(str);
-    iSize size = iSizeMake(sss.width + 20, sss.height + 20);
+
+    iSize size = iSizeMake(128, 128);
     g->init(size);
 
     setRGBA(1, 1, 1, 1);
     g->fillRect(0, 0, size.width, size.height, 10);
 
     setStringRGBA(0, 0, 0, 1);
-    g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str);
+    for (int i = 0; i < lineNum; i++)
+        g->drawString(size.width / 2, 30 + 30 * i, VCENTER | HCENTER, line[i]);
+
+    iString::freeStringLine(line, lineNum);
 
     Texture* tex = g->getTexture();
     return tex;
@@ -112,17 +119,25 @@ void drawLib(Method_Paint method)
     drawLine(devSize.width, 0, 0, devSize.height);
 
     setRGBA(1, 1, 1, 1);
-    static Texture* tex = createImage("assets/ex.png");
+    static Texture* tex = createGreyImage("assets/ex.png");
     static float tt = 0.0f;
 	tt += delta;
  
-    drawImage(tex, devSize.width/2, devSize.height/2,0,0, tex->width, tex->height, VCENTER|HCENTER, 1, 1, 2, 360*tt ,REVERSE_NONE);
 
+   drawImage(tex, devSize.width / 2, devSize.height / 2,
+        0, 0, tex->width, tex->height,
+        VCENTER | HCENTER, 1, 1, 2, 360 * tt, REVERSE_NONE);
+	
     static iStrTex* st = new iStrTex(aaaaa);
     static int score = 0;
     score++;
-    st->setString("hello %d", score);
+    st->setString("hello\nworld\n%d", score);
     st->paint(0, 0, TOP | LEFT);
+
+
+    static Texture** texs = createDivideImage(2, 2, "assets/ex.png");
+    for (int i = 0; i < 4; i++)
+        drawImage(texs[i], 50 + 150 * (i % 2), 50 + 150* (i / 2), TOP | LEFT);
 	
 #endif
     keyDown = 0;   
@@ -198,6 +213,96 @@ void setRGBA(float r, float g, float b, float a)
 void setLineWidth(float lineWidth)
 {
     glLineWidth(lineWidth);
+}
+
+void convertGrey(uint8* rgba, int width, int height, int potWidth)
+{
+	for(int j =0; j < height; j++)
+	{
+		for(int i = 0; i< width; i++)
+		{
+            uint8* c = &rgba[potWidth * 4 * j + 4 * i];
+            uint8 grey = (299 * c[0] + 587 * c[1] + 114* c[2]) / 1000.f;
+            c[0] = grey;
+            c[1] = grey;
+            c[2] = grey;
+			
+		}
+	}
+	
+}
+
+Texture* createGreyImage(const char* szFormat, ...)
+{
+    va_list args;
+    va_start(args, szFormat);
+
+    char szText[1024];
+    _vsnprintf(szText, sizeof(szText), szFormat, args);
+    va_end(args);
+
+    wchar_t* ws = utf8_to_utf16(szText);
+    Bitmap* bmp = new Bitmap(ws);
+    free(ws);
+
+    int width, height;
+    uint8* rgba = bmp2rgba(bmp, width, height);
+
+    delete bmp;
+    convertGrey(rgba, width, height, nextPot(width));
+    Texture* tex = createImageWithRGBA(rgba, width, height);
+    free(rgba);
+
+    return tex;
+}
+
+Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...)
+{
+    va_list args;
+    va_start(args, szFormat);
+
+    char szText[1024];
+    _vsnprintf(szText, sizeof(szText), szFormat, args);
+    va_end(args);
+    
+    wchar_t* ws = utf8_to_utf16(szText);
+    Bitmap* bmp = new Bitmap(ws);
+    free(ws);
+
+    int width, height;
+    uint8* rgba = bmp2rgba(bmp, width, height);
+    delete bmp;
+
+    int potWidth = nextPot(width);
+    int potHeight = nextPot(height);
+	
+    int num = wNum * hNum;
+
+    int w = width / wNum;
+    int h = height / hNum;
+    int potW = nextPot(w);
+    int potH = nextPot(h);
+
+    uint8* buf = (uint8*)malloc(sizeof(uint8) * potW * potH * 4);
+	
+    Texture** texs = (Texture**)malloc(sizeof(Texture*) * num);
+
+    for(int j = 0; j<hNum; j++)
+    {
+        for (int i = 0; i < wNum; i++)
+        {
+            memset(buf, 0x00, sizeof(uint8) * potW * potH * 4);
+            for (int k = 0; k < h; k++)
+                memcpy(&buf[potW * 4 * k], &rgba[potWidth * 4 * (h * j + k) + w * 4 * i], sizeof(uint8) * w * 4);
+
+            //rgba => buf (이미지를 각각 쪼개서 버퍼에 저장함
+            texs[wNum* j +i] = createImageWithRGBA(buf, w, h);
+        }
+    }
+	
+    free(buf);
+	
+    return texs;
 }
 
 void getRGBA(float& r, float& g, float& b, float& a)
@@ -380,38 +485,43 @@ void drawImage(Texture* tex, int x, int y,
     case BOTTOM | RIGHT:    x -= width;     y -= height;     break;
     }
 
-    iPoint position[4] = { {x,y}, // T | L
-                            {x,y + height}, // B | L
-                            { x + width,y}, // T | R
-                            {x + width, y + height} // B | R
+    iPoint position[4] = {
+        {x, y},             // top|left
+        {x, y + height},      // bottom|left,  
+        {x + width, y},       // top|right
+        {x + width, y + height} // bottom|right
     };
-
-
-    
-	
-    iPoint texCoorinate[4] =
-    { {ix / tex->potWidth, iy / tex->potHeight},
+#if 0
+    iPoint coordinate[4] = {
+        {0.0, 0.0},
+        {0.0, tex->height / tex->potHeight},
+        {tex->width / tex->potWidth, 0.0},
+        {tex->width / tex->potWidth, tex->height / tex->potHeight}
+    };
+#else
+    iPoint coordinate[4] = {
+        {ix / tex->potWidth, iy / tex->potHeight},
         {ix / tex->potWidth, (iy + ih) / tex->potHeight},
         {(ix + iw) / tex->potWidth, iy / tex->potHeight},
         {(ix + iw) / tex->potWidth, (iy + ih) / tex->potHeight}
     };
-    float color[4][4] = 
-    {{_r,_g,_b,_a},
-    	{_r,_g,_b,_a},
-    	{_r,_g,_b,_a},
-    	{_r,_g,_b,_a} } ;
-
-	if(reverse == REVERSE_WIDTH)
-	{
+#endif
+    float color[4][4] = {
+        {_r, _g, _b, _a},
+        {_r, _g, _b, _a},
+        {_r, _g, _b, _a },
+        {_r, _g, _b, _a} };
+    if (reverse == REVERSE_WIDTH)
+    {
         iPoint t;
-        for(int i = 0; i <2; i++)
+        for (int i = 0; i < 2; i++)
         {
             t = position[i];
             position[i] = position[i + 2];
             position[i + 2] = t;
-		}
-	}
-    else if(reverse == REVERSE_HEIGHT)
+        }
+    }
+    else if (reverse == REVERSE_HEIGHT)
     {
         iPoint t;
         for (int i = 0; i < 2; i++)
@@ -419,41 +529,43 @@ void drawImage(Texture* tex, int x, int y,
             t = position[2 * i];
             position[2 * i] = position[2 * i + 1];
             position[2 * i + 1] = t;
-    	}
+        }
     }
 
     glPushMatrix();
-	
-	if(degree)
-	{
+    if (degree)
+    {
         iPoint t = iPointMake(x + width / 2, y + height / 2);
-
         for (int i = 0; i < 4; i++)
             position[i] -= t;
-		
-       glTranslatef(t.x,t.y,0);
+        glTranslatef(t.x, t.y, 0);
 
-       while (degree > 360) degree -= 360;
-           degree =  360- degree;
-		
-		
-        float _xyz[3] = { 0,0,0 };
+        float _xyz[3] = { 0, 0, 0 };
         _xyz[xyz] = 1.0f;
+        while (degree > 360) degree -= 360;
+        degree = 360 - degree;
         glRotatef(degree, _xyz[0], _xyz[1], _xyz[2]);
-	}
+    }
 
-	
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex->texID);
-	
-	glVertexPointer(2, GL_FLOAT, 0, position);
-    glTexCoordPointer(2, GL_FLOAT, 0, texCoorinate);
+
+    glVertexPointer(2, GL_FLOAT, 0, position);
+    glTexCoordPointer(2, GL_FLOAT, 0, coordinate);
     glColorPointer(4, GL_FLOAT, 0, color);
 
+#if 1
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+#elif 1
+    uint8 indices[4] = { 0, 1, 2, 3 };
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
+#else
+    uint8 indices[6] = { 0, 1, 2,  1, 2, 3 };
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
+#endif
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -464,13 +576,22 @@ void drawImage(Texture* tex, int x, int y,
     glPopMatrix();
 
 #if 0
+    Image* img = (Image*)tex->texID;
+    Rect destinationRect(x, y, width, height);
+#if 0
+    g->DrawImage(
+        img,
+        destinationRect,
+        ix, iy, iw, ih,
+        UnitPixel);
+#endif
     iPoint destPoint[3] = {
-        {x, y}, {x+width, y}, {x, y+height}
+        {x, y}, {x + width, y}, {x, y + height}
     };
     if (reverse == REVERSE_WIDTH)
     {
         destPoint[2].x = destPoint[1].x;
-    
+
         iPoint t = destPoint[0];
         destPoint[0] = destPoint[1];
         destPoint[1] = t;
@@ -487,15 +608,15 @@ void drawImage(Texture* tex, int x, int y,
     if (xyz == 0)// x축으로 회전
     {
         destPoint[0].y =
-        destPoint[1].y = y + height / 2 - height / 2 * _cos(degree);
+            destPoint[1].y = y + height / 2 - height / 2 * _cos(degree);
         destPoint[2].y = y + height / 2 + height / 2 * _cos(degree);
     }
     else if (xyz == 1)// y축으로 회전
     {
         destPoint[0].x =
-        destPoint[2].x = x + width / 2 - width / 2 * _cos(degree);
+            destPoint[2].x = x + width / 2 - width / 2 * _cos(degree);
         destPoint[1].x = x + width / 2 + width / 2 * _cos(degree);
-    }
+}
     else if (xyz == 2)// z축으로 회전
     {
         iPoint t = iPointMake(x + width / 2, y + height / 2);
@@ -503,7 +624,7 @@ void drawImage(Texture* tex, int x, int y,
             destPoint[i] = iPointRotate(destPoint[i], t, degree);
     }
 
-    ColorMatrix matrix = {_r,   0.0f, 0.0f, 0.0f, 0.0f,
+    ColorMatrix matrix = { _r,   0.0f, 0.0f, 0.0f, 0.0f,
                           0.0f, _g,   0.0f, 0.0f, 0.0f,
                           0.0f, 0.0f, _b,   0.0f, 0.0f,
                           0.0f, 0.0f, 0.0f, _a,   0.0f,
@@ -515,6 +636,8 @@ void drawImage(Texture* tex, int x, int y,
         ix, iy, iw, ih, UnitPixel, &attr);
 #endif
 }
+
+
 
 void setClip(int x, int y, int width, int height)
 {
