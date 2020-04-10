@@ -78,6 +78,68 @@ void initOpenGL()
 #include "iStd.h"
 extern int monitorSizeW, monitorSizeH;
 
+void checkOpenGL()
+{
+
+	//GL, GLEW, SHADER 버전 확인...
+	const GLubyte* strGL = glGetString(GL_VERSION);
+	const GLubyte* strGLEW = glewGetString(GLEW_VERSION);
+	const GLubyte* strGLSL = glGetString(GL_SHADING_LANGUAGE_VERSION);
+	printf("strGL: %s strGLEW: %s strGLSL: %s\n", strGL, strGLEW, strGLSL);
+
+
+
+	// matrix 확인 방법.. OpenGL 1.x에서만...
+	GLfloat matrix[2][16];
+	glGetFloatv(GL_PROJECTION_MATRIX, matrix[0]);
+	glGetFloatv(GL_MODELVIEW_MATRIX, matrix[1]);
+
+	for(int i = 0; i < 2; i++)
+	{
+		for(int j = 0; j<4; j++)
+		{
+			GLfloat* m = &matrix[i][4*j];
+			for (int k = 0; k < 4; k++)
+				printf("%f\t", m[k]);
+
+			printf("\n");
+		}
+
+		
+	}
+
+	//현재 디바이스가 지원하는 Texture의 최대 크기
+	GLint maxTextureSize;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+	printf("maxTextureSize : %d\n", maxTextureSize);
+
+
+	// OpenGL RunTime중 에러 확인방법 glew 사용시...
+	GLenum error = glGetError();
+	const GLubyte* strerror = glewGetErrorString(error);
+	printf("%s\n", strerror);
+
+
+	// 이미지 텍스처 불러온것 정보 확인 확인하기전에 바인딩된 텍스처가 있어야됨(OpenGL에서 텍스처를 사용하기 위해서는 바인딩을 해야 사용할 수있음)
+	static Texture* tex = createImage("assets/ex.png");
+	glBindTexture(GL_TEXTURE_2D, tex->texID);
+	GLint w, h, format;
+	//level : 블로어 비슷하게 쓸수 있는 개념이라고만 생각하면 될듯?
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w); // 가로크기 확인
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h); // 세로크기 확인
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &format); // GL_RGBA인지 어떤 형식인지...
+	GLint texID;
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &texID);
+	printf("%d\n", texID);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// 현재사용하는 fbo 확인 ... 우리는 일단 fbo를 사용하지 않았으므로 main fbo만 나옴.
+	GLint fbo;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &fbo);
+	printf("%d\n", fbo);
+
+}
+
 void reshapeOpenGL(int width, int height)
 {
 
@@ -106,11 +168,20 @@ void reshapeOpenGL(int width, int height)
 	}
 	glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
 
+	printf("--------------\n");
+	checkOpenGL();
+
+	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, devSize.width, devSize.height, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	
+	printf("==============\n");
+	checkOpenGL();
+	
 }
 
 
