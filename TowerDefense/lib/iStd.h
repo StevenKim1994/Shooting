@@ -57,6 +57,7 @@ uint8* bmp2rgba(Bitmap* bmp, int& width, int& height);
 Texture* createImage(const char* szFormat, ...);
 Texture* createGreyImage(const char* szFormat, ...);
 Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...);
+Texture* createReflectImage(float rateY, const char* szFormat, ...);
 void freeImage(Texture* tex);
 
 void drawImage(Texture* tex, int x, int y, int anc);

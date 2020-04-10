@@ -5,6 +5,7 @@
 #define gs_intro	0
 #define gs_menu		1
 #define gs_proc		2
+#define gs_ending	3
 #define gs_none		0xFF
 extern int gameState;
 

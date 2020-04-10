@@ -57,20 +57,17 @@ void iImage::setTexAtIndex(int index)
 
 void iImage::replaceAtIndex(int index, Texture* tex)
 {
-#if 0
-	arrayTex->remove(index);
-	arrayTex->addObject(index, tex);
-#else
+
 	Texture* t = (Texture*)arrayTex->objectAtIndex(index);
 
 	if (t->retainCount > 1)
 		t->retainCount--;
 
 	else
-		delete (Image*)t->texID;
-	freeImage(t);
+		glDeleteTextures(1, &t->texID);
 	memcpy(t, tex, sizeof(Texture));
-#endif
+	free(tex);
+
 }
 
 

@@ -81,6 +81,9 @@
     <ClInclude Include="lib\iStrTex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="game\Ending.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -160,6 +163,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="lib\iStrTex.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Ending.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

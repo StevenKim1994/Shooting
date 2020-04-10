@@ -68,31 +68,6 @@ void freeLib()
     free(keys);
 }
 
-Texture* aaaaa(const char* str)
-{
-    int lineNum;
-    char** line = iString::getStringLine(str, lineNum); // \n 마다 줄별로 나눔
-
-    iGraphics* g = iGraphics::instance();
-
-    setStringSize(20);
-    setStringBorder(0);
-
-    iSize size = iSizeMake(128, 128);
-    g->init(size);
-
-    setRGBA(1, 1, 1, 1);
-    g->fillRect(0, 0, size.width, size.height, 10);
-
-    setStringRGBA(0, 0, 0, 1);
-    for (int i = 0; i < lineNum; i++)
-        g->drawString(size.width / 2, 30 + 30 * i, VCENTER | HCENTER, line[i]);
-
-    iString::freeStringLine(line, lineNum);
-
-    Texture* tex = g->getTexture();
-    return tex;
-}
 
 void drawLib(Method_Paint method)
 {
@@ -103,46 +78,12 @@ void drawLib(Method_Paint method)
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-#if 0
+
     method(delta);
-#else
-	// testCode
-    setRGBA(0.5, 0.5, 0.5, 1);
-    fillRect(0, 0, devSize.width, devSize.height);
 
-    setRGBA(1, 1, 1, 1);
-    drawRect(10, 10, devSize.width-20, devSize.height-20);
-	
-    setRGBA(1, 0, 0, 1);
-    drawLine(0, 0, devSize.width, devSize.height);
-    setRGBA(0, 0, 1, 1);
-    drawLine(devSize.width, 0, 0, devSize.height);
-
-    setRGBA(1, 1, 1, 1);
-    static Texture* tex = createGreyImage("assets/ex.png");
-    static float tt = 0.0f;
-	tt += delta;
- 
-
-   drawImage(tex, devSize.width / 2, devSize.height / 2,
-        0, 0, tex->width, tex->height,
-        VCENTER | HCENTER, 1, 1, 2, 360 * tt, REVERSE_NONE);
-	
-    static iStrTex* st = new iStrTex(aaaaa);
-    static int score = 0;
-    score++;
-    st->setString("hello\nworld\n%d", score);
-    st->paint(0, 0, TOP | LEFT);
-
-
-    static Texture** texs = createDivideImage(2, 2, "assets/ex.png");
-    for (int i = 0; i < 4; i++)
-        drawImage(texs[i], 50 + 150 * (i % 2), 50 + 150* (i / 2), TOP | LEFT);
-	
-#endif
     keyDown = 0;   
 
-	// testCode
+
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)
@@ -303,6 +244,63 @@ Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...)
     free(buf);
 	
     return texs;
+}
+
+uint8* convertReflect(uint8* rgba, int width, int& height, int potWidth, float rateY)
+{
+	// ex : 강가에 비친 게임 오브젝트의 모습을 구현하기 위한 ...
+    // rateY 1.4
+    //
+    int newHeight = height * rateY;
+    int newPotHeight = nextPot(newHeight);
+    uint8* buf = (uint8*)calloc(sizeof(uint8), potWidth * newPotHeight * 4);
+
+	memcpy(buf, rgba, sizeof(uint8)*potWidth*height*4);
+    int remainHeight = newPotHeight - height;
+
+	for(int j = 0; j <remainHeight; j++)
+	{
+        int J = height * (1.0f * j / remainHeight);
+        uint8 a = 0xFF * (1.0f - 1.0f * j / remainHeight);
+		
+		for(int i =0; i<width; i++)
+		{
+            uint8* dst = &buf[potWidth * 4 * (height + j) * 4 * i];
+            uint8* src = &rgba[potWidth * 4 * (height - 1 - J) + 4 * i];
+            memcpy(dst, src, sizeof(uint8) * 3);
+            dst[3] = a;
+		}
+	}
+ 
+    height = newHeight;
+
+    return buf;
+}
+Texture* createReflectImage(float rateY, const char* szFormat, ...)
+{
+    va_list args;
+    va_start(args, szFormat);
+
+    char szText[1024];
+    _vsnprintf(szText, sizeof(szText), szFormat, args);
+    va_end(args);
+
+    wchar_t* ws = utf8_to_utf16(szText);
+    Bitmap* bmp = new Bitmap(ws);
+    free(ws);
+
+    int width, height;
+    uint8* rgba = bmp2rgba(bmp, width, height);
+
+    delete bmp;
+
+	uint8* tmp = convertReflect(rgba, width, height, nextPot(width), rateY);
+    free(rgba);
+    Texture* tex = createImageWithRGBA(tmp, width, height);
+    free(tmp);
+    
+    return tex;
+	
 }
 
 void getRGBA(float& r, float& g, float& b, float& a)
