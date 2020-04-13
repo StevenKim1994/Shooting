@@ -2,143 +2,184 @@
 
 #include "Loading.h"
 
-Texture* texDot;
-iRect txt[4][3];
+void loadEnding()
+{
+	createPopEndingMenu();
+	createPopNumber();
 
-Texture** strTex;
-Texture* answerTex;
+	showPopEndingMenu(true);
+}
 
-iPoint offset;
+void freeEnding()
+{
+	freePopEndingMenu();
+	freePopNumber();
+}
+
+void drawEnding(float dt)
+{
+	drawPopEndingMenu(dt);
+	drawPopNumber(dt);
+}
+
+void keyEnding(iKeyState stat, iPoint point)
+{
+	if (keyPopNumber(stat, point))
+		return;
+
+	if (keyPopEndingMenu(stat, point))
+		return;
+}
+
+// ----------------------------------------
+// popEndingMenu
+// ----------------------------------------
+iPopup* popEndingMenu;
+iImage** imgEndingMenuBtn;
+
+void createPopEndingMenu()
+{
+	iImage* img;
+	Texture* tex;
+	int i, j;
+
+	iPopup* pop = new iPopup(iPopupStyleMove);
+
+	iGraphics* g = iGraphics::instance();
+	iSize size = iSizeMake(128, 64);
+	imgEndingMenuBtn = (iImage**)malloc(sizeof(iImage*) * 1);
+	const char* strBtn[] = { "열려팝업", };
+	iPoint posBtn[] = { {100, 100}, };
+	for (i = 0; i < 1; i++)
+	{
+		img = new iImage();
+		for (j = 0; j < 2; j++)
+		{
+			g->init(size);
+
+			if (j == 0) setRGBA(1, 0, 0, 1);
+			else setRGBA(0, 0, 1, 1);
+			g->fillRect(0, 0, size.width, size.height, 10);
+			setStringSize(20);
+			setStringRGBA(1, 1, 1, 1);
+			setStringBorder(0);
+			g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, strBtn[i]);
+
+			tex = g->getTexture();
+			img->addObject(tex);
+		}
+		img->position = posBtn[i];
+		imgEndingMenuBtn[i] = img;
+		pop->addObject(img);
+	}
+
+	pop->openPosition = iPointMake(devSize.width, 0);
+	pop->closePosition = iPointMake(0, 0);
+	popEndingMenu = pop;
+}
+
+void freePopEndingMenu()
+{
+	delete popEndingMenu;
+	free(imgEndingMenuBtn);
+}
+
+void showPopEndingMenu(bool show)
+{
+	popEndingMenu->show(show);
+}
+
+void drawPopEndingMenu(float dt)
+{
+	for (int i = 0; i < 1; i++)
+		imgEndingMenuBtn[i]->setTexAtIndex(i == popEndingMenu->selected);
+	popEndingMenu->paint(dt);
+}
+
+bool keyPopEndingMenu(iKeyState stat, iPoint point)
+{
+	if (popEndingMenu->bShow == false)
+		return false;
+	if (popEndingMenu->stat != iPopupStatProc)
+		return true;
+
+	int i, j = -1;
+
+	switch (stat) {
+
+	case iKeyStateBegan:
+		i = popEndingMenu->selected;
+		if (i == 0)
+		{
+			showPopNumber(true);
+		}
+		break;
+
+	case iKeyStateMoved:
+		for (i = 0; i < 1; i++)
+		{
+			if (containPoint(point, imgEndingMenuBtn[i]->touchRect(popEndingMenu->closePosition)))
+			{
+				j = i;
+				break;
+			}
+		}
+		popEndingMenu->selected = j;
+		break;
+
+	case iKeyStateEnded:
+		break;
+	}
+
+	return true;
+}
+
+// ----------------------------------------
+// popNumber
+// ----------------------------------------
+iPopup* popNumber;
+iImage** imgNumberBtn;
+
 int tileW, tileH;
 int tileNumX, tileNumY;
-int selectedTile;
 
 iStrTex** stNumber;
 Texture* methodStNumber(const char* str);
-iStrTex* stSelect;
-
 iImage** imgNumber;
 
+iStrTex* stSelect;
+Texture* methodStSelect(const char* str);
 
-Texture* methodStNumber(const char* str)
+void drawPopNumber(iPopup* me, iPoint position, iPoint scale, float alpha);
+
+void openPopNumber(iPopup* me)
 {
-	iGraphics* g = iGraphics::instance();
-	iSize size = iSizeMake(tileW, tileH);
-	g->init(size);
-
-	setRGBA(1, 1, 1, 1);
-	g->drawRect(2, 2, tileW - 4, tileH - 4, 10);
-	setStringSize(20);
-	setStringRGBA(1, 1, 1, 1);
-	setStringBorder(0);
-	g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str);
-
-	Texture* tex = g->getTexture();
-	return tex;
+	showPopEndingMenu(false);
 }
 
-
-struct Dot
+void closePopNumber(iPopup* me)
 {
-	float life , _life;
-	iPoint p, v;// position,단위 vector 
-
-	float speed;
-
-	bool paint(float dt)
-	{
-		life += dt;
-		if (life < _life)
-		{
-			p += v * speed;
-			setRGBA(1, 1, 1, 1.0f - life / _life);
-			drawImage(texDot, p.x, p.y, 0, 0, texDot->width, texDot->height,
-				VCENTER | HCENTER, 1.0f, 1.0f, 2, 0, REVERSE_NONE);
-			return false;
-		}
-		return true;
-	}
-	//float alpha, alphaS, alphaE;
-};
-
-Dot* _dot;
-Dot** dot;
-int dotNum;
-#define _dotNum 1000
-
-float dotCreateDt;
-#define _dotCreateDt	0.1f
-
-Dot* addDot()
-{
-	for (int i = 0; i < _dotNum; i++)
-	{
-		Dot* d = &_dot[i];
-		if (d->life >= d->_life)
-		{
-			return d;
-		}
-	}
-	return NULL;
+	showPopEndingMenu(true);
 }
 
-
-
-void updateDot(float dt)
+void createPopNumber()
 {
-	dotCreateDt += dt;
-	if (dotCreateDt < _dotCreateDt)
-		return;
-	dotCreateDt -= _dotCreateDt;
+	iImage* img;
+	Texture* tex;
+	int i, j;
 
-	Dot* d = addDot();
-	if (d == NULL)
-		return;
-	d->life = 0.0f;
-	d->_life = (10 + random() % 50) / 50.0f;
-	d->p = iPointMake(devSize.width / 2 + (-20 + random() % 40) / 10.f,
-		devSize.height / 2 + (-20 + random() % 40) / 10.f);
-	d->v = iPointRotate(iPointMake(1, 0), iPointMake(0, 0), 60 + random() % 60);
-	d->speed = (20 + random() % 40) / 10.f;
+	iPopup* pop = new iPopup(iPopupStyleMove);
+	iPoint offset = iPointMake(10, 10);
+	pop->openPosition = iPointMake(-1000, offset.y);
+	pop->closePosition = offset;
+	pop->methodDrawAfter = drawPopNumber;
+	pop->methodOpen = openPopNumber;
+	pop->methodClose = closePopNumber;
 
-	dot[dotNum] = d;
-	dotNum++;
-}
-
-void loadEnding()
-{
-#if 0 // 내가 한것
-	_dot = (Dot*)calloc(sizeof(Dot), _dotNum);
-	dot = (Dot**)malloc(sizeof(Dot*) * _dotNum);
-	dotNum = 0;
-	dotCreateDt = 0.0f;
-
-	uint8* rgba = (uint8*)calloc(sizeof(uint8), 64 * 64 * 4);
-	float half = 32.0f;
-	for (int j = 0; j < 64; j++)
-	{
-		for (int i = 0; i < 64; i++)
-		{
-			float d = sqrtf((i - half) * (i - half) + (j - half) * (j - half));
-			if (d < half)
-			{
-				uint8* buf = &rgba[64 * 4 * j + 4 * i];
-				memset(buf, 0xFF, 3);
-				buf[3] = 0xFF * (half - d) / half;
-			}
-		}
-	}
-	texDot = createImageWithRGBA(rgba, 64, 64);
-
-
-#else // 강사님이 한것
-
-	offset = iPointMake(10, 10);
 	tileW = 100;
 	tileH = 100;
 	tileNumX = 3;
 	tileNumY = 4;
-	selectedTile = -1;
 
 	int num = tileNumX * tileNumY;
 	stNumber = (iStrTex**)malloc(sizeof(iStrTex*) * num);
@@ -156,135 +197,169 @@ void loadEnding()
 		img->position = iPointMake(tileW * (i % tileNumX),
 			tileH * (i / tileNumX));
 		imgNumber[i] = img;
+
+		pop->addObject(img);
 	}
 
+	iGraphics* g = iGraphics::instance();
+	iSize size = iSizeMake(128, 64);
+	imgNumberBtn = (iImage**)malloc(sizeof(iImage*) * 1);
+	const char* strBtn[] = { "닫아라",};
+	iPoint posBtn[] = { {500, 300}, };
+	for (i = 0; i < 1; i++)
+	{
+		img = new iImage();
+		for (j = 0; j < 2; j++)
+		{
+			g->init(size);
+
+			if (j == 0) setRGBA(1, 0, 0, 1);
+			else setRGBA(0, 0, 1, 1);
+			g->fillRect(0, 0, size.width, size.height, 10);
+			setStringSize(20);
+			setStringRGBA(1, 1, 1, 1);
+			setStringBorder(0);
+			g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, strBtn[i]);
+
+			tex = g->getTexture();
+			img->addObject(tex);
+		}
+		img->position = posBtn[i];
+		imgNumberBtn[i] = img;
+		pop->addObject(img);
+	}
+
+	popNumber = pop;
+
+	stSelect = new iStrTex(methodStSelect);
+	stSelect->setString("%d", popNumber->selected);
+}
+
+Texture* methodStNumber(const char* str)
+{
+	iGraphics* g = iGraphics::instance();
+	iSize size = iSizeMake(tileW, tileH);
+	g->init(size);
+
+	setRGBA(1, 1, 1, 1);
+	g->drawRect(2, 2, tileW - 4, tileH - 4, 10);
 	setStringSize(20);
 	setStringRGBA(1, 1, 1, 1);
 	setStringBorder(0);
-	stSelect = new iStrTex(NULL);
-	stSelect->setString("%d", selectedTile);
-#endif
-	
+	g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str);
+
+	Texture* tex = g->getTexture();
+	return tex;
+}
+Texture* methodStSelect(const char* str)
+{
+	iGraphics* g = iGraphics::instance();
+	iSize size = iSizeMake(128, 64);
+	g->init(size);
+
+	setRGBA(0, 0, 1, 1);
+	g->fillRect(0, 0, size.width, size.height, 10);
+	setStringSize(20);
+	setStringRGBA(1, 1, 1, 1);
+	setStringBorder(0);
+	g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str);
+
+	Texture* tex = g->getTexture();
+	return tex;
 }
 
-void freeEnding()
+void freePopNumber()
 {
-#if 0 // 원래 파티클
-	freeImage(texDot);
-
-
-#else // 강사님이 한것
 	int num = tileNumX * tileNumY;
 	for (int i = 0; i < num; i++)
 	{
 		delete stNumber[i];
-		delete imgNumber[i];
+		//delete imgNumber[i];
 	}
 	free(stNumber);
 	free(imgNumber);
+	delete popNumber;
+	free(imgNumberBtn);
 	delete stSelect;
-#endif
-	
 }
 
-void drawEnding(float dt)
+void showPopNumber(bool show)
 {
-#if 0 // 내가 한것
-
-
-	//iRect txt[4][3];
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 3; j++)
-		{
-			drawRect(110.f * j, 110.f * i, 30.0f, 30.0f, 0);
-			txt[i][j] = iRectMake(110.f * j, 110.f * i, 30.f, 30.f);
-}
-
-	
-#elif 0 // 원래 파티클
-	//drawImage(texDot, devSize.width / 2, devSize.height / 2,
-	//	VCENTER | HCENTER);
-	updateDot(dt);
-	for (int i = 0; i < dotNum; i++)
+	popNumber->show(show);
+	if (show)
 	{
-		if (dot[i]->paint(dt))
-		{
-			dotNum--;
-			dot[i] = dot[dotNum];
-			i--;
-}
+		//
 	}
-
-#else //강사님이 한것
-	int num = tileNumX * tileNumY;
-	for (int i = 0; i < num; i++)
+	else
 	{
-		//iPoint p = iPointMake(	offset.x + tileW * (i % tileNumX),
-		//						offset.y + tileH * (i / tileNumX));
-		//stNumber[i]->paint(p.x + tileW / 2, p.y + tileH / 2, VCENTER | HCENTER);
-		imgNumber[i]->paint(dt, offset);
+		//
 	}
-	stSelect->paint(offset.x + tileW * 3 + 20,
-		offset.y, TOP | LEFT, "%d", selectedTile);
-
-	
-
-#endif
 }
 
-void keyEnding(iKeyState stat, iPoint point)
+
+void drawPopNumber(iPopup* me, iPoint position, iPoint scale, float alpha)
 {
-	//if (stat == iKeyStateBegan)
-	//	setLoading(gs_menu, freeProc, loadMenu);
-	//
-	// myButtonChecker
-#if 0  //내가 한것
-	if(stat == iKeyStateEnded)
-	{
-		
+	for (int i = 0; i < 1; i++)
+		imgNumberBtn[i]->setTexAtIndex(100 + i == popNumber->selected);
 
-		for(int i = 0; i<4; i++)
-		{
-			for(int j = 0; j<3; j++)
-			{
-				if (containPoint(point, txt[i][j]))
-					printf("%d\n", i * 3 + j);
+	stSelect->paint(position.x + tileW * 3 + 20,
+		position.y, TOP | LEFT,
+		"%d", me->selected);
+}
 
-				else
-					printf("-1\n");
-				
-			}
-		}
-	}
-#else // 강사님이 한것
+void drawPopNumber(float dt)
+{
+	popNumber->paint(dt);
+}
 
-	if (stat == iKeyStateBegan)
-	{
+bool keyPopNumber(iKeyState stat, iPoint point)
+{
+	if (popNumber->bShow == false)
+		return false;
+	if (popNumber->stat != iPopupStatProc)
+		return true;
+
+	int i, j = -1, num = tileNumX * tileNumY;
+
+	switch (stat) {
+
+	case iKeyStateBegan:
 		//setLoading(gs_menu, freeProc, loadMenu);
-	}
-	else if (stat == iKeyStateMoved)
-	{
-		int i, j = -1, num = tileNumX * tileNumY;
-		for (int i = 0; i < num; i++)
+		if (popNumber->selected == 100)
 		{
-			//iRect rt = iRectMake(offset.x + tileW * (i % tileNumX),
-			//					offset.y + tileH * (i / tileNumX),
-			//					tileW, tileH);
-			//if (containPoint(point, rt))
-			if (containPoint(point, imgNumber[i]->touchRect(offset)))
+			showPopNumber(false);
+		}
+		break;
+
+	case iKeyStateMoved:
+		for (i = 0; i < num; i++)
+		{
+			if (containPoint(point, imgNumber[i]->touchRect(popNumber->closePosition)))
 			{
 				j = i;
 				break;
 			}
 		}
-		if (selectedTile != j)
+		for (i = 0; i < 1; i++)
+		{
+			if (containPoint(point, imgNumberBtn[i]->touchRect(popNumber->closePosition)))
+			{
+				j = 100 + i;
+				break;
+			}
+		}
+
+		if (popNumber->selected != j)
 			;// audioplay
-		selectedTile = j;
-	}
-	else if (stat == iKeyStateEnded)
-	{
+		popNumber->selected = j;
+		break;
 
+	case iKeyStateEnded:
+		break;
 	}
 
-#endif
+	return true;
 }
+
+
+
