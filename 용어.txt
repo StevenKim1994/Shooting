@@ -1,0 +1,5 @@
+bytes per line == stride
+
+OpenGL = 가로 세로 단위가 2의 승수
+
+GDI = 가로만 단위가 2의 승수

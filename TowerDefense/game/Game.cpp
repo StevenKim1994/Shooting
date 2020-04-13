@@ -7,10 +7,43 @@
 #include "Ending.h"
 void loadGame()
 {
+/*
+	int* a = (int*)malloc(sizeof(int) * 4);
+	int* b = (int*)malloc(sizeof(int) * 16);
+	
+	for (int i = 0; i < 16; i++)
+	{
+		b[i] = 15-i;
+		printf("%d ", b[i]);
+
+	}
+	printf("\n");
+
+	int p = 2, q = 1, w = 2, h = 2;
+
+	
+
+	drawRect(0.3f, 0.3f, 0.2f, 0.2f, 0);
+
+	for (int i = 0; i < h; i++)
+		for (int j = 0; j < w; j++)
+			a[w * j + i] = b[4 * (q + j) + p + i];//memcpy(&a[w*j+i], &b[4 *  (q+j) + p+i], sizeof(int)*2);
+	
+
+	for (int i = 0; i < 4; i++)
+		printf("%d ", a[i]);
+	
+
+	free(a);
+	free(b);
+
+	
+
+	*/
 #if 1
 	loadEnding();
 	gameState = gs_ending;
-#else
+#elif 0
 	loadMenu();
 	gameState = gs_menu;
 #endif
@@ -50,3 +83,4 @@ void keyGame(iKeyState stat, iPoint point)
 	case gs_ending: keyEnding(stat, point); break;
 	}
 }
+

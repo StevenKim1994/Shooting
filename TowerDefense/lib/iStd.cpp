@@ -214,6 +214,9 @@ Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...)
     uint8* rgba = bmp2rgba(bmp, width, height);
     delete bmp;
 
+	
+
+
     int potWidth = nextPot(width);
     int potHeight = nextPot(height);
 	
@@ -221,12 +224,47 @@ Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...)
 
     int w = width / wNum;
     int h = height / hNum;
-    int potW = nextPot(w);
-    int potH = nextPot(h);
+    int potW = nextPot(w); // OpenGL에서는 2의 승수로 저장되기 때문에 크기를 2의 승수로
+    int potH = nextPot(h); // 3일때 4로... 5일떄 8로...
+
+    Texture** texs = (Texture**)malloc(sizeof(Texture*) * num);
+#if 1
+    int* RGBA = (int*)rgba; // 방금 쪼갠거
+    int* buf = (int*)calloc(sizeof(int) , potW * potH); // 위에껄 2의 승수로 저장할 버퍼 크기를 4바이트로 써야하기때매 쉽게 int포인터로 함
+
+	for(int j = 0; j<hNum; j++)
+	{
+        for (int i = 0; i < wNum; i++)
+        {
+            //buf <= RGBA
+            // w * i , h * j 만큼
+
+            for (int n = 0; n < h; n++)
+            {
+                for (int m = 0; m < w; m++)
+                {
+
+                   // buf[(potW * n) + m] = RGBA[potWidth * (h * j + n) + w * i + m]; // potW를 해주는 이유는 2의 승수로 저장하는 특성떄문임.
+                                          //RGBA[potWidth * (h * j + n) + w * i + m]; // potWidth를 곱하는 이유는 세로로 봤을땐 한줄마다의 오프셋이 potwidth 이기 때문임.
+
+                    memcpy(&buf[potW * n], &RGBA[potWidth * (h * j + n) + w * i], sizeof(int) * w);
+                	
+                }
+				texs[wNum* j + i] = createImageWithRGBA((GLubyte*)buf, w, h);
+            }
+
+
+			 
+		}
+	}
+
+	
+#endif
+
+#if 0
 
     uint8* buf = (uint8*)malloc(sizeof(uint8) * potW * potH * 4);
 	
-    Texture** texs = (Texture**)malloc(sizeof(Texture*) * num);
 
     for(int j = 0; j<hNum; j++)
     {
@@ -236,11 +274,12 @@ Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...)
             for (int k = 0; k < h; k++)
                 memcpy(&buf[potW * 4 * k], &rgba[potWidth * 4 * (h * j + k) + w * 4 * i], sizeof(uint8) * w * 4);
 
-            //rgba => buf (이미지를 각각 쪼개서 버퍼에 저장함
+            //rgba => buf (이미지를 각각 쪼개서 버퍼에 저장함)
             texs[wNum* j +i] = createImageWithRGBA(buf, w, h);
         }
     }
-	
+
+#endif 
     free(buf);
 	
     return texs;
