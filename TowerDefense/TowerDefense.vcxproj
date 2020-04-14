@@ -157,6 +157,7 @@
     <ClInclude Include="game\Menu.h" />
     <ClInclude Include="game\Proc.h" />
     <ClInclude Include="game\ProcObject.h" />
+    <ClInclude Include="game\Test.h" />
     <ClInclude Include="lib\iArray.h" />
     <ClInclude Include="lib\iFPS.h" />
     <ClInclude Include="lib\iGraphics.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="game\Menu.cpp" />
     <ClCompile Include="game\Proc.cpp" />
     <ClCompile Include="game\ProcObject.cpp" />
+    <ClCompile Include="game\Test.cpp" />
     <ClCompile Include="lib\iArray.cpp" />
     <ClCompile Include="lib\iFPS.cpp" />
     <ClCompile Include="lib\iGraphics.cpp" />

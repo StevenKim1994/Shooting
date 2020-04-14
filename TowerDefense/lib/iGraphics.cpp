@@ -164,6 +164,16 @@ void iGraphics::freeIgImage(igImage* img)
 	delete img;
 }
 
+int iGraphics::getIgImageWidth(igImage* img)
+{
+    return img->GetWidth();
+}
+
+int iGraphics::getIgImageHeight(igImage* img)
+{
+    return img->GetHeight();
+}
+
 void iGraphics::drawImage(igImage* img, float x, float y, int anc)
 {
 	drawImage(img, x, y,

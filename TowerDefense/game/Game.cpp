@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include "Proc.h"
 #include "Ending.h"
+#include "Test.h"
 void loadGame()
 {
 /*
@@ -40,12 +41,15 @@ void loadGame()
 	
 
 	*/
-#if 1
+#if 0
 	loadEnding();
 	gameState = gs_ending;
 #elif 0
 	loadMenu();
 	gameState = gs_menu;
+#else
+	loadTest();
+	gameState = 100;
 #endif
 }
 
@@ -56,6 +60,7 @@ void freeGame()
 	case gs_menu:	freeMenu(); break;
 	case gs_proc:	freeProc(); break;
 	case gs_ending:	freeEnding(); break;
+	case 100:	freeTest(); break;
 	}
 }
 
@@ -66,6 +71,7 @@ void drawGame(float dt)
 	case gs_menu:	drawMenu(dt); break;
 	case gs_proc:	drawProc(dt); break;
 	case gs_ending: drawEnding(dt); break;
+	case 100:	drawTest(dt); break;
 	}
 
 	drawLoading(dt);
@@ -81,6 +87,7 @@ void keyGame(iKeyState stat, iPoint point)
 	case gs_menu:	keyMenu(stat, point); break;
 	case gs_proc:	keyProc(stat, point); break;
 	case gs_ending: keyEnding(stat, point); break;
+	case 100:	keyTest(stat, point); break;
 	}
 }
 

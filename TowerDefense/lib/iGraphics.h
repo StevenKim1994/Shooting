@@ -37,7 +37,11 @@ public:
 
 	static igImage* createIgImage(const char* szFormat, ...);
 	static void freeIgImage(igImage* img);
+	static int getIgImageWidth(igImage* img);
+	static int getIgImageHeight(igImage* img);
+	
 
+	
 	void drawImage(igImage* img, float x, float y, int anc);
 	void drawImage(igImage* img, float x, float y, float rx, float ry, int anc);
 	void drawImage(igImage* img, int x, int y,

@@ -86,20 +86,27 @@ void iImage::paint(float dt, iPoint off)
 			frame++;
 			if (frame == arrayTex->count)
 			{
-				if (repeatNum == 0)
+				if (_repeatNum == 0)
 					frame = 0;
+				
 				else
 				{
-					if (method)
-						method(this);
-					if (lastFrame)
-						frame = arrayTex->count - 1;
-					else
+					repeatNum++;
+					if (repeatNum < _repeatNum)
 						frame = 0;
-					animation = false;
+					else
+					{
+						if (method)
+							method(this);
+						if (lastFrame)
+							frame = arrayTex->count - 1;
+						else
+							frame = 0;
+						animation = false;
+					}
 				}
-				tex = (Texture*)arrayTex->objectAtIndex(frame);
 			}
+			tex = (Texture*)arrayTex->objectAtIndex(frame);
 		}
 	}
 
@@ -136,6 +143,7 @@ void iImage::startAnimation(IMAGE_METHOD m)
 	method = m;
 	aniDt = 0.0f;
 	frame = 0;
+	repeatNum = 0;
 }
 
 iRect iImage::touchRect(iPoint p)

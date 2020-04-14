@@ -39,7 +39,8 @@ public:
 	float aniDt, _aniDt;
 	int frame;
 	bool lastFrame;
-	int repeatNum;	// 0 : inf
+	int repeatNum = 0;	// 0 : inf
+	int _repeatNum = 0;
 	IMAGE_METHOD method;
 };
 

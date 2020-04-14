@@ -1,0 +1,34 @@
+	iPoint p = positionTest;
+	p.y = positionTest.y;
+	dtTest += dt;
+	
+
+	// 등속운동 
+	
+	float delta = dtTest-floor(dtTest);
+
+	if (delta < 0.25f)
+		p.x = 100 * delta / 0.25f;
+	else if (delta < 0.5f)
+		p.x = 100 * (1.0f - (delta - 0.25f) / 0.25f);
+	else if (delta < 0.75f)
+		p.x = -100 * (delta - 0.5f) /   0.25f;
+	else
+		p.x = -100 * (1.0f - (delta - 0.75f) / 0.25f);
+
+	p.x += positionTest.x;
+	drawImage(texTest, p.x, p.y + 150, VCENTER | HCENTER);
+
+
+
+
+// 함수 포인터
+
+	typedef float(*method)(float, float, float); // 이런 형식의 함수가 있어야함
+	method _m[3] = { linear, easeIn, easeOut }; // 위의 형식의 함수들을 넣을 수 있음.
+
+	method m = _m[0];
+
+
+왠만하면 
+//클래스일경우에만 new 아닐경우 malloc 하는게 구분하기 편함
