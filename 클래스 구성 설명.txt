@@ -1,0 +1,13 @@
+
+iStrTex : char* + texture* : 텍스처에다가 문자를 넣음. (이걸 쓰는 이유는 새로 그리지 않고 char의 값의 주소를 가지고 char의 내용을 조절할 수 있도록 하기 위함임)
+
+			width, potWidth 트릭				iGraphics는 iSize size로 원하는 사이즈 변경 가능 
+
+Texture* : 기본 이미지 : createImage(png경로...) 이미지 불러옴  /// iGraphics* g->getTexture(); (gdiplus이용해서 gdi로 그린거 받아올수있음) size만 가지고 있음.
+
+iImage* : Texture*의 집합 : Animation , Button , sprite의 모임이 될수있음 (Texture*들의 링크드 리스트로 구성되어있음) ,그리고 position을 가지고 있음.
+
+iPopup* : iImage*의 집합 : iImage의 position의 off값을 사용할 수 있음. select (iPopup*내의 버튼 선택)
+
+FBO : Texture*를 모아놈 g->getTexture() 처럼 사용할 수 있음... // 아직 안함
+
