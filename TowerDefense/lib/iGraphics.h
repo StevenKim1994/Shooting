@@ -54,11 +54,11 @@ public:
 	void drawLine(iPoint sp, iPoint ep);
 	void drawLine(float x0, float y0, float x1, float y1);
 
-	void drawRect(iRect rect, float radius);
-	void drawRect(float x, float y, float width, float height, float radius);
+	void drawRect(iRect rect, float radius=0);
+	void drawRect(float x, float y, float width, float height, float radius=0);
 
-	void fillRect(iRect rect, float radius);
-	void fillRect(float x, float y, float width, float height, float radius);
+	void fillRect(iRect rect, float radius=0);
+	void fillRect(float x, float y, float width, float height, float radius=0);
 
 	Texture* getTexture();
 
