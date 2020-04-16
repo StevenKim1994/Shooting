@@ -43,6 +43,19 @@ struct Texture {
     int retainCount;
 };
 
+enum TextureWrap {
+    CLAMP = 0, // GL_GLAMP_EDGE 제일 끝에 잇는 값을 사용
+    REPEAT, // GL_REPEAT 범위가 벗어나도 해당텍스처 반복
+
+}; //텍스처의 끝을 어떻게 마무리할것인가?에 대한 
+
+enum TextureFilter {
+    LINEAR = 0, // GL_LINEAR
+    NEAREST, // GL_NEAREST
+    MIPMAP, // GL_LINEAR_MIPMAP_LINEAR
+
+};
+
 #define TOP     1
 #define VCENTER 2
 #define BOTTOM  4

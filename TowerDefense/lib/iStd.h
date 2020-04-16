@@ -40,6 +40,29 @@ uint32 getKeyStat();
 bool getKeyStat(uint32 key);
 void resizeLib(int width, int height);
 
+class iFBO
+{
+public:
+    iFBO(int width, int height);
+    virtual ~iFBO();
+
+    void clear(float r, float g, float b, float a);
+    void bind();
+    void bind(Texture* tex);
+    void unbind();
+    Texture* getTexture();
+    uint32 bindingTexID();
+
+public:
+    GLuint fbo;
+    GLint prevFbo;
+    
+    GLuint depthBuffer;
+
+    Texture* tex; // colorBuffer
+};
+extern iFBO* fbo;
+
 uint8 float2uint8(float f);
 void setRGBA(float r, float g, float b, float a);
 void getRGBA(float& r, float& g, float& b, float& a);
@@ -53,6 +76,9 @@ void fillRect(float x, float y, float width, float height, float radius=0.0f);
 void fillRect(iRect rt, float radius=0.0f);
 
 uint8* bmp2rgba(Bitmap* bmp, int& width, int& height);
+
+Texture* createTexture(int width, int height, bool rgba32f = false); // 빈껍데기 Texture 제작
+void setTexture(TextureWrap wrap, TextureFilter filter);
 
 Texture* createImage(const char* szFormat, ...);
 Texture* createGreyImage(const char* szFormat, ...);

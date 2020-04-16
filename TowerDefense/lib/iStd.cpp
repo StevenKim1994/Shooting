@@ -30,8 +30,11 @@ bool getKeyStat(uint32 key) { return keyStat & key; }
 void loadLib(HDC hDC)
 {
     setupOpenGL(true,hDC);
+    startGLEW();
     initOpenGL();
     devSize = iSizeMake(DEVSIZE_WIDTH, DEVSIZE_HEIGHT);
+    fbo = new iFBO(devSize.width, devSize.height);
+
     reshapeOpenGL(monitorSizeW, monitorSizeH);
 	//monitorSizeW,H : App.cpp
 
@@ -63,6 +66,8 @@ void loadLib(HDC hDC)
 
 void freeLib()
 {
+    delete fbo;
+
     setupOpenGL(false, NULL);
 
     free(keys);
@@ -72,18 +77,55 @@ void freeLib()
 void drawLib(Method_Paint method)
 {
     DWORD d = GetTickCount();
-    float delta = (d - prevTickCount)/1000.f;
+    float delta = (d - prevTickCount) / 1000.f;
     prevTickCount = d;
-	
+
+
+    fbo->bind(); // ----------------------------
+
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 
     method(delta);
 
-    keyDown = 0;   
+    keyDown = 0;
 
+    fbo->unbind(); // --------------------------
 
+    setRGBA(1, 1, 1, 1);
+
+    Texture* tex = fbo->getTexture();
+#if 0 // 미니맵 처럼
+    //drawImage(tex, 0, 0, TOP | LEFT);
+    drawImage(tex, 0, 0, 0, 0, tex->width, tex->height, TOP | LEFT, 1.0f, 1.0f, 2, 0, REVERSE_HEIGHT);
+
+    drawImage(tex, devSize.width - 50, devSize.height - 50, 0, 0, tex->width, tex->height, BOTTOM | RIGHT, 0.2f, 0.2f, 2, 0, REVERSE_HEIGHT);
+#endif
+
+#if 1 // zoomin out 효과 처럼 ..
+    static float dt = 0.0f;
+    static int num = 1;
+    dt += delta;
+    if (dt > 0.2f)
+    {
+        dt -= 0.2f;
+        num++;
+        if (num > 16)
+            num = 1;
+    }
+    int i, n = num * num;
+    
+    float w = devSize.width / num;
+    float h = devSize.height / num;
+    float s = 1.0 / num;
+    
+
+    for (int i = 0; i < n; i++)
+    {
+        drawImage(tex, w*(i%num), h*(i/num), 0, 0, tex->width, tex->height, BOTTOM | RIGHT, 0.2f, 0.2f, s, s, REVERSE_HEIGHT);
+#endif 
+    }
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)
@@ -140,6 +182,99 @@ void resizeLib(int width, int height)
 {
     reshapeOpenGL(width, height);
  
+}
+
+iFBO::iFBO(int width, int height)
+{
+    //renderBuffer == depthBuffer
+    glGenRenderbuffers(1, &depthBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    //colorBuffer
+    tex = createTexture(width, height, false);
+    GLuint texID = tex->texID;
+
+    //frameBuffer
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    
+    //glDrawBuffer(GL_COLOR_ATTACHMENT0); //
+    GLenum fboBuffs[1] = {GL_COLOR_ATTACHMENT0}; // 여러개를 사용할 수 있으므로...
+    glDrawBuffers(1, fboBuffs);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texID, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+    //color buffer 붙이는부분
+    GLenum stat = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (stat != GL_FRAMEBUFFER_COMPLETE)
+        printf("%d, %d\n", stat, GL_FRAMEBUFFER_COMPLETE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+}
+
+iFBO* fbo = NULL;
+
+iFBO::~iFBO()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDeleteRenderbuffers(1, &depthBuffer);
+    freeImage(tex);
+   
+    glDeleteFramebuffers(1, &fbo);
+
+}
+
+void iFBO::clear(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void iFBO::bind()
+{
+    bind(tex);
+}
+
+iRect prevViewport;
+
+
+void iFBO::bind(Texture* tex)
+{
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevFbo);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    GLenum fboBuffs[1] = { GL_COLOR_ATTACHMENT0 }; // 여러개를 사용할 수 있으므로...
+    glDrawBuffers(1, fboBuffs);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->texID, 0);
+ 
+   // glMatrixMode(GL_PROJECTION);
+   // glLoadIdentity();
+   // glOrtho(0, devSize.width, devSize.height, 0, -1, 1);
+   // glMatrixMode(GL_MODELVIEW);
+    glViewport(0, 0, tex->width, tex->height);
+    
+ 
+}
+
+void iFBO::unbind()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
+  
+    
+    glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
+    
+}
+
+Texture* iFBO::getTexture()
+{
+    return tex;
+}
+
+uint32 iFBO::bindingTexID()
+{
+    return 0;
 }
 
 
@@ -459,6 +594,61 @@ uint8* bmp2rgba(Bitmap* bmp, int& width, int& height)
     bmp->UnlockBits(&bmpData);
 	
     return rgba;
+}
+
+Texture* createTexture(int width, int height, bool rgba32f)
+{
+    //FBO에서 쓸 버퍼만들기
+    //FBO에서는 2의 승수일 필요가 없다. 
+    GLuint texID;
+    glGenTextures(1, &texID);
+    glBindTexture(GL_TEXTURE_2D, texID);
+   
+    setTexture(CLAMP, LINEAR);
+
+
+    if(rgba32f == false)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,NULL);
+    else
+    { // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_HALF_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+    
+    }
+
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    //return nullptr;
+
+    Texture* tex = (Texture*)malloc(sizeof(Texture));
+    tex->texID = texID;
+    tex->width = width;
+    tex->height = height;
+    tex->potWidth = width;
+    tex->potHeight = height; // 앞에서 FBO에선 2의 승수일 필요가 없다고 했음
+    tex->retainCount = 1;
+    return tex;
+}
+
+void setTexture(TextureWrap wrap, TextureFilter filter)
+{
+    GLenum e = (wrap == CLAMP ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, e);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, e);
+
+    if (filter != MIPMAP)
+    {
+        e = (filter == NEAREST ? GL_NEAREST : GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, e);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, e);
+
+    }
+    else
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
 }
 
 Texture* createImage(const char* szFormat, ...)
@@ -1037,3 +1227,4 @@ float getDistanceLine1(iPoint p, iPoint sp, iPoint ep)
 
     return iPointLength(m - proj);
 }
+

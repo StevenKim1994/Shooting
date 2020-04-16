@@ -13,7 +13,7 @@ void setupOpenGL(bool setup, HDC hDC) // 이부분은 플랫폼마다 다름 현
 		pfd.nVersion = 1;
 		pfd.iPixelType = PFD_TYPE_RGBA;
 		pfd.cColorBits = 32;
-		pfd.cDepthBits = 32;
+		pfd.cDepthBits = 32; // 렌더버퍼라고도 함
 		pfd.iLayerType = PFD_MAIN_PLANE;
 		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 		
