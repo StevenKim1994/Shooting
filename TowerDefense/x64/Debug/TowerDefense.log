@@ -1,70 +1,72 @@
 ﻿  iStd.cpp
 C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(5,14): warning C4244: 'return': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(36,42): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(36,27): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(62,15): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(95,78): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(95,103): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(99,40): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(99,66): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(103,64): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(103,49): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(111,69): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(111,58): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(111,41): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(111,26): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(112,48): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(112,37): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(114,48): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(114,37): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(290,37): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(290,25): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(306,92): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(306,71): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(306,54): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(306,35): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(341,24): warning C4244: '초기화 중': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(468,19): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(477,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(478,17): warning C4244: '초기화 중': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(665,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(666,19): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(667,21): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(668,22): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(676,55): warning C4244: '인수': 'GLenum'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(677,55): warning C4244: '인수': 'GLenum'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(732,30): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(732,18): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(741,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(742,16): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(756,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(756,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(756,13): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(756,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(757,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(757,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(757,15): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(757,15): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(758,12): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(758,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(758,21): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(758,21): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(759,12): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(759,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(759,23): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(759,23): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(805,48): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(805,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(927,61): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(927,46): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(927,35): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(927,22): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1005,31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1039,31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1095,34): warning C4244: '인수': 'INT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1095,24): warning C4244: '인수': 'INT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1157,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1162,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(214,14): warning C4244: 'return': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(245,42): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(245,27): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(271,15): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(304,78): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(304,103): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(308,40): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(308,66): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(312,64): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(312,49): warning C4244: '인수': 'float'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(320,69): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(320,58): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(320,41): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(320,26): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(321,48): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(321,37): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(323,48): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(323,37): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(325,50): warning C4244: '인수': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(325,36): warning C4244: '인수': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(500,37): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(500,25): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(516,92): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(516,71): warning C4244: '인수': 'float'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(516,54): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(516,35): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(551,24): warning C4244: '초기화 중': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(678,19): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(687,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(688,17): warning C4244: '초기화 중': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(875,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(876,19): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(877,21): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(878,22): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(886,55): warning C4244: '인수': 'GLenum'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(887,55): warning C4244: '인수': 'GLenum'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(942,30): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(942,18): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(951,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(952,16): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(966,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(966,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(966,13): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(966,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(967,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(967,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(967,15): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(967,15): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(968,12): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(968,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(968,21): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(968,21): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(969,12): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(969,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(969,23): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(969,23): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1015,48): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1015,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1137,61): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1137,46): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1137,35): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1137,22): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1215,31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1249,31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1305,34): warning C4244: '인수': 'INT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1305,24): warning C4244: '인수': 'INT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1367,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iStd.cpp(1372,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   TowerDefense.vcxproj -> C:\Users\user\Documents\GitHub\Shooting\x64\Debug\TowerDefense.exe
