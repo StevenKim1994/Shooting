@@ -55,11 +55,16 @@ public:
 
 public:
     GLuint fbo;
-    GLint prevFbo;
     
     GLuint depthBuffer;
 
     Texture* tex; // colorBuffer
+
+    GLint prevFbo; // multiple fbo 고려
+    Texture** listTex;
+    int listNum;
+
+
 };
 extern iFBO* fbo;
 

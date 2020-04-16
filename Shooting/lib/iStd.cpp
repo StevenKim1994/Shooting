@@ -99,6 +99,8 @@ void drawLib(Method_Paint method)
         destinationRect,
         0, 0, width, height,
         UnitPixel);
+
+
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)

@@ -72,7 +72,7 @@ void freeLib()
 
     free(keys);
 }
-
+Texture* dd;
 
 void drawLib(Method_Paint method)
 {
@@ -83,7 +83,7 @@ void drawLib(Method_Paint method)
 
     fbo->bind(); // ----------------------------
 
-    glClearColor(0, 0, 0, 1);
+    glClearColor(1, 0, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -91,7 +91,27 @@ void drawLib(Method_Paint method)
 
     keyDown = 0;
 
+ 
+    GLubyte* screenshot = (GLubyte*)malloc(sizeof(GLubyte) * (nextPot(devSize.width) * nextPot(devSize.height)) * 4);
+    
+  
+    
+    glReadPixels(0, 0, nextPot(fbo->tex->width), nextPot(fbo->tex->height), GL_RGBA, GL_UNSIGNED_BYTE, screenshot);
+
+
+   //if(dd == NULL)
+    dd = createImageWithRGBA(screenshot, devSize.width, devSize.height);
+
+     
+
+
+
     fbo->unbind(); // --------------------------
+
+    drawImage(dd, devSize.width, devSize.height, 0, 0, dd->width, dd->height, BOTTOM | RIGHT, 0.5f, 0.2f, 2, 0, REVERSE_HEIGHT);
+    drawImage(dd, 150, 150, 0, 0, dd->width, dd->height, BOTTOM | RIGHT, 0.3f, 0.2f, 2, 0, REVERSE_HEIGHT);
+
+    drawImage(dd, 300, 300, 0, 0, dd->width, dd->height, BOTTOM | RIGHT, 0.2f, 0.4f, 2, 0, REVERSE_HEIGHT);
 
     setRGBA(1, 1, 1, 1);
 
@@ -103,7 +123,7 @@ void drawLib(Method_Paint method)
     drawImage(tex, devSize.width - 50, devSize.height - 50, 0, 0, tex->width, tex->height, BOTTOM | RIGHT, 0.2f, 0.2f, 2, 0, REVERSE_HEIGHT);
 #endif
 
-#if 1 // zoomin out 효과 처럼 ..
+#if 0 // zoomin out 효과 처럼 ..
     static float dt = 0.0f;
     static int num = 1;
     dt += delta;
@@ -124,8 +144,9 @@ void drawLib(Method_Paint method)
     for (int i = 0; i < n; i++)
     {
         drawImage(tex, w*(i%num), h*(i/num), 0, 0, tex->width, tex->height, BOTTOM | RIGHT, 0.2f, 0.2f, s, s, REVERSE_HEIGHT);
-#endif 
+
     }
+#endif
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)
@@ -186,6 +207,7 @@ void resizeLib(int width, int height)
 
 iFBO::iFBO(int width, int height)
 {
+
     //renderBuffer == depthBuffer
     glGenRenderbuffers(1, &depthBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
@@ -211,6 +233,13 @@ iFBO::iFBO(int width, int height)
         printf("%d, %d\n", stat, GL_FRAMEBUFFER_COMPLETE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    prevFbo = 0;
+
+
+    listTex = (Texture**)malloc(sizeof(Texture*) * 10);
+
+    listNum = 0;
+
 
 }
 
@@ -224,6 +253,7 @@ iFBO::~iFBO()
    
     glDeleteFramebuffers(1, &fbo);
 
+    free(listTex);
 }
 
 void iFBO::clear(float r, float g, float b, float a)
@@ -242,7 +272,11 @@ iRect prevViewport;
 
 void iFBO::bind(Texture* tex)
 {
+    if(listNum ==0)
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevFbo);
+
+    listTex[listNum] = tex;
+    listNum++;
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     GLenum fboBuffs[1] = { GL_COLOR_ATTACHMENT0 }; // 여러개를 사용할 수 있으므로...
@@ -260,11 +294,17 @@ void iFBO::bind(Texture* tex)
 
 void iFBO::unbind()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
-  
     
-    glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
-    
+    listNum--;
+    if (listNum) // 만약 listNum이 3이면 bind할것은 listNum-1번째 인덱스의 값임
+    {
+        bind(listTex[listNum - 1]);
+    }
+    else
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
+        glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
+    }
 }
 
 Texture* iFBO::getTexture()

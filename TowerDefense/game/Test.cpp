@@ -18,6 +18,9 @@ void drawTest(float dt)
 {
 	drawPopStart(dt);
 	drawPopCalc(dt);
+
+
+
 }
 
 void keyTest(iKeyState stat, iPoint point)

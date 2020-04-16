@@ -1,0 +1,10 @@
+FBO : frame buffer object
+
+static Texture* dd = NULL;
+
+GLubyte* screenshot = (GLubyte*)malloc(sizeof(GLubyte) * (nextPot(devSize.width) * nextPot(devSize.height)) * 4);       
+glReadPixels(0, 0, nextPot(fbo->tex->width), nextPot(fbo->tex->height), GL_RGBA, GL_UNSIGNED_BYTE, screenshot);
+dd = createImageWithRGBA(screenshot, devSize.width, devSize.height);
+
+// nextPot()함수를 사용해서 width , height 2의 승수로 만들어줘야함 OpenGL 이거에 대해서 매우 민감함
+
