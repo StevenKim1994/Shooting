@@ -6,47 +6,18 @@
 #include "Proc.h"
 #include "Ending.h"
 #include "Test.h"
+
 void loadGame()
 {
-/*
-	int* a = (int*)malloc(sizeof(int) * 4);
-	int* b = (int*)malloc(sizeof(int) * 16);
-	
-	for (int i = 0; i < 16; i++)
-	{
-		b[i] = 15-i;
-		printf("%d ", b[i]);
-
-	}
-	printf("\n");
-
-	int p = 2, q = 1, w = 2, h = 2;
-
-	
-
-	drawRect(0.3f, 0.3f, 0.2f, 0.2f, 0);
-
-	for (int i = 0; i < h; i++)
-		for (int j = 0; j < w; j++)
-			a[w * j + i] = b[4 * (q + j) + p + i];//memcpy(&a[w*j+i], &b[4 *  (q+j) + p+i], sizeof(int)*2);
-	
-
-	for (int i = 0; i < 4; i++)
-		printf("%d ", a[i]);
-	
-
-	free(a);
-	free(b);
-
-	
-
-	*/
 #if 0
-	loadEnding();
-	gameState = gs_ending;
+	loadIntro();
+	gameState = gs_intro;
 #elif 0
 	loadMenu();
 	gameState = gs_menu;
+#elif 0
+	loadEnding();
+	gameState = gs_ending;
 #else
 	loadTest();
 	gameState = 100;
@@ -60,7 +31,7 @@ void freeGame()
 	case gs_menu:	freeMenu(); break;
 	case gs_proc:	freeProc(); break;
 	case gs_ending:	freeEnding(); break;
-	case 100:	freeTest(); break;
+	case 100:		freeTest(); break;
 	}
 }
 
@@ -70,11 +41,14 @@ void drawGame(float dt)
 	case gs_intro:	drawIntro(dt); break;
 	case gs_menu:	drawMenu(dt); break;
 	case gs_proc:	drawProc(dt); break;
-	case gs_ending: drawEnding(dt); break;
-	case 100:	drawTest(dt); break;
+	case gs_ending:	drawEnding(dt); break;
+	case 100:		drawTest(dt); break;
 	}
 
 	drawLoading(dt);
+
+	//static Texture* tex = createImage("assets/ex.png");
+	//drawImageLikeCircle(tex, devSize.width / 2, devSize.height / 2, 1.0);
 }
 
 void keyGame(iKeyState stat, iPoint point)
@@ -86,8 +60,7 @@ void keyGame(iKeyState stat, iPoint point)
 	case gs_intro:	keyIntro(stat, point); break;
 	case gs_menu:	keyMenu(stat, point); break;
 	case gs_proc:	keyProc(stat, point); break;
-	case gs_ending: keyEnding(stat, point); break;
-	case 100:	keyTest(stat, point); break;
+	case gs_ending:	keyEnding(stat, point); break;
+	case 100:		keyTest(stat, point); break;
 	}
 }
-

@@ -4,6 +4,7 @@ void loadTest()
 {
 	createPopStart();
 	createPopCalc();
+	createPopExe();
 
 	showPopStart(true);
 }
@@ -12,20 +13,20 @@ void freeTest()
 {
 	freePopStart();
 	freePopCalc();
+	freePopExe();
 }
 
 void drawTest(float dt)
 {
 	drawPopStart(dt);
 	drawPopCalc(dt);
-
-
-
+	drawPopExe(dt);
 }
 
 void keyTest(iKeyState stat, iPoint point)
 {
-	if (keyPopCalc(stat, point) ||
+	if (keyPopExe(stat, point) ||
+		keyPopCalc(stat, point) ||
 		keyPopStart(stat, point))
 		return;
 }
@@ -132,7 +133,8 @@ bool keyPopStart(iKeyState stat, iPoint point)
 		else if (i == 0)
 		{
 			printf("start\n");
-			showPopCalc(true);
+			//showPopCalc(true);
+			showPopExe(true);
 		}
 		break;
 
@@ -173,12 +175,12 @@ void inputClear(int n);
 void inputClose(int n);
 
 Texture* createBtnTexture(int index, bool selected);
-void drawPopCalcAfter(iPopup* me, iPoint position, iPoint scale, float alpha);
+void drawPopCalcAfter(iPopup* me, float dt);
 
 void createPopCalc()
 {
 	int i, j;
-	iPopup* pop = new iPopup(iPopupStyleMove);
+	iPopup* pop = new iPopup(iPopupStyleZoom);
 
 	// 7, 8, 9  +    close
 	// 4, 5, 6  -
@@ -208,6 +210,9 @@ void createPopCalc()
 	}
 
 	pop->methodDrawAfter = drawPopCalcAfter;
+	pop->openPosition = iPointMake(0, 0);
+	pop->closePosition = iPointMake((devSize.width - 512) / 2,
+									(devSize.height - 512) / 2);
 	popCalc = pop;
 
 	stEdit = (iStrTex**)malloc(sizeof(iStrTex*) * 2);
@@ -252,13 +257,13 @@ void showPopCalc(bool show)
 	}
 }
 
-void drawPopCalcAfter(iPopup* me, iPoint position, iPoint scale, float alpha)
+void drawPopCalcAfter(iPopup* me, float dt)
 {
 	for (int i = 0; i < 17; i++)
 		imgCalcBtn[i]->setTexAtIndex(i == popCalc->selected);
 
 	for (int i = 0; i < 2; i++)
-		stEdit[i]->paint(position.x, position.y + 30 * i, TOP | LEFT);
+		stEdit[i]->paint(0, 30 * i, TOP | LEFT);
 }
 
 void drawPopCalc(float dt)
@@ -410,7 +415,7 @@ void inputResult(int n)
 	while (1)
 	{
 		bool exist = false;
-		for (int i = 0; i < index - 1; i++)
+		for (int i = 0; i < index-1; i++)
 		{
 			if (sym[i] == 2 || sym[i] == 3)// +, -, x, /
 			{
@@ -436,7 +441,7 @@ void inputResult(int n)
 	while (1)
 	{
 		bool exist = false;
-		for (int i = 0; i < index - 1; i++)
+		for (int i = 0; i < index-1; i++)
 		{
 			if (sym[i] == 0 || sym[i] == 1)// +, -, x, /
 			{
@@ -483,4 +488,124 @@ void inputClear(int n)
 void inputClose(int n)
 {
 	showPopCalc(false);
+}
+
+// ------------------------------------
+// popExe
+// ------------------------------------
+iPopup* popExe;
+iImage** imgExeBtn;
+
+void createPopExe()
+{
+	iPopup* pop = new iPopup(iPopupStyleZoom);
+
+	//
+	// bg
+	//
+	iGraphics* g = iGraphics::instance();
+	iSize size = iSizeMake(256, 256);
+	g->init(size);
+
+	setRGBA(1, 0, 1, 1);
+	g->fillRect(0, 0, size.width, size.height, 10);
+
+	Texture* tex = g->getTexture();
+	iImage* img = new iImage();
+	img->addObject(tex);
+	freeImage(tex);
+	pop->addObject(img);
+
+	//
+	// btn
+	//
+	imgExeBtn = (iImage**)malloc(sizeof(iImage*) * 1);
+
+	img = new iImage();
+	iSize sizeBtn = iSizeMake(100, 50);
+	for(int i=0; i<2; i++)
+	{
+		g->init(sizeBtn);
+
+		if (i == 0) setRGBA(0, 0, 0, 1);
+		else setRGBA(1, 1, 1, 1);
+		g->fillRect(0, 0, sizeBtn.width, sizeBtn.height, 10);
+
+		setRGBA(1, 1, 0, 1);
+		g->drawString(sizeBtn.width / 2, sizeBtn.height / 2, VCENTER | HCENTER, "X");
+
+		tex = g->getTexture();
+		img->addObject(tex);
+		freeImage(tex);
+	}
+	img->position = iPointMake(10, 10);
+	pop->addObject(img);
+	imgExeBtn[0] = img;
+
+	pop->openPosition = iPointMake(devSize.width/2, devSize.height/2);
+	pop->closePosition = iPointMake((devSize.width-size.width) / 2,
+									(devSize.height-size.height) / 2);
+	popExe = pop;
+}
+
+void freePopExe()
+{
+	delete popExe;
+	free(imgExeBtn);
+}
+
+void showPopExe(bool show)
+{
+	popExe->show(show);
+	if (show)
+	{
+		// to do
+	}
+}
+
+void drawPopExe(float dt)
+{
+	for (int i = 0; i < 1; i++)
+		imgExeBtn[i]->setTexAtIndex(i == popExe->selected);
+	popExe->paint(dt);
+}
+
+bool keyPopExe(iKeyState stat, iPoint point)
+{
+	if (popExe->bShow == false)
+		return false;
+	if (popExe->stat != iPopupStatProc)
+		return true;
+
+	int i, j = -1;
+
+	switch (stat) {
+
+	case iKeyStateBegan:
+		if (popExe->selected == 0)
+		{
+			// x
+			showPopExe(false);
+		}
+		break;
+
+	case iKeyStateMoved:
+		for (i = 0; i < 1; i++)
+		{
+			if (containPoint(point, imgExeBtn[i]->touchRect(popExe->closePosition)))
+			{
+				j = i;// popExe->selected = i;
+				break;
+			}
+		}
+		if (j != popExe->selected)
+			;// audioPlay
+		popExe->selected = j;
+		break;
+
+	case iKeyStateEnded:
+		break;
+	}
+
+	return true;
 }

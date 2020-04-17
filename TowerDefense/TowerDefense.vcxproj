@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib;C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game;C:\Users\user\Documents\GitHub\Shooting\TowerDefense\assets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\dev\Documents\GitHub\Shooting\TowerDefense\spine-c\include;C:\Users\dev\Documents\GitHub\Shooting\TowerDefense\lib;C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib;C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game;C:\Users\user\Documents\GitHub\Shooting\TowerDefense\assets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
@@ -168,6 +168,7 @@
     <ClInclude Include="lib\iRect.h" />
     <ClInclude Include="lib\iSize.h" />
     <ClInclude Include="lib\iSort.h" />
+    <ClInclude Include="lib\iSpine.h" />
     <ClInclude Include="lib\iStd.h" />
     <ClInclude Include="lib\iString.h" />
     <ClInclude Include="lib\iStrTex.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="lib\iRect.cpp" />
     <ClCompile Include="lib\iSize.cpp" />
     <ClCompile Include="lib\iSort.cpp" />
+    <ClCompile Include="lib\iSpine.cpp" />
     <ClCompile Include="lib\iStd.cpp" />
     <ClCompile Include="lib\iString.cpp" />
     <ClCompile Include="lib\iStrTex.cpp" />

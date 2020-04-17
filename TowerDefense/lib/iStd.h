@@ -2,7 +2,6 @@
 
 #include "iGraphics.h"
 #include "iOpenGL.h"
-
 #include "iType.h"
 
 #include "iImage.h"
@@ -12,8 +11,6 @@
 #include "iSort.h"
 
 #include "iFPS.h"
-
-
 
 #if _DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
@@ -28,7 +25,6 @@ extern iSize devSize;
 #define DEVSIZE_HEIGHT 480
 extern iRect viewport;
 
-void setLineWidth(float lineWidth);
 void loadLib(HDC hDC);
 void freeLib();
 typedef void (*Method_Paint)(float dt);
@@ -50,21 +46,20 @@ public:
     void bind();
     void bind(Texture* tex);
     void unbind();
+
     Texture* getTexture();
     uint32 bindingTexID();
 
 public:
     GLuint fbo;
-    
+
     GLuint depthBuffer;
 
-    Texture* tex; // colorBuffer
+    Texture* tex;// colorBuffer
 
-    GLint prevFbo; // multiple fbo 고려
+    GLint prevFbo;// multiple fbo 고려
     Texture** listTex;
     int listNum;
-
-
 };
 extern iFBO* fbo;
 
@@ -72,6 +67,7 @@ uint8 float2uint8(float f);
 void setRGBA(float r, float g, float b, float a);
 void getRGBA(float& r, float& g, float& b, float& a);
 
+void setLineWidth(float lineWidth);
 void drawLine(iPoint sp, iPoint ep);
 void drawLine(float x0, float y0, float x1, float y1);
 
@@ -80,17 +76,19 @@ void drawRect(iRect rt, float radius = 0.0f);
 void fillRect(float x, float y, float width, float height, float radius=0.0f);
 void fillRect(iRect rt, float radius=0.0f);
 
+void saveImageFromRGBA(const char* path, uint8* rgba, int width, int height);
 uint8* bmp2rgba(Bitmap* bmp, int& width, int& height);
 
-Texture* createTexture(int width, int height, bool rgba32f = false); // 빈껍데기 Texture 제작
+Texture* createTexture(int width, int height, bool rgba32f=false);
 void setTexture(TextureWrap wrap, TextureFilter filter);
 
 Texture* createImage(const char* szFormat, ...);
 Texture* createGreyImage(const char* szFormat, ...);
-Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...);
 Texture* createReflectImage(float rateY, const char* szFormat, ...);
+Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...);
 void freeImage(Texture* tex);
 
+void drawImageLikeCircle(Texture* tex, int x, int y, float rate);
 void drawImage(Texture* tex, int x, int y, int anc);
 void drawImage(Texture* tex, int x, int y,
     int ix, int iy, int iw, int ih, int anc,
@@ -130,7 +128,3 @@ bool containRect(iRect src, iRect dst);
 
 char* loadFile(const char* filePath, int& length);
 void saveFile(const char* filePath, char* buf, int bufLength);
-
-
-// 한점에서 선분까지의 거리
-float getDistanceLine1(iPoint p, iPoint sp, iPoint ep);

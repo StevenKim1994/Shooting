@@ -22,7 +22,6 @@ struct GD {
 
 GD* gd = NULL;
 
-
 wchar_t* utf8_to_utf16(const char* szFormat, ...)
 {
     va_list args;
@@ -171,7 +170,7 @@ int iGraphics::getIgImageWidth(igImage* img)
 
 int iGraphics::getIgImageHeight(igImage* img)
 {
-    return img->GetHeight();
+	return img->GetHeight();
 }
 
 void iGraphics::drawImage(igImage* img, float x, float y, int anc)
@@ -391,11 +390,11 @@ void iGraphics::fillRect(float x, float y, float width, float height, float radi
 }
 
 Texture* iGraphics::getTexture()
-{ 
+{
     int width, height;
     uint8* rgba = bmp2rgba(gd->bmp, width, height);
     Texture* tex = createImageWithRGBA(rgba, width, height);
     free(rgba);
-	
+
 	return tex;
 }

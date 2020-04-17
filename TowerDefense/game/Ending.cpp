@@ -150,7 +150,7 @@ iImage** imgNumber;
 iStrTex* stSelect;
 Texture* methodStSelect(const char* str);
 
-void drawPopNumber(iPopup* me, iPoint position, iPoint scale, float alpha);
+void drawPopNumber(iPopup* me, float dt);
 
 void openPopNumber(iPopup* me)
 {
@@ -204,7 +204,7 @@ void createPopNumber()
 	iGraphics* g = iGraphics::instance();
 	iSize size = iSizeMake(128, 64);
 	imgNumberBtn = (iImage**)malloc(sizeof(iImage*) * 1);
-	const char* strBtn[] = { "닫아라",};
+	const char* strBtn[] = { "닫아라", };
 	iPoint posBtn[] = { {500, 300}, };
 	for (i = 0; i < 1; i++)
 	{
@@ -297,13 +297,12 @@ void showPopNumber(bool show)
 }
 
 
-void drawPopNumber(iPopup* me, iPoint position, iPoint scale, float alpha)
+void drawPopNumber(iPopup* me, float dt)
 {
 	for (int i = 0; i < 1; i++)
-		imgNumberBtn[i]->setTexAtIndex(100 + i == popNumber->selected);
+		imgNumberBtn[i]->setTexAtIndex(100+i == popNumber->selected);
 
-	stSelect->paint(position.x + tileW * 3 + 20,
-		position.y, TOP | LEFT,
+	stSelect->paint(tileW * 3 + 20, 0, TOP | LEFT,
 		"%d", me->selected);
 }
 
@@ -344,7 +343,7 @@ bool keyPopNumber(iKeyState stat, iPoint point)
 		{
 			if (containPoint(point, imgNumberBtn[i]->touchRect(popNumber->closePosition)))
 			{
-				j = 100 + i;
+				j = 100+i;
 				break;
 			}
 		}

@@ -17,7 +17,8 @@ iImage::iImage()
 	aniDt = 0.0f;
 	_aniDt = 0.08f;
 	frame = 0;
-	repeatNum = 0;// inf
+	repeatNum = 0;
+	_repeatNum = 0;// inf
 	method = NULL;
 }
 
@@ -57,19 +58,22 @@ void iImage::setTexAtIndex(int index)
 
 void iImage::replaceAtIndex(int index, Texture* tex)
 {
-
 	Texture* t = (Texture*)arrayTex->objectAtIndex(index);
-
+#if 0
+	arrayTex->remove(index);
+	arrayTex->addObject(index, tex);
+	if (this->tex == t)
+		this->tex = tex;
+#else
+	//freeImage(t);
 	if (t->retainCount > 1)
 		t->retainCount--;
-
 	else
 		glDeleteTextures(1, &t->texID);
 	memcpy(t, tex, sizeof(Texture));
 	free(tex);
-
+#endif
 }
-
 
 void iImage::paint(float dt, iPoint off)
 {
@@ -86,15 +90,14 @@ void iImage::paint(float dt, iPoint off)
 			frame++;
 			if (frame == arrayTex->count)
 			{
-				if (_repeatNum == 0)
+				if( _repeatNum==0 )
 					frame = 0;
-				
 				else
 				{
 					repeatNum++;
 					if (repeatNum < _repeatNum)
 						frame = 0;
-					else
+					else// if (repeatNum == _repeatNum)
 					{
 						if (method)
 							method(this);
@@ -150,6 +153,6 @@ iRect iImage::touchRect(iPoint p)
 {
 	p += position;
 	iRect rt = iRectMake(p.x, p.y,
-		tex->width, tex->height);
+						tex->width, tex->height);
 	return rt;
 }

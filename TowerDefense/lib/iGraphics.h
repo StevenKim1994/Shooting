@@ -14,7 +14,6 @@ typedef Image igImage;
 ULONG_PTR startGdiplus();
 void endGdiplus(ULONG_PTR gpToken);
 
-
 wchar_t* utf8_to_utf16(const char* szFormat, ...);
 char* utf16_to_utf8(const wchar_t* str);
 
@@ -39,9 +38,7 @@ public:
 	static void freeIgImage(igImage* img);
 	static int getIgImageWidth(igImage* img);
 	static int getIgImageHeight(igImage* img);
-	
 
-	
 	void drawImage(igImage* img, float x, float y, int anc);
 	void drawImage(igImage* img, float x, float y, float rx, float ry, int anc);
 	void drawImage(igImage* img, int x, int y,
@@ -54,11 +51,11 @@ public:
 	void drawLine(iPoint sp, iPoint ep);
 	void drawLine(float x0, float y0, float x1, float y1);
 
-	void drawRect(iRect rect, float radius=0);
-	void drawRect(float x, float y, float width, float height, float radius=0);
+	void drawRect(iRect rect, float radius=0.0f);
+	void drawRect(float x, float y, float width, float height, float radius=0.0f);
 
-	void fillRect(iRect rect, float radius=0);
-	void fillRect(float x, float y, float width, float height, float radius=0);
+	void fillRect(iRect rect, float radius=0.0f);
+	void fillRect(float x, float y, float width, float height, float radius=0.0f);
 
 	Texture* getTexture();
 

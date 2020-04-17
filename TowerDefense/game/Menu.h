@@ -36,6 +36,33 @@ struct Solution {
 
 void checkSolution();
 
+// -------------------------------------
+// popMenu
+// -------------------------------------
+void createPopMenu();
+void freePopMenu();
+void showPopMenu(bool show);
+void drawPopMenu(float dt);
+bool keyPopMenu(iKeyState stat, iPoint point);
+
+// -------------------------------------
+// popHowto
+// -------------------------------------
+void createPopHowto();
+void freePopHowto();
+void showPopHowto(bool show);
+void drawPopHowto(float dt);
+bool keyPopHowto(iKeyState stat, iPoint point);
+
+// -------------------------------------
+// popResult
+// -------------------------------------
+void createPopResult();
+void freePopResult();
+void showPopResult(bool show);
+void drawPopResult(float dt);
+bool keyPopResult(iKeyState stat, iPoint point);
+
 #if 0
 OpenGL 4 Shading Language Cookbook, 3 / E
 http ://www.yes24.com/Product/Goods/66859151

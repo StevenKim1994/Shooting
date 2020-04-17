@@ -1,4 +1,5 @@
 #include "App.h"
+
 #include "Game.h"
 
 HINSTANCE hInstance;
@@ -39,19 +40,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
     hDC = GetDC(hWnd);
 
-	RECT rect;
-	GetClientRect(hWnd,&rect); // GetWindowsRect()는 스크롤바 타이틀바 까지 다받아온다.
-
+    RECT rect;
+    GetClientRect(hWnd, &rect);
     monitorSizeW = rect.right - rect.left;
     monitorSizeH = rect.bottom - rect.top;
-	
-    loadLib(hDC); // GDI;
+    loadLib(hDC);
     loadGame();
-	
+
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
-	runWnd = true;
+    runWnd = true;
     MSG msg;
     while (runWnd)
     {
@@ -62,7 +61,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         }
         else
         {
-
             drawLib(drawGame);
             SwapBuffers(hDC);
         }
@@ -98,19 +96,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_SIZE:
-        //client  rect load
-    	resizeLib(LOWORD(lParam), HIWORD(lParam));
-        reshapeOpenGL(LOWORD(lParam), HIWORD(lParam));
-    	break;
-    case WM_SIZING:
-    case WM_MOVE:
-		// window rect load        
-        RECT rect;
-        GetClientRect(hWnd, &rect);
-        resizeLib(rect.right - rect.left, rect.bottom - rect.top);
+        // client rect
+        resizeLib(LOWORD(lParam), HIWORD(lParam));
 
         drawLib(drawGame);
         SwapBuffers(hDC);
+        break;
+    case WM_SIZING:case WM_MOVE:
+    {
+        // window rect
+        RECT rect;
+        GetClientRect(hWnd, &rect);
+        resizeLib(rect.right-rect.left, rect.bottom-rect.top);
+
+        drawLib(drawGame);
+        SwapBuffers(hDC);
+    }
         break;
 
     case WM_LBUTTONDOWN:
@@ -123,6 +124,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         keyGame(iKeyStateEnded, convertCoordinate(LOWORD(lParam), HIWORD(lParam)));
         break;
 
+    //case WM_CHAR:
+    //    break;
     case WM_KEYDOWN:
         keyLib(iKeyStateBegan, wParam);
         break;
@@ -131,7 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_CLOSE:
-        if (IDYES == MessageBoxW(NULL, TEXT("종료하시겠습니까?"), TEXT("알림"), MB_YESNO))
+        if (IDYES == MessageBoxW(NULL, TEXT("너 못생겼어?"), TEXT("알림"), MB_YESNO))
         {
             runWnd = false;
         }

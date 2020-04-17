@@ -67,7 +67,14 @@ void loadMenu()
 	selectedTile[1] = -1;
 
 	solution = (Solution*)malloc(sizeof(Solution) * playerNum);
+
+	createPopMenu();
+	createPopHowto();
+	createPopResult();
+
+	showPopHowto(true);
 }
+
 void freeMenu()
 {		 
 	free(tile);
@@ -75,6 +82,10 @@ void freeMenu()
 
 	free(selectedTile);
 	free(solution);
+
+	freePopMenu();
+	freePopHowto();
+	freePopResult();
 }
 
 void drawMenu(float dt)
@@ -190,7 +201,12 @@ void drawMenu(float dt)
 					goPosition.y = ep.y;
 			}
 			if (goPosition == ep)
+			{
 				goIndex++;
+				if (goIndex == s->num - 1)
+					showPopResult(true);
+
+			}
 			drawLine(sp, goPosition);
 		}
 		else
@@ -204,10 +220,19 @@ void drawMenu(float dt)
 			}
 		}
 	}
+
+	drawPopMenu(dt);
+	drawPopHowto(dt);
+	drawPopResult(dt);
 }
 
 void keyMenu(iKeyState stat, iPoint point)
 {
+	if (keyPopResult(stat, point) ||
+		keyPopHowto(stat, point) ||
+		keyPopMenu(stat, point))
+		return;
+
 	if (menuStat == MenuStatReady)
 	{
 		if (stat == iKeyStateBegan)
@@ -351,3 +376,396 @@ void checkSolution()
 		}
 	}
 }
+
+// -------------------------------------
+// popMenu
+// -------------------------------------
+iImage** imgMenuTest;
+
+void createPopMenu()
+{
+}
+
+void freePopMenu()
+{
+}
+
+void showPopMenu(bool show)
+{
+}
+
+// 한점에서 직선까지의 거리
+float getDistanceLine0(iPoint p, iPoint sp, iPoint ep)
+{
+#if 1
+	iPoint n = ep - sp;
+	float len = sqrtf(n.x * n.x + n.y * n.y);
+	n /= len;
+
+	iPoint m = p - sp;
+	iPoint proj = n * (m.x * n.x + m.y * n.y);
+
+	return iPointLength(m - proj);
+#endif
+
+	// sp & ep : y = ax + b
+	float a = (ep.y - sp.y) / (ep.x - sp.x);
+	float b = sp.y - a * sp.x;// y - ax
+	// y = -ax + c
+	float c = p.y + a * p.x; // y + ax
+
+	// ax + b = - ax + c
+	// 2ax = c - b
+	// x = (c-b)/2a;
+	iPoint np;
+	np.x = (c - b) / (2 * a);
+	np.y = a * np.x + b;
+
+	return iPointLength(p - np);
+}
+// 한점에서 선분까지의 거리
+float getDistanceLine1(iPoint p, iPoint sp, iPoint ep)
+{
+	iPoint n = ep - sp;
+	float len = sqrtf(n.x * n.x + n.y * n.y);
+	n /= len;
+
+	iPoint m = p - sp;
+	iPoint proj = n * max(0.0f, min((m.x * n.x + m.y * n.y), len));
+	
+	return iPointLength(m - proj);
+}
+
+void drawPopMenu(float dt)
+{
+}
+
+bool keyPopMenu(iKeyState stat, iPoint point)
+{
+	return false;
+}
+
+// -------------------------------------
+// popHowto
+// -------------------------------------
+iPopup* popHowto;
+
+iImage* imgHowtoBg;
+iImage** imgHowtoBtn;
+int pageHowto, _pageHowto;
+
+Texture* getHowtoBg(int page)
+{
+	iGraphics* g = iGraphics::instance();
+
+	iSize size = iSizeMake(512, 256);
+	g->init(size);
+
+	setRGBA(31 / 255.f, 255 / 255.f, 255 / 255.f, 1.0);
+	g->fillRect(0, 0, size.width, size.height, 20);
+
+	const char* strExp[3] = {
+		"설명 1", "설명 2", "설명 3"
+	};
+	setStringSize(50);
+	setStringRGBA(0, 0, 1, 1);
+	setStringBorder(0);
+	g->drawString(size.width / 2, 10, TOP | HCENTER, strExp[page]);
+
+	setStringSize(20);
+	setStringRGBA(1, 1, 1, 1);
+	setStringBorder(0);
+	g->drawString(size.width / 2, 80, TOP | HCENTER, "%d / %d", 1 + page, _pageHowto);
+
+	return g->getTexture();
+}
+
+void createPopHowto()
+{
+	iImage* img;
+	Texture* tex;
+	int i, j;
+
+	iPopup* pop = new iPopup(iPopupStyleAlpha);
+
+	// 
+	// bg
+	//
+	_pageHowto = 3;
+	tex = getHowtoBg(pageHowto = 0);
+	img = new iImage();
+	img->addObject(tex);
+	freeImage(tex);
+	//img->position = iPointMake(0, 0);
+	pop->addObject(img);
+	imgHowtoBg = img;
+
+	//
+	// btn
+	//
+	const char* strBtn[3] = {
+		"prev", "close", "next"
+	};
+	imgHowtoBtn = (iImage**)malloc(sizeof(iImage*) * 3);
+
+	iGraphics* g = iGraphics::instance();
+
+	iSize sizeBtn = iSizeMake(128, 40);
+	setStringSize(20);
+	setStringRGBA(1, 1, 1, 1);
+	setStringBorder(0);
+	for (i = 0; i < 3; i++)
+	{
+		img = new iImage();
+		for (j = 0; j < 2; j++)
+		{
+			g->init(sizeBtn);
+			if (j == 0) setRGBA(255 / 255.f, 102 / 255.f, 255 / 255.f, 1.0);
+			else		setRGBA(128 / 128.f, 255 / 255.f, 0 / 255.f, 1.0);
+			g->fillRect(0, 0, sizeBtn.width, sizeBtn.height, 10);
+
+			g->drawString(sizeBtn.width / 2, sizeBtn.height / 2, VCENTER | HCENTER, strBtn[i]);
+
+			tex = g->getTexture();
+			img->addObject(tex);
+			freeImage(tex);
+		}
+		img->position = iPointMake(20+140*i, 200);
+		pop->addObject(img);
+		imgHowtoBtn[i] = img;
+	}
+
+	iPoint p = iPointMake((devSize.width - imgHowtoBg->tex->width) / 2,
+		(devSize.height - imgHowtoBg->tex->height) / 2);
+	pop->openPosition = p;
+	pop->closePosition = p;
+	popHowto = pop;
+}
+
+void freePopHowto()
+{
+	delete popHowto;
+	free(imgHowtoBtn);
+}
+
+void showPopHowto(bool show)
+{
+	popHowto->show(show);
+}
+
+void drawPopHowto(float dt)
+{
+	for (int i = 0; i < 3; i++)
+		imgHowtoBtn[i]->setTexAtIndex(i == popHowto->selected);
+	popHowto->paint(dt);
+}
+
+bool keyPopHowto(iKeyState stat, iPoint point)
+{
+	if (popHowto->bShow == false)
+		return false;
+	if (popHowto->stat != iPopupStatProc)
+		return true;
+
+	int i, j = -1;
+
+	switch (stat) {
+
+	case iKeyStateBegan:
+		switch (popHowto->selected) {
+		case 0:// prev
+			pageHowto--;
+			if (pageHowto < 0)
+				pageHowto = _pageHowto - 1;
+			imgHowtoBg->replaceAtIndex(0, getHowtoBg(pageHowto));
+			break;
+		case 1:// close
+			showPopHowto(false);
+			break;
+		case 2:// next
+			pageHowto++;
+			if (pageHowto == _pageHowto)
+				pageHowto = 0;
+			imgHowtoBg->replaceAtIndex(0, getHowtoBg(pageHowto));
+			break;
+		}
+		break;
+
+	case iKeyStateMoved:
+		for (i = 0; i < 3; i++)
+		{
+			if (containPoint(point, imgHowtoBtn[i]->touchRect(popHowto->closePosition)))
+			{
+				j = i;
+				break;
+			}
+		}
+		if (j != popHowto->selected)
+			;// audio play
+		popHowto->selected = j;
+		break;
+
+	case iKeyStateEnded:
+		break;
+	}
+
+	return true;
+}
+
+// -------------------------------------
+// popResult
+// -------------------------------------
+iPopup* popResult;
+iImage* imgResultBg;
+iImage** imgResultBtn;
+
+Texture* getResultBg(bool success)
+{
+	iGraphics* g = iGraphics::instance();
+
+	iSize size = iSizeMake(512, 256);
+	g->init(size);
+
+	setRGBA(31 / 255.f, 255 / 255.f, 255 / 255.f, 1.0);
+	g->fillRect(0, 0, size.width, size.height, 20);
+
+	const char* strResult[2] = {
+		"꽝", "당첨",
+	};
+	setStringSize(50);
+	setStringRGBA(0, 0, 1, 1);
+	setStringBorder(0);
+	g->drawString(size.width / 2, 10, TOP | HCENTER, strResult[success]);
+
+	return g->getTexture();
+}
+
+void createPopResult()
+{
+	iImage* img;
+	Texture* tex;
+	int i, j;
+
+	iPopup* pop = new iPopup(iPopupStyleAlpha);
+
+	// 
+	// bg
+	//
+	tex = getResultBg(false);
+	img = new iImage();
+	img->addObject(tex);
+	freeImage(tex);
+	//img->position = iPointMake(0, 0);
+	pop->addObject(img);
+	imgResultBg = img;
+
+	//
+	// btn
+	//
+	const char* strBtn[1] = {
+		"알았다",
+	};
+	imgResultBtn = (iImage**)malloc(sizeof(iImage*) * 1);
+
+	iGraphics* g = iGraphics::instance();
+
+	iSize sizeBtn = iSizeMake(128, 40);
+	setStringSize(20);
+	setStringRGBA(1, 1, 1, 1);
+	setStringBorder(0);
+	for (i = 0; i < 1; i++)
+	{
+		img = new iImage();
+		for (j = 0; j < 2; j++)
+		{
+			g->init(sizeBtn);
+			if (j == 0) setRGBA(255 / 255.f, 102 / 255.f, 255 / 255.f, 1.0);
+			else		setRGBA(128 / 128.f, 255 / 255.f, 0 / 255.f, 1.0);
+			g->fillRect(0, 0, sizeBtn.width, sizeBtn.height, 10);
+
+			g->drawString(sizeBtn.width / 2, sizeBtn.height / 2, VCENTER | HCENTER, strBtn[i]);
+
+			tex = g->getTexture();
+			img->addObject(tex);
+			freeImage(tex);
+		}
+		img->position = iPointMake(20 + 140 * i, 200);
+		pop->addObject(img);
+		imgResultBtn[i] = img;
+	}
+
+	iPoint p = iPointMake((devSize.width - imgHowtoBg->tex->width) / 2,
+		(devSize.height - imgHowtoBg->tex->height) / 2);
+	pop->openPosition = p;
+	pop->closePosition = p;
+	popResult = pop;
+}
+
+void freePopResult()
+{
+	delete popResult;
+	free(imgResultBtn);
+}
+
+void showPopResult(bool show)
+{
+	if (show)
+	{
+		Solution* s = &solution[goKind];
+	
+		Texture* tex = getResultBg(
+			result[
+				s->index[s->num - 1] % playerNum
+			]);
+		imgResultBg->replaceAtIndex(0, tex);
+	}
+
+	popResult->show(show);
+}
+
+void drawPopResult(float dt)
+{
+	for (int i = 0; i < 1; i++)
+		imgResultBtn[i]->setTexAtIndex(i == popResult->selected);
+	popResult->paint(dt);
+}
+
+bool keyPopResult(iKeyState stat, iPoint point)
+{
+	if (popResult->bShow == false)
+		return false;
+	if (popResult->stat != iPopupStatProc)
+		return true;
+
+	int i, j = -1;
+
+	switch (stat) {
+
+	case iKeyStateBegan:
+		if (popResult->selected==0) {
+			showPopResult(false);
+		}
+		break;
+
+	case iKeyStateMoved:
+		for (i = 0; i < 1; i++)
+		{
+			if (containPoint(point, imgResultBtn[i]->touchRect(popResult->closePosition)))
+			{
+				j = i;
+				break;
+			}
+		}
+		if (j != popResult->selected)
+			;// audio play
+		popResult->selected = j;
+		break;
+
+	case iKeyStateEnded:
+		break;
+	}
+
+	return true;
+}
+
+
