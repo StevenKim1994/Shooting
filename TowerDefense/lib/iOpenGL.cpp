@@ -203,6 +203,9 @@ Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height)
 	tex->potWidth = potWidth;
 	tex->potHeight = potHeight;
 	tex->retainCount = 1;
+#ifdef _DEBUG
+	texNum++;
+#endif
 	return tex;
 }
 

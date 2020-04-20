@@ -1,0 +1,55 @@
+﻿  App.cpp
+C:\workspace\BGA\Shooting\game\App.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\BGA\Shooting\game\App.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\BGA\Shooting\resource.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\BGA\Shooting\game\App.cpp(117,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\game\App.cpp(118,13): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Game.cpp
+  Intro.cpp
+  Loading.cpp
+  Menu.cpp
+C:\workspace\BGA\Shooting\game\Menu.cpp(33,19): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Proc.cpp
+  iPoint.cpp
+  iRect.cpp
+  iSize.cpp
+  iStd.cpp
+C:\workspace\BGA\Shooting\lib\iStd.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(5,14): warning C4244: 'return': 'float'에서 'uint8'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(27,47): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(27,32): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(73,43): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(73,22): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(72,60): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(72,41): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(140,55): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(146,54): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(152,43): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(152,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(254,51): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(254,37): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,10): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,13): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,19): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,19): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,27): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,27): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,32): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,32): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,36): warning C4838: 'int'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(263,36): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(279,48): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(279,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(293,21): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(293,17): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(293,13): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(293,9): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(323,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\BGA\Shooting\lib\iStd.cpp(328,15): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  Previous IPDB not found, fall back to full compilation.
+  All 101 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  Shooting.vcxproj -> C:\workspace\BGA\Release\Shooting.exe

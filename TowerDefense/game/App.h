@@ -25,5 +25,15 @@
 	_CRT_SECURE_NO_WARNINGS : strcpy_s _s 함수 못 쓰게 하는거 막음
 	_USE_MATH_DEFINES : M_PI
 	GDIPVER=0x0110 : gdi+상위버전 사용
+
+	Debugging
+	1. logo (콘솔창, 파일, 서버)
+	2. ide (제공)
+	3. 과부하
+
+	f5 : 디버그 > 디버깅 시작
+	f9 : 디버그 > 중단점 설정/해제 break point
+	f10 : 디버그 > 프로시저 단위 실행 step over
+	f11 : 디버그 > 한 단계씩 코드 실행 step into
 */
 

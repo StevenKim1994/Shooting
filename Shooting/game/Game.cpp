@@ -7,7 +7,7 @@
 
 void loadGame()
 {
-#if 1
+#if 0
 	loadIntro();
 	gameState = gs_intro;
 #else

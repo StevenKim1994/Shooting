@@ -10,7 +10,9 @@ enum iPopupStyle {
 	iPopupStyleNone = 0,
 	iPopupStyleAlpha,
 	iPopupStyleMove,
+
 	iPopupStyleZoom,
+	iPopupStyleTong,
 };
 
 enum iPopupStat {
@@ -42,7 +44,8 @@ public:
 
 	iPoint openPosition, closePosition;
 	IPOPUP_OPEN_METHOD methodOpen, methodClose;
-	IPOPUP_DRAW_METHOD  methodDrawBefore, methodDrawAfter;
+
+	IPOPUP_DRAW_METHOD methodDrawBefore, methodDrawAfter;
 
 	int selected;
 };

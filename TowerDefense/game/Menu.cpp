@@ -2,6 +2,7 @@
 
 #include "Loading.h"
 #include "Proc.h"
+#include "Test.h"
 
 MenuStat menuStat;
 
@@ -73,6 +74,8 @@ void loadMenu()
 	createPopResult();
 
 	showPopHowto(true);
+
+
 }
 
 void freeMenu()
@@ -224,6 +227,36 @@ void drawMenu(float dt)
 	drawPopMenu(dt);
 	drawPopHowto(dt);
 	drawPopResult(dt);
+
+	{
+		float a[4][4];
+		float b[16];
+		memcpy(b, a, sizeof(float) * 16);
+
+		float* c = (float*)a;
+	}
+
+	{
+		int** a = (int**)malloc(sizeof(int*)*100);
+		for (int i = 0; i < 100; i++)
+			a[i] = (int*)malloc(sizeof(int) * 200);
+		int* c = (int*)a;
+
+		int* b = (int*)malloc(sizeof(int)*20000);
+//		memcpy(b, a, sizeof(int) * 20000);
+		memcpy(b, c, sizeof(int) * 20000);
+
+	}
+
+#if 0
+	static float delta = 0.0f;
+	delta += dt;
+	if (delta > 1.0)
+	{
+		delta = 0.0f;
+		setLoading(100, freeMenu, loadTest);
+	}
+#endif
 }
 
 void keyMenu(iKeyState stat, iPoint point)

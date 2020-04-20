@@ -7,9 +7,6 @@
 //
 // TEXTINCLUDE 리소스에서 생성되었습니다.
 //
-#ifndef APSTUDIO_INVOKED
-
-#endif
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS

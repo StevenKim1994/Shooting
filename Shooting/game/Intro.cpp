@@ -10,11 +10,6 @@ void loadIntro()
 {
 	printf("loadIntro()\n");
 
-	//printf("%f\n", getDistanceLine1(iPointMake(2.5, 3.5), iPointMake(0, 0), iPointMake(1.5, 1.5)));
-
-	
-
-	
 	const char* strMenu[3] = {
 		"게임시작",
 		"옵션",
@@ -33,7 +28,7 @@ void loadIntro()
 	for (int i = 0; i < 3; i++)
 	{
 		iImage* img = new iImage();
-		for (int j = 0; j < 2; j++)
+		for(int j=0; j<2; j++)
 		{
 			g->init(size);
 			//if (j == 0) setRGBA(0, 0, 1, 1);
@@ -97,7 +92,7 @@ void keyIntro(iKeyState stat, iPoint point)
 
 	case iKeyStateBegan:
 		//setLoading(gs_menu, freeIntro, loadMenu);
-		if (selectedIntro == 1)
+		if (selectedIntro == 1 )
 		{
 			showPopOption(true);
 		}
@@ -182,10 +177,10 @@ void createPopOption()
 		imgOptionBtn[i] = img;
 	}
 
-	popOption->openPosition = iPointMake((devSize.width - size.width) / 2,
-		-size.height);
-	popOption->closePosition = iPointMake((devSize.width - size.width) / 2,
-		(devSize.height - size.height) / 2);
+	popOption->openPosition = iPointMake(	(devSize.width-size.width)/2,
+											-size.height);
+	popOption->closePosition = iPointMake(	(devSize.width - size.width) / 2,
+											(devSize.height - size.height) / 2);
 	popOption->methodOpen = NULL;
 	popOption->methodClose = NULL;
 }

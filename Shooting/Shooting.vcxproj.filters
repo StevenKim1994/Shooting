@@ -147,9 +147,6 @@
     <ClCompile Include="lib\iPopup.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="lib\iType.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="game\glew.c">
       <Filter>소스 파일</Filter>
     </ClCompile>

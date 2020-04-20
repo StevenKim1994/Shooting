@@ -2,7 +2,6 @@
 
 #include "iGraphics.h"
 #include "iOpenGL.h"
-
 #include "iType.h"
 
 #include "iImage.h"
@@ -11,8 +10,6 @@
 #include "iSort.h"
 
 #include "iFPS.h"
-
-
 
 #if _DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
@@ -93,7 +90,3 @@ bool containRect(iRect src, iRect dst);
 
 char* loadFile(const char* filePath, int& length);
 void saveFile(const char* filePath, char* buf, int bufLength);
-
-
-// 한점에서 선분까지의 거리
-float getDistanceLine1(iPoint p, iPoint sp, iPoint ep);

@@ -99,8 +99,6 @@ void drawLib(Method_Paint method)
         destinationRect,
         0, 0, width, height,
         UnitPixel);
-
-
 }
 
 static void keyLib(uint32& key, iKeyState stat, int c)
@@ -268,40 +266,31 @@ uint8* bmp2rgba(Bitmap* bmp, int& width, int& height)
 {
     width = bmp->GetWidth();
     height = bmp->GetHeight();
+    int potWidth = nextPOT(width);
+    int potHeight = nextPOT(height);
 
-    int potWidht = nextPot(width);
-    int potHeight = nextPot(height);
-
-    Rect rt(0, 0, width, height);
     BitmapData bmpData;
-	bmp->LockBits(&rt, ImageLockModeRead, PixelFormat32bppARGB, &bmpData);
+    Rect rt(0, 0, width, height);
+    bmp->LockBits(&rt, ImageLockModeRead, PixelFormat32bppARGB, &bmpData);
+
     int stride = bmpData.Stride / 4;
-	uint8* argb= (uint8*)bmpData.Scan0;
-    uint8* rgba = (uint8*)calloc(sizeof(uint8) , potWidht * potHeight * 4);
-
-    for(int j = 0; j < height; j++)
+    uint8* argb = (uint8*)bmpData.Scan0;
+    uint8* rgba = (uint8*)calloc(sizeof(uint8), potWidth * potHeight * 4);
+    for (int j = 0; j < height; j++)
     {
-	    for(int i =0 ; i <width; i++)
-	    {
-            uint8* dst = &rgba[potWidht * 4 * j + 4 * i]; // OpenGL에서는 2의 승수
-            uint8* src = &argb[stride * 4 * j + 4 * i]; // Gdi+에서는 4단위로
-
-            //dst[0] = src[1];
-            //dst[1] = src[2];
-            //dst[2] = src[3];
-            //dst[3] = src[0];
-            //memcpy(dst, &src[1], 3); 
-			//dst[3] = src[0];
-
-            dst[0] = src[2]; // bgra 임.. 버그인듯
+        for (int i = 0; i < width; i++)
+        {
+            uint8* dst = &rgba[potWidth * 4 * j + 4 * i];
+            uint8* src = &argb[stride * 4 * j + 4 * i];
+            dst[0] = src[2];
             dst[1] = src[1];
             dst[2] = src[0];
             dst[3] = src[3];
-	    }   
+        }
     }
-	
+
     bmp->UnlockBits(&bmpData);
-	
+
     return rgba;
 }
 
@@ -810,17 +799,3 @@ void saveFile(const char* filePath, char* buf, int bufLength)
     fclose(pf);
 }
 
-
-
-// 한점에서 선분까지의 거리
-float getDistanceLine1(iPoint p, iPoint sp, iPoint ep)
-{
-    iPoint n = ep - sp;
-    float len = sqrtf(n.x * n.x + n.y * n.y);
-    n /= len;
-
-    iPoint m = p - sp;
-    iPoint proj = n * max(0.0f, min((m.x * n.x + m.y * n.y), len));
-
-    return iPointLength(m - proj);
-}

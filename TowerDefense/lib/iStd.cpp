@@ -745,7 +745,14 @@ void freeImage(Texture* tex)
     }
     glDeleteTextures(1, &tex->texID);
     free(tex);
+#ifdef _DEBUG
+    texNum--;
+#endif
 }
+
+#ifdef _DEBUG
+int texNum = 0;
+#endif
 
 void drawImageLikeCircle(Texture* tex, int x, int y, float rate)
 {
@@ -940,8 +947,7 @@ void setClip(int x, int y, int width, int height)
     else
     {
         glEnable(GL_SCISSOR_TEST);
-        // monitor 영역 #bug
-        glScissor(x, y, width, height);
+        glScissor(x, y, width, devSize.height - height); // 반전되어있기 때문임.
     }
 }
 
