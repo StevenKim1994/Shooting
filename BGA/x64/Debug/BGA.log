@@ -1,6 +1,0 @@
-﻿  pch.cpp
-  BGA.cpp
-C:\Users\user\Documents\GitHub\Shooting\BGA\BGA.cpp(81,13): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\BGA\BGA.cpp(82,19): warning C4244: '+=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\BGA\BGA.cpp(83,20): warning C4244: '+=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  BGA.vcxproj -> C:\Users\user\Documents\GitHub\Shooting\x64\Debug\BGA.exe
