@@ -256,3 +256,10 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+
+#myCustom
+*VC.db
+*VC.opendb
+*VC.db-shm
+*VC.db-wal
