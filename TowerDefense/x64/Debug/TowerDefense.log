@@ -1,34 +1,6 @@
-﻿  Menu.cpp
+﻿  Game.cpp
 C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(33,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(34,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(40,14): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(39,29): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(100,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(101,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(111,6): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(110,13): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(116,32): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(125,41): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(125,26): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(99,15): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(566,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(637,4): warning C4390: ';': 제어된 빈 문이 있습니다. 이 문이 필요합니까?
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(725,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Menu.cpp(793,4): warning C4390: ';': 제어된 빈 문이 있습니다. 이 문이 필요합니까?
-  Test.cpp
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(15,17): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\lib\iFPS.h(17,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(34,28): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(34,14): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(33,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(33,33): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(38,34): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(38,17): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(37,35): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Documents\GitHub\Shooting\TowerDefense\game\Test.cpp(146,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
      C:\Users\user\Documents\GitHub\Shooting\x64\Debug\TowerDefense.lib 라이브러리 및 C:\Users\user\Documents\GitHub\Shooting\x64\Debug\TowerDefense.exp 개체를 생성하고 있습니다.
 LINK : warning LNK4217: 'glewInit'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"bool __cdecl startGLEW(void)" (?startGLEW@@YA_NXZ)'이(가) 가져왔습니다.
 LINK : warning LNK4217: 'glewGetErrorString'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl checkOpenGL(void)" (?checkOpenGL@@YAXXZ)'이(가) 가져왔습니다.

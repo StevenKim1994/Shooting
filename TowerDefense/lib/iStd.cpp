@@ -947,7 +947,7 @@ void setClip(int x, int y, int width, int height)
     else
     {
         glEnable(GL_SCISSOR_TEST);
-        glScissor(x, y, width, devSize.height - height); // 반전되어있기 때문임.
+        glScissor(x, devSize.height - y - height, width, height);// 반전되어있기 때문임.
     }
 }
 

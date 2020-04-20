@@ -38,6 +38,7 @@ void freeGame()
 void drawGame(float dt)
 {
 	
+	//setClip(0, 50, devSize.width / 2, 300);
 	switch (gameState) {
 	case gs_intro:	drawIntro(dt); break;
 	case gs_menu:	drawMenu(dt); break;
@@ -46,7 +47,9 @@ void drawGame(float dt)
 	case 100:		drawTest(dt); break;
 	}
 
+	//setClip(0, 0, 0, 0);
 	drawLoading(dt);
+
 
 	//static Texture* tex = createImage("assets/ex.png");
 	//drawImageLikeCircle(tex, devSize.width / 2, devSize.height / 2, 1.0);
