@@ -58,6 +58,13 @@ iPoint& iPoint::operator *= (const float f)
 	return *this;
 }
 
+iPoint& iPoint::operator*=(const iPoint& p)
+{
+	x *= p.x;
+	y *= p.y;
+	return *this;
+}
+
 iPoint& iPoint::operator /= (const iPoint& p)
 {
 	x /= p.x;

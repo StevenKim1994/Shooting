@@ -58,10 +58,18 @@ iSize iSize::operator*(const float f)
 	return r;
 }
 
-iSize iSize::operator*=(const float f)
+iSize& iSize::operator*=(const float f)
 {
 	width *= f;
 	height *= f;
+
+	return *this;
+}
+
+iSize& iSize::operator*=(const iSize& s)
+{
+	width *= s.width;
+	height *= s.height;
 
 	return *this;
 }

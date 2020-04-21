@@ -9,4 +9,5 @@ struct iRect
 	iSize size;
 };
 
+
 iRect iRectMake(float x, float y, float width, float height);

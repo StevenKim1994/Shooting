@@ -12,6 +12,7 @@
 #include "iPoint.h"
 #include "iSize.h"
 #include "iRect.h"
+#include "iColor.h"
 
 #include "iArray.h"
 #include "iString.h"
