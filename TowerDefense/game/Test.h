@@ -48,11 +48,11 @@ bool keyPopSlot(iKeyState stat, iPoint point);
 
 
 // -----------------------------------
-// popOption
+// popSettings
 // -----------------------------------
 
-void createPopOption();
-void freePopOption();
-void showPopOption(bool show);
-void drawPopOption(float dt);
-bool keyPopOption(iKeyState stat, iPoint point);
+void createPopSettings();
+void freePopSettings();
+void showPopSettings(bool show);
+void drawPopSettings(float dt);
+bool keyPopSettings(iKeyState stat, iPoint point);
