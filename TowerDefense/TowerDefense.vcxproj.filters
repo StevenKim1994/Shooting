@@ -213,6 +213,9 @@
     <ClInclude Include="lib\iSpine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="lib\iColor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -415,6 +418,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="lib\iSpine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\iColor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

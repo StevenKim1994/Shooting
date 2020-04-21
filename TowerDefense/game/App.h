@@ -35,5 +35,24 @@
 	f9 : 디버그 > 중단점 설정/해제 break point
 	f10 : 디버그 > 프로시저 단위 실행 step over
 	f11 : 디버그 > 한 단계씩 코드 실행 step into
+
+	imporve performance
+	1. call by value or call by reference
+	2. loop
+
+	int n = 10000;
+
+	for(int i =0, j = n-1; i < j; i++) // n-1 이 매번 반복되지 않는다.
+	{
+		TODO...
+	}
+
+	3. new malloc ( class or struct )
+	4. image - frequency / size 
+	5. storage - 숫자 / 지역변수 (중복 연산할수 있는 함수 내에 함수 인자를 한번만 연산해놓기...) , 또한 전역변수를 지역변수보다 접근속도가 차이가 난다... 참조하는거 미리 바로가기 변수(지역변수) 만들기...
+	6. file io - struct padding
+	7. sound - 60/1초 차이로 재생되는 경우 없애기
+
+	
 */
 

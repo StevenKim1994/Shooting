@@ -10,6 +10,7 @@ Texture* texTable;
 iRect rtTable;
 iPoint offTable;
 
+
 void loadTest()
 {
 	texBg = createImage("assets/menu/menuBg.jpg");
@@ -36,6 +37,7 @@ void freeTest()
 
 void drawTest(float dt)
 {
+
 	// texBg : 1400 x 933
 	float r0 = devSize.width / texBg->width;
 	float r1 = devSize.height / texBg->height;
