@@ -18,6 +18,7 @@ void loadTest()
 	createPopPrss();
 	createPopStart();
 	createPopSlot();
+	createPopSettings();
 
 	showPopPress(true);
 
@@ -34,6 +35,7 @@ void freeTest()
 	freePopPress();
 	freePopStart();
 	freePopSlot();
+	freePopSettings();
 
 	freeImage(texTable);
 }
@@ -56,6 +58,7 @@ void drawTest(float dt)
 	drawPopPress(dt);
 	drawPopStart(dt);
 	drawPopSlot(dt);
+	drawPopSettings(dt);
 
 #if 0
 	setClip(rtTable.origin.x, rtTable.origin.y,
@@ -118,6 +121,9 @@ void keyTest(iKeyState stat, iPoint point)
 	}
 	return;
 #endif
+	if (keyPopSettings(stat, point))
+		return;
+
 	if (keyPopSlot(stat, point))
 		return;
 
@@ -311,8 +317,12 @@ void createPopSlot()
 	// bg - add
 	iImage* imgBg = new iImage();
 	iGraphics* g = iGraphics::instance();
+
+
+
+	//////CreateTexture;
 	{
-		//////CreateTexture;
+
 		iSize size = iSizeMake(256, 256);
 		g->init(size);
 
@@ -323,7 +333,7 @@ void createPopSlot()
 		imgBg->addObject(tex);
 		freeImage(tex);
 
-	}
+	}//////CreateTexture;
 
 
 
@@ -473,4 +483,168 @@ bool keyPopSlot(iKeyState stat, iPoint point)
 
 	return true;
 }
+// -----------------------------------
+// popSettings
+// -----------------------------------
+
+iPopup* popSettings;
+iImage** imgSettingsBtn;
+
+void drawPopSettingsBefore(iPopup* me, float dt)
+{
+	for (int i = 0; i < 4; i++)
+		imgSettingsBtn[i]->setTexAtIndex(i == popSettings->selected);
+}
+
+
+void createPopSettings()
+{
+	//popup
+	iPopup* pop = new iPopup(iPopupStyleMove);
+	popSettings = pop;
+
+
+
+	//bg (bgm line / sfx line)
+	iImage* imgBg = new iImage();
+	iGraphics* g = iGraphics::instance();
+	////////////Texture
+	{
+		iSize size = iSizeMake(256, 256);
+		g->init(size);
+
+
+		setRGBA(0, 0, 1, 0.9f);
+		g->fillRect(0, 0, size.width, size.height, 10);
+		setStringSize(30);
+		setStringRGBA(1, 1, 1, 1);
+		setStringBorder(0);
+		g->drawString(20, 60+70*0, VCENTER | LEFT, "BGM");
+		setRGBA(1, 1, 1, 1);
+		g->fillRect(100, 60+70*0 -1, 140, 2);
+		g->drawString(20, 60+70*1, VCENTER | LEFT, "SFX");
+		g->fillRect(100, 60 + 70 * 1 - 1, 140, 2);
+
+
+
+		Texture* tex = g->getTexture();
+		imgBg->addObject(tex);
+		freeImage(tex);
+	}
+	////////////Texture
+
+
+	pop->addObject(imgBg);
+
+
+
+
+	//btn (bgm thumb / sfx thumb / credits / x )
+	iImage* imgThumb = new iImage(); 
+	for (int i = 0; i < 2; i++) // thumb create
+	{
+
+	}
+
+	iImage* imgCredits = new iImage(); // credits create
+	for (int i = 0; i < 2; i++)
+	{
+
+	}
+
+
+	
+
+	imgSettingsBtn = (iImage**)malloc(sizeof(iImage*) * 4);
+
+	for (int i = 0; i < 4; i++)
+	{
+		iImage* imgBtn;
+		if (i == 0)
+			imgBtn = imgThumb; // thumb copy
+		else if (i == 1)
+			imgBtn = imgSettingsBtn[0]->copy();//thumb copy
+		else if (i == 2)
+			imgBtn = imgCredits; //credits copy
+		else // if (i ==3)
+			imgBtn = imgSlotBtn[2]->copy(); // X
+
+		pop->addObject(imgBtn);
+		imgSettingsBtn[i] = imgBtn;
+	}
+
+
+
+
+	//pop (openPosition, closePosition) Bottom - up!!! 
+	pop->openPosition = iPointMake((devSize.width - imgBg->tex->width) / 2, devSize.height); 
+	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2, (devSize.height - imgBg->tex->height) / 2);
+
+	pop->methodDrawBefore = drawPopSettingsBefore;
+}
+
+void freePopSettings()
+{
+	delete popSettings;
+	free(imgSettingsBtn);
+
+}
+
+void showPopSettings(bool show)
+{
+	popSettings->show(show);
+}
+
+void drawPopSettings(float dt)
+{
+	popSettings->paint(dt);
+}
+
+bool keyPopSettings(iKeyState stat, iPoint point)
+{
+	if (popSettings->bShow == false)
+		return false;
+
+	if (popSettings->stat != iPopupStatProc)
+		return true;
+
+	int i;
+
+	switch (stat)
+	{
+	case iKeyStateBegan:
+		i = popSettings->selected;
+		if (i == 0 || i == 1)
+		{
+			//thumb
+		}
+		else if (i == 2)
+		{
+			//credits
+		}
+		else //if( i==3)
+		{
+			showPopSettings(false);
+		}
+		break;
+
+	case iKeyStateMoved:
+		for (int i = 0; i < 4; i++)
+		{
+			if (containPoint(point, imgSettingsBtn[i]->touchRect(popSettings->closePosition)))
+			{
+				popSettings->selected = i;
+				break;
+			}
+		}
+		break;
+
+	case iKeyStateEnded:
+		break;
+	}
+
+	return false;
+}
+
+
 

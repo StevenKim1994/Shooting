@@ -156,3 +156,18 @@ iRect iImage::touchRect(iPoint p)
 						tex->width, tex->height);
 	return rt;
 }
+
+iImage* iImage::copy()
+{
+	iImage* img = new iImage();
+
+	memcpy(img, this, sizeof(iImage));
+
+	iArray* array = new iArray(freeTex);
+	for (int i = 0; i < arrayTex->count; i++)
+		array->addObject(arrayTex->objectAtIndex(i));
+
+	img->arrayTex = array;
+
+	return img;
+}
