@@ -53,6 +53,9 @@
 	6. file io - struct padding
 	7. sound - 60/1초 차이로 재생되는 경우 없애기
 
+
+
+
 	
 */
 

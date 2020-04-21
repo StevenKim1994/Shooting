@@ -37,3 +37,11 @@ void showPopStart(bool show);
 void drawPopStart(float dt);
 bool keyPopStart(iKeyState stat, iPoint point);
 
+// -----------------------------------
+// popSlot
+// -----------------------------------
+void createPopSlot();
+void freePopSlot();
+void showPopSlot(bool show);
+void drawPopSlot(float dt);
+bool keyPopSlot(iKeyState stat, iPoint point);

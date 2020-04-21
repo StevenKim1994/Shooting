@@ -17,6 +17,7 @@ void loadTest()
 	texTitle = createImage("assets/menu/menuTitle.png");
 	createPopPrss();
 	createPopStart();
+	createPopSlot();
 
 	showPopPress(true);
 
@@ -27,10 +28,12 @@ void loadTest()
 
 void freeTest()
 {
+
 	freeImage(texBg);
 	freeImage(texTitle);
 	freePopPress();
 	freePopStart();
+	freePopSlot();
 
 	freeImage(texTable);
 }
@@ -52,12 +55,14 @@ void drawTest(float dt)
 
 	drawPopPress(dt);
 	drawPopStart(dt);
+	drawPopSlot(dt);
 
+#if 0
 	setClip(rtTable.origin.x, rtTable.origin.y,
 		rtTable.size.width, rtTable.size.height);
 	drawImage(texTable, offTable.x, offTable.y, TOP | LEFT);
 	setClip(0, 0, 0, 0);
-
+#endif
 #if 0
 	static float delta = 0.0f;
 	delta += dt;
@@ -90,6 +95,7 @@ void moveTable(iPoint& off, iPoint mp, const iRect& rt, const iSize& dstSize)
 
 void keyTest(iKeyState stat, iPoint point)
 {
+#if 0
 	if (stat == iKeyStateBegan)
 	{
 		prevPoint = point;
@@ -111,6 +117,9 @@ void keyTest(iKeyState stat, iPoint point)
 		touching = false;
 	}
 	return;
+#endif
+	if (keyPopSlot(stat, point))
+		return;
 
 	if (keyPopStart(stat, point))
 		return;
@@ -230,6 +239,7 @@ void drawPopStart(float dt)
 
 bool keyPopStart(iKeyState stat, iPoint point)
 {
+
 	if (popStart->bShow == false)
 		return false;
 	if (popStart->stat != iPopupStatProc)
@@ -243,6 +253,7 @@ bool keyPopStart(iKeyState stat, iPoint point)
 		i = popStart->selected;
 		if (i == 0)
 		{
+			showPopSlot(true);
 			// start(slot)
 		}
 		else if (i == 1)
@@ -270,6 +281,195 @@ bool keyPopStart(iKeyState stat, iPoint point)
 	case iKeyStateEnded:
 		break;
 	}
+
+	return true;
+}
+
+// -----------------------------------
+// popSlot
+// -----------------------------------
+iPopup* popSlot;
+iImage** imgSlotBtn;
+
+void drawPopSlotBefore(iPopup* me, float dt)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		imgSlotBtn[i]->setTexAtIndex(i == popSlot->selected);
+	}
+
+
+}
+
+void createPopSlot()
+{
+	//popup create
+	iPopup* pop = new iPopup(iPopupStyleMove);
+	popSlot = pop;
+
+
+	// bg - add
+	iImage* imgBg = new iImage();
+	iGraphics* g = iGraphics::instance();
+	{
+		//////CreateTexture;
+		iSize size = iSizeMake(256, 256);
+		g->init(size);
+
+		setRGBA(1, 1, 0, 0.95f); // yellow
+		g->fillRect(0, 0, size.width, size.height);
+
+		Texture* tex = g->getTexture();
+		imgBg->addObject(tex);
+		freeImage(tex);
+
+	}
+
+
+
+	pop->addObject(imgBg);
+
+
+	// btn - add ( slot x2 , xbtn )
+	imgSlotBtn = (iImage**)malloc(sizeof(iImage) * 3);
+	iPoint posBtn[3] = { {(256-150)/2, 70} , {(256-150)/2, 70+70} , {256-32, 0} , };
+	
+	for (int i = 0; i < 3; i++)
+	{
+		iImage* imgBtn = new iImage();
+	
+		if (i < 2)
+		{ 
+			for (int j = 0; j < 2; j++)
+			{
+				// create slot
+				iSize size = iSizeMake(150, 64);
+				g->init(size);
+
+				if (j == 0) setRGBA(0, 0, 0, 1);
+				else		setRGBA(0.5, 0.5, 0.5, 1);
+				g->fillRect(0, 0, size.width, size.height, 10);
+
+				setStringSize(30);
+				setStringRGBA(1, 1, 1, 1);
+				setStringBorder(0);
+				g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, "Slot %d", i + 1);
+
+
+
+
+				Texture* tex = g->getTexture();
+				imgBtn->addObject(tex);
+				freeImage(tex);
+			}
+		}
+		else if (i == 2)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+
+				// create x
+				iSize size = iSizeMake(32, 32);
+				g->init(size);
+
+				if (j == 0) setRGBA(0, 0, 0, 1);
+				else		setRGBA(0.5, 0.5, 0.5, 1);
+				g->fillRect(0, 0, size.width, size.height, 10);
+
+				setStringSize(30);
+				setStringRGBA(1, 1, 1, 1);
+				setStringBorder(0);
+				g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, "X", i + 1);
+
+
+				Texture* tex = g->getTexture();
+				imgBtn->addObject(tex);
+				freeImage(tex);
+			}
+		}
+
+	
+
+		imgBtn -> position = posBtn[i];
+		pop->addObject(imgBtn);
+		imgSlotBtn[i] = imgBtn;
+	}
+
+
+
+	// pop Settings( open position / close position )
+
+	pop->openPosition = iPointMake((devSize.width - imgBg->tex->width) / 2, (devSize.height - imgBg->tex->height) / 2);
+	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2, (devSize.height - imgBg->tex->height) / 2);
+
+	pop->methodDrawBefore = drawPopSlotBefore;
+
+}
+
+
+
+void freePopSlot()
+{
+	delete popSlot;
+	free(imgSlotBtn);
+
+}
+
+void showPopSlot(bool show)
+{
+	popSlot->show(show);
+
+}
+
+void drawPopSlot(float dt)
+{
+
+
+	popSlot->paint(dt); 
+}
+
+bool keyPopSlot(iKeyState stat, iPoint point)
+{
+	if (popSlot->bShow == false)
+		return false;
+
+	if (popSlot->stat != iPopupStatProc)
+		return true; // 활짝열리지 않으면 키 처리는 무시하지만 밑 계층에 잇는거 활성화 못하게함
+
+	int i;// = popSlot->selected;
+
+	switch (stat)
+	{
+	case iKeyStateBegan:
+		i = popSlot->selected; // 이런식으로 구현하면 실행코드 경량화, 가독성,  코드 보안성 올라감... 
+		if (i == -1)
+			break;
+
+		if (i < 2)
+		{
+			printf("selected %d \n ", i);
+		}
+		else// if(i == 2) // x 버튼일떄
+			showPopSlot(false);
+		break;
+
+	case iKeyStateMoved:
+		for (i = 0; i < 3; i++)
+		{
+			if (containPoint(point, imgSlotBtn[i]->touchRect(popSlot->closePosition))) // 인자로 closePosition을 넣는 이유는 이 버튼이 popup 안에 잇는 좌표이기 때문이다.
+			{													// 이 팝업의 좌표를 고려한 위치가 나온다...
+				popSlot->selected = i;
+				break;
+			}
+		}
+
+		break;
+
+	case iKeyStateEnded:
+		break;
+	}
+
+
 
 	return true;
 }
