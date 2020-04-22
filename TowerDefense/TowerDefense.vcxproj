@@ -105,12 +105,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\TowerDefense\spine-c\include;..\TowerDefense\lib;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include\spine;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\TowerDefense\openal\include;..\TowerDefense\spine-c\include;..\TowerDefense\lib;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include\spine;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\TowerDefense\openal\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -164,6 +165,7 @@
     <ClInclude Include="lib\iFPS.h" />
     <ClInclude Include="lib\iGraphics.h" />
     <ClInclude Include="lib\iImage.h" />
+    <ClInclude Include="lib\iOpenAL.h" />
     <ClInclude Include="lib\iOpenGL.h" />
     <ClInclude Include="lib\iPoint.h" />
     <ClInclude Include="lib\iPopup.h" />
@@ -241,6 +243,7 @@
     <ClCompile Include="lib\iFPS.cpp" />
     <ClCompile Include="lib\iGraphics.cpp" />
     <ClCompile Include="lib\iImage.cpp" />
+    <ClCompile Include="lib\iOpenAL.cpp" />
     <ClCompile Include="lib\iOpenGL.cpp" />
     <ClCompile Include="lib\iPoint.cpp" />
     <ClCompile Include="lib\iPopup.cpp" />

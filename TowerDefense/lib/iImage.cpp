@@ -119,12 +119,14 @@ void iImage::paint(float dt, iPoint off)
 		if (selectedDt > _selectedDt)
 			selectedDt = _selectedDt;
 	}
+
 	else
 	{
 		selectedDt -= dt;
 		if (selectedDt < 0.0f)
 			selectedDt = 0.0f;
 	}
+
 	iPoint p = position + off;
 	float s = 1.0f + linear(selectedDt / _selectedDt, 0.0f, selectedScale);
 	if (s == 0.0f)
@@ -152,8 +154,7 @@ void iImage::startAnimation(IMAGE_METHOD m)
 iRect iImage::touchRect(iPoint p)
 {
 	p += position;
-	iRect rt = iRectMake(p.x, p.y,
-						tex->width, tex->height);
+	iRect rt = iRectMake(p.x, p.y,tex->width, tex->height);
 	return rt;
 }
 

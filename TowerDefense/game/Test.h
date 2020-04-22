@@ -22,7 +22,7 @@ void keyTest(iKeyState stat, iPoint point);
 // -----------------------------------
 // popPress
 // -----------------------------------
-void createPopPrss();
+void createPopPress();
 void freePopPress();
 void showPopPress(bool show);
 void drawPopPress(float dt);

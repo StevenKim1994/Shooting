@@ -10,12 +10,11 @@ Texture* texTable;
 iRect rtTable;
 iPoint offTable;
 
-
 void loadTest()
 {
 	texBg = createImage("assets/menu/menuBg.jpg");
 	texTitle = createImage("assets/menu/menuTitle.png");
-	createPopPrss();
+	createPopPress();
 	createPopStart();
 	createPopSlot();
 	createPopSettings();
@@ -29,7 +28,6 @@ void loadTest()
 
 void freeTest()
 {
-
 	freeImage(texBg);
 	freeImage(texTitle);
 	freePopPress();
@@ -42,7 +40,6 @@ void freeTest()
 
 void drawTest(float dt)
 {
-
 	// texBg : 1400 x 933
 	float r0 = devSize.width / texBg->width;
 	float r1 = devSize.height / texBg->height;
@@ -66,6 +63,7 @@ void drawTest(float dt)
 	drawImage(texTable, offTable.x, offTable.y, TOP | LEFT);
 	setClip(0, 0, 0, 0);
 #endif
+
 #if 0
 	static float delta = 0.0f;
 	delta += dt;
@@ -79,23 +77,18 @@ void drawTest(float dt)
 
 bool touching = false;
 iPoint prevPoint;
-
-void moveTable(iPoint& off, iPoint mp, const iRect& rt, const iSize& dstSize)
+void moveTable(iPoint& off, iPoint mp, const iRect& rt, const iSize& size)
 {
 	off += mp;
-
-	float minX = rt.origin.x + rt.size.width - dstSize.width;
+	float minX = rt.origin.x + rt.size.width - size.width;
+	float minY = rt.origin.y + rt.size.height - size.height;
 	float maxX = rt.origin.x;
-	float minY = rt.origin.y + rt.size.height - dstSize.height;
 	float maxY = rt.origin.y;
-
-	if (off.y < minY) off.y = minY;
-	else if (off.y > maxY) off.y = maxY;
 	if (off.x < minX) off.x = minX;
 	else if (off.x > maxX) off.x = maxX;
-
+	if (off.y < minY) off.y = minY;
+	else if (off.y > maxY) off.y = maxY;
 }
-
 void keyTest(iKeyState stat, iPoint point)
 {
 #if 0
@@ -109,10 +102,7 @@ void keyTest(iKeyState stat, iPoint point)
 		if (touching)
 		{
 			moveTable(offTable, point - prevPoint, rtTable, iSizeMake(texTable->width, texTable->height));
-			
-
-				prevPoint = point;
-				
+			prevPoint = point;
 		}
 	}
 	else if (stat == iKeyStateEnded)
@@ -121,6 +111,7 @@ void keyTest(iKeyState stat, iPoint point)
 	}
 	return;
 #endif
+
 	if (keyPopSettings(stat, point))
 		return;
 
@@ -144,7 +135,7 @@ void closePopPress(iPopup* me)
 	showPopStart(true);
 }
 
-void createPopPrss()
+void createPopPress()
 {
 	iPopup* pop = new iPopup(iPopupStyleAlpha);
 
@@ -245,7 +236,6 @@ void drawPopStart(float dt)
 
 bool keyPopStart(iKeyState stat, iPoint point)
 {
-
 	if (popStart->bShow == false)
 		return false;
 	if (popStart->stat != iPopupStatProc)
@@ -259,12 +249,13 @@ bool keyPopStart(iKeyState stat, iPoint point)
 		i = popStart->selected;
 		if (i == 0)
 		{
-			showPopSlot(true);
 			// start(slot)
+			showPopSlot(true);
 		}
 		else if (i == 1)
 		{
 			// option
+			showPopSettings(true);
 		}
 		else if (i == 2)
 		{
@@ -277,10 +268,12 @@ bool keyPopStart(iKeyState stat, iPoint point)
 		{
 			if (containPoint(point, imgStartBtn[i]->touchRect(popStart->closePosition)))
 			{
-				j = i;
+				j = i;// audio
 				break;
 			}
 		}
+		if (popStart->selected != j)
+			;// audio Play
 		popStart->selected = j;
 		break;
 
@@ -297,289 +290,230 @@ bool keyPopStart(iKeyState stat, iPoint point)
 iPopup* popSlot;
 iImage** imgSlotBtn;
 
+void drawPopSlotBefore(iPopup* me, float dt);
+
+void createPopSlot()
+{
+	// pop
+	iPopup* pop = new iPopup(iPopupStyleMove);
+	popSlot = pop;
+
+	// bg - add
+	iImage* imgBg = new iImage();
+	iGraphics* g = iGraphics::instance();
+	{
+		iSize size = iSizeMake(256, 256);
+		g->init(size);
+
+		setRGBA(1, 1, 0, 0.9f);
+		g->fillRect(0, 0, size.width, size.height, 10);
+		setRGBA(1, 1, 1, 1);
+
+		Texture* tex = g->getTexture();
+		imgBg->addObject(tex);
+		freeImage(tex);
+	}
+	pop->addObject(imgBg);
+
+	// btn - add(slot x2 & x)
+	iPoint posBtn[3] = {
+		{(256 - 201) / 2, 70 + 80 * 0},
+		{(256 - 201) / 2, 70 + 80 * 1},
+		{256 - 32, 0}
+	};
+	imgSlotBtn = (iImage**)malloc(sizeof(iImage*) * 3);
+	for (int i = 0; i < 3; i++)
+	{
+		iImage* imgBtn = new iImage();
+		if (i < 2)
+		{
+			// slot
+			for (int j = 0; j < 2; j++)
+			{
+				iSize size = iSizeMake(201, 77);
+				g->init(size);
+
+				igImage* ig = g->createIgImage("assets/menu/slotBtn%d.png", j);
+				g->drawImage(ig, 0, 0, TOP | LEFT);
+				g->freeIgImage(ig);
+
+				setStringSize(30);
+				setStringRGBA(1, 1, 1, 1);
+				setStringBorder(0);
+				g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER,
+					"slot %d", 1 + i);
+
+				Texture* tex = g->getTexture();
+				imgBtn->addObject(tex);
+				freeImage(tex);
+			}
+		}
+		else if (i == 2)
+		{
+			// x
+			for (int j = 0; j < 2; j++)
+			{
+				Texture* tex = createImage("assets/menu/btnX%d.png", j);
+				imgBtn->addObject(tex);
+				freeImage(tex);
+			}
+		}
+		imgBtn->position = posBtn[i];
+		pop->addObject(imgBtn);
+		imgSlotBtn[i] = imgBtn;
+	}
+
+	// pop setting(open/close)
+	pop->openPosition = iPointMake((devSize.width - imgBg->tex->width) / 2,
+		-imgBg->tex->height);
+	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2,
+		(devSize.height - imgBg->tex->height) / 2);
+	pop->methodDrawBefore = drawPopSlotBefore;
+}
+
+void freePopSlot()
+{
+	delete popSlot;
+	free(imgSlotBtn);
+}
+
+void showPopSlot(bool show)
+{
+	popSlot->show(show);
+}
+
 void drawPopSlotBefore(iPopup* me, float dt)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		imgSlotBtn[i]->setTexAtIndex(i == popSlot->selected);
 	}
-
-
-}
-
-void createPopSlot()
-{
-	//popup create
-	iPopup* pop = new iPopup(iPopupStyleMove);
-	popSlot = pop;
-
-
-	// bg - add
-	iImage* imgBg = new iImage();
-	iGraphics* g = iGraphics::instance();
-
-
-
-	//////CreateTexture;
-	{
-
-		iSize size = iSizeMake(256, 256);
-		g->init(size);
-
-		setRGBA(1, 1, 0, 0.95f); // yellow
-		g->fillRect(0, 0, size.width, size.height);
-
-		Texture* tex = g->getTexture();
-		imgBg->addObject(tex);
-		freeImage(tex);
-
-	}//////CreateTexture;
-
-
-
-	pop->addObject(imgBg);
-
-
-	// btn - add ( slot x2 , xbtn )
-	imgSlotBtn = (iImage**)malloc(sizeof(iImage) * 3);
-	iPoint posBtn[3] = { {(256-150)/2, 70} , {(256-150)/2, 70+70} , {256-32, 0} , };
-	
-	for (int i = 0; i < 3; i++)
-	{
-		iImage* imgBtn = new iImage();
-	
-		if (i < 2)
-		{ 
-			for (int j = 0; j < 2; j++)
-			{
-				// create slot
-				iSize size = iSizeMake(150, 64);
-				g->init(size);
-
-				if (j == 0) setRGBA(0, 0, 0, 1);
-				else		setRGBA(0.5, 0.5, 0.5, 1);
-				g->fillRect(0, 0, size.width, size.height, 10);
-
-				setStringSize(30);
-				setStringRGBA(1, 1, 1, 1);
-				setStringBorder(0);
-				g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, "Slot %d", i + 1);
-
-
-
-
-				Texture* tex = g->getTexture();
-				imgBtn->addObject(tex);
-				freeImage(tex);
-			}
-		}
-		else if (i == 2)
-		{
-			for (int j = 0; j < 2; j++)
-			{
-
-				// create x
-				iSize size = iSizeMake(32, 32);
-				g->init(size);
-
-				if (j == 0) setRGBA(0, 0, 0, 1);
-				else		setRGBA(0.5, 0.5, 0.5, 1);
-				g->fillRect(0, 0, size.width, size.height, 10);
-
-				setStringSize(30);
-				setStringRGBA(1, 1, 1, 1);
-				setStringBorder(0);
-				g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, "X", i + 1);
-
-
-				Texture* tex = g->getTexture();
-				imgBtn->addObject(tex);
-				freeImage(tex);
-			}
-		}
-
-	
-
-		imgBtn -> position = posBtn[i];
-		pop->addObject(imgBtn);
-		imgSlotBtn[i] = imgBtn;
-	}
-
-
-
-	// pop Settings( open position / close position )
-
-	pop->openPosition = iPointMake((devSize.width - imgBg->tex->width) / 2, (devSize.height - imgBg->tex->height) / 2);
-	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2, (devSize.height - imgBg->tex->height) / 2);
-
-	pop->methodDrawBefore = drawPopSlotBefore;
-
-}
-
-
-
-void freePopSlot()
-{
-	delete popSlot;
-	free(imgSlotBtn);
-
-}
-
-void showPopSlot(bool show)
-{
-	popSlot->show(show);
-
 }
 
 void drawPopSlot(float dt)
 {
-
-
-	popSlot->paint(dt); 
+	popSlot->paint(dt);
 }
 
 bool keyPopSlot(iKeyState stat, iPoint point)
 {
 	if (popSlot->bShow == false)
 		return false;
-
 	if (popSlot->stat != iPopupStatProc)
-		return true; // 활짝열리지 않으면 키 처리는 무시하지만 밑 계층에 잇는거 활성화 못하게함
+		return true;
 
-	int i;// = popSlot->selected;
+	int i, j = -1;
 
-	switch (stat)
-	{
+	switch (stat) {
+
 	case iKeyStateBegan:
-		i = popSlot->selected; // 이런식으로 구현하면 실행코드 경량화, 가독성,  코드 보안성 올라감... 
-		if (i == -1)
-			break;
-
+		i = popSlot->selected;
+		if (i == -1) break;
 		if (i < 2)
 		{
-			printf("selected %d \n ", i);
+			printf("selected = %d\n", i);
 		}
-		else// if(i == 2) // x 버튼일떄
+		else// if (i == 2)
+		{
 			showPopSlot(false);
+		}
 		break;
 
 	case iKeyStateMoved:
 		for (i = 0; i < 3; i++)
 		{
-			if (containPoint(point, imgSlotBtn[i]->touchRect(popSlot->closePosition))) // 인자로 closePosition을 넣는 이유는 이 버튼이 popup 안에 잇는 좌표이기 때문이다.
-			{													// 이 팝업의 좌표를 고려한 위치가 나온다...
-				popSlot->selected = i;
+			if (containPoint(point, imgSlotBtn[i]->touchRect(popSlot->closePosition)))
+			{
+				j = i;
 				break;
 			}
 		}
-
+		popSlot->selected = j;
 		break;
 
 	case iKeyStateEnded:
 		break;
 	}
 
-
-
 	return true;
 }
+
 // -----------------------------------
 // popSettings
 // -----------------------------------
-
 iPopup* popSettings;
 iImage** imgSettingsBtn;
 
-void drawPopSettingsBefore(iPopup* me, float dt)
-{
-	for (int i = 0; i < 4; i++)
-		imgSettingsBtn[i]->setTexAtIndex(i == popSettings->selected);
-}
-
-
+void drawPopSettingsBefore(iPopup* me, float dt);
 void createPopSettings()
 {
-	//popup
+	// pop
 	iPopup* pop = new iPopup(iPopupStyleMove);
 	popSettings = pop;
 
-
-
-	//bg (bgm line / sfx line)
+	// bg (bgm line / sfx line)
 	iImage* imgBg = new iImage();
 	iGraphics* g = iGraphics::instance();
-	////////////Texture
 	{
 		iSize size = iSizeMake(256, 256);
 		g->init(size);
 
-
 		setRGBA(0, 0, 1, 0.9f);
 		g->fillRect(0, 0, size.width, size.height, 10);
+
 		setStringSize(30);
 		setStringRGBA(1, 1, 1, 1);
 		setStringBorder(0);
-		g->drawString(20, 60+70*0, VCENTER | LEFT, "BGM");
 		setRGBA(1, 1, 1, 1);
-		g->fillRect(100, 60+70*0 -1, 140, 2);
-		g->drawString(20, 60+70*1, VCENTER | LEFT, "SFX");
-		g->fillRect(100, 60 + 70 * 1 - 1, 140, 2);
-
-
+		g->drawString(20, 60 + 70 * 0, VCENTER | LEFT, "BGM");
+		g->fillRect(90, 60 + 70 * 0 - 1, 140, 2);
+		g->drawString(20, 60 + 70 * 1, VCENTER | LEFT, "SFX");
+		g->fillRect(90, 60 + 70 * 1 - 1, 140, 2);
 
 		Texture* tex = g->getTexture();
 		imgBg->addObject(tex);
 		freeImage(tex);
 	}
-	////////////Texture
-
-
 	pop->addObject(imgBg);
 
-
-
-
-	//btn (bgm thumb / sfx thumb / credits / x )
-	iImage* imgThumb = new iImage(); 
-	for (int i = 0; i < 2; i++) // thumb create
-	{
-
-	}
-
-	iImage* imgCredits = new iImage(); // credits create
+	// btn (bgm thumb / sfx thumb / credtis / x )
+	iImage* imgThumb = new iImage();
 	for (int i = 0; i < 2; i++)
 	{
-
+		Texture* tex = createImage("assets/menu/optionBtn0%d.png", i);
+		imgThumb->addObject(tex);
+		freeImage(tex);
 	}
 
+	iImage* imgCredits = new iImage();
+	for (int i = 0; i < 2; i++)
+	{
+		Texture* tex = createImage("assets/menu/optionBtn1%d.png", i);
+		imgCredits->addObject(tex);
+		freeImage(tex);
+	}
 
-	
-
+	iPoint posBtn[4] = { {60, 30}, {60, 30 + 70}, // thumb
+						{(256 - 201) / 2, 170},// credits
+						imgSlotBtn[2]->position + iPointMake(20, 0) };
 	imgSettingsBtn = (iImage**)malloc(sizeof(iImage*) * 4);
-
 	for (int i = 0; i < 4; i++)
 	{
 		iImage* imgBtn;
-		if (i == 0)
-			imgBtn = imgThumb; // thumb copy
-		else if (i == 1)
-			imgBtn = imgSettingsBtn[0]->copy();//thumb copy
-		else if (i == 2)
-			imgBtn = imgCredits; //credits copy
-		else // if (i ==3)
-			imgBtn = imgSlotBtn[2]->copy(); // X
-
+		if (i == 0)		imgBtn = imgThumb;					// thumb
+		else if (i == 1)imgBtn = imgSettingsBtn[0]->copy();	// thumb
+		else if (i == 2)imgBtn = imgCredits;				// credits
+		else			imgBtn = imgSlotBtn[2]->copy();		// x
+		imgBtn->position = posBtn[i];
 		pop->addObject(imgBtn);
 		imgSettingsBtn[i] = imgBtn;
 	}
 
-
-
-
-	//pop (openPosition, closePosition) Bottom - up!!! 
-	pop->openPosition = iPointMake((devSize.width - imgBg->tex->width) / 2, devSize.height); 
-	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2, (devSize.height - imgBg->tex->height) / 2);
-
+	// pop (open / close)
+	pop->openPosition = iPointMake((devSize.width - imgBg->tex->width) / 2,
+		devSize.height);
+	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2,
+		(devSize.height - imgBg->tex->height) / 2);
 	pop->methodDrawBefore = drawPopSettingsBefore;
 }
 
@@ -587,12 +521,17 @@ void freePopSettings()
 {
 	delete popSettings;
 	free(imgSettingsBtn);
-
 }
 
 void showPopSettings(bool show)
 {
 	popSettings->show(show);
+}
+
+void drawPopSettingsBefore(iPopup* me, float dt)
+{
+	for (int i = 0; i < 4; i++)
+		imgSettingsBtn[i]->setTexAtIndex(i == popSettings->selected);
 }
 
 void drawPopSettings(float dt)
@@ -604,47 +543,79 @@ bool keyPopSettings(iKeyState stat, iPoint point)
 {
 	if (popSettings->bShow == false)
 		return false;
-
 	if (popSettings->stat != iPopupStatProc)
 		return true;
 
-	int i;
+	int i, j = -1;
 
-	switch (stat)
-	{
+	switch (stat) {
+
 	case iKeyStateBegan:
 		i = popSettings->selected;
 		if (i == 0 || i == 1)
 		{
-			//thumb
+			// thumb
+			touching = true;
+			prevPoint = point;
 		}
 		else if (i == 2)
 		{
-			//credits
+			// credits
 		}
-		else //if( i==3)
+		else// if (i==3)
 		{
 			showPopSettings(false);
 		}
 		break;
 
 	case iKeyStateMoved:
-		for (int i = 0; i < 4; i++)
+		if (touching)
 		{
-			if (containPoint(point, imgSettingsBtn[i]->touchRect(popSettings->closePosition)))
+			i = popSettings->selected;
+			if (i < 2)
 			{
-				popSettings->selected = i;
-				break;
+				// move 60 ~ 200
+				iImage* img = imgSettingsBtn[i];
+				img->position.x += (point - prevPoint).x;
+				if (img->position.x < 60)
+					img->position.x = 60;
+				else if (img->position.x > 200)
+					img->position.x = 200;
+				prevPoint = point;
 			}
+		}
+		else
+		{
+			for (i = 0; i < 4; i++)
+			{
+				if (containPoint(point, imgSettingsBtn[i]->touchRect(popSettings->closePosition)))
+				{
+					j = i;
+					break;
+				}
+			}
+			popSettings->selected = j;
 		}
 		break;
 
 	case iKeyStateEnded:
+		touching = false;
+		i = popSettings->selected;
+		if (i == 0)
+		{
+			printf("BGM : %f\n" , ((imgSettingsBtn[i] -> position.x - 60.f) / 140.f) * 100);
+				
+			 // bgm
+		}
+		else if (i == 1)
+		{
+			 printf("sfx : %f\n" , ((imgSettingsBtn[i]->position.x - 60.f) /140.f ) * 100);
+			 //sfx
+		}
 		break;
 	}
 
-	return false;
+	return true;
 }
-
 
 
