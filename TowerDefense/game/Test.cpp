@@ -617,14 +617,16 @@ bool keyPopSettings(iKeyState stat, iPoint point)
 		i = popSettings->selected;
 		if (i == 0)
 		{
-			printf("BGM : %f\n" , ((imgSettingsBtn[i] -> position.x - 60.f) / 140.f) * 100);
+			float r = ((imgSettingsBtn[i] -> position.x - 60.f) / 140.f) * 100;
+			printf("BGM : %f\n", r);
 			bgmPop = (imgSettingsBtn[i]->position.x - 60.f) / 140.f;
 			audioVolume(bgmPop, sfxPop, 2);
 			 // bgm
 		}
 		else if (i == 1)
 		{
-			 printf("sfx : %f\n" , ((imgSettingsBtn[i]->position.x - 60.f) /140.f ) * 100);
+			 float r = ((imgSettingsBtn[i]->position.x - 60.f) /140.f ) * 100;
+			 printf("sfx : %f\n", r);
 			 sfxPop = (imgSettingsBtn[i]->position.x - 60.f) / 140.f;
 			 audioVolume(bgmPop, sfxPop, 2);
 			 //sfx

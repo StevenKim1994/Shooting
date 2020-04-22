@@ -246,8 +246,8 @@ void audioStop(int sndIdx)
 void audioVolume(float bgm, float sfx, int sfxNum)
 {
 	// 밑 두줄은 그냥 편의를 위해 추가함... 무시해도됨.
-	if (bgm < 0.1) bgm = 0; else if (bgm > 0.9) bgm = 1.0; 
-	if (sfx < 0.1) sfx = 0; else if (sfx > 0.9) sfx = 1.0;
+	//if (bgm < 0.1) bgm = 0; else if (bgm > 0.9) bgm = 1.0; 
+	//if (sfx < 0.1) sfx = 0; else if (sfx > 0.9) sfx = 1.0;
 
 
 	int i;
@@ -264,7 +264,7 @@ void audioVolume(float bgm, float sfx, int sfxNum)
 
 		vol /= al->sfx;
 
-		al->volume(i, vol* sfx);
+		al->volume(i,  sfx);
 	}
 
 
