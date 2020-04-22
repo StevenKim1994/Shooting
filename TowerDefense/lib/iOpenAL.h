@@ -25,6 +25,7 @@ public:
 	ALuint* gBuffer;
 	ALuint* gSource;
 	int bufCount;
+	float bgm, sfx;
 
 
 };

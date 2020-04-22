@@ -46,6 +46,9 @@ iOpenAL::iOpenAL(int audioNum)
 	}
 
 	alGetError(); 	//clear any errors , 한번더 부름으로써 에러 로그를 지운다.
+
+	bgm = 1.0f;
+	sfx = 1.0f;
 }
 
 ALvoid* gStaticBufferData = NULL; // load된 sound를 저장할 변수 ( 쓸때마다 로드하는게 아니라 한번에 다 로드해서 쓸거임 )
@@ -242,17 +245,39 @@ void audioStop(int sndIdx)
 
 void audioVolume(float bgm, float sfx, int sfxNum)
 {
-	// 밑 두줄은 그냥 편의를 위해 추가함...
+	// 밑 두줄은 그냥 편의를 위해 추가함... 무시해도됨.
 	if (bgm < 0.1) bgm = 0; else if (bgm > 0.9) bgm = 1.0; 
 	if (sfx < 0.1) sfx = 0; else if (sfx > 0.9) sfx = 1.0;
 
 
 	int i;
 
-	for(int i = 0; i< sfxNum; i++)
-			al->volume(i, sfx);
+	float vol;
+	
+	// 볼륨을 바꿀때 다시 원래 초기값으로 되돌린후 그후 다시볼륨을 조절한다.
+
+	// 예를 들어 초기값 0.6이 100%일때 90%로 내리면 0.54가 90% 근데 여기서 다시 내리면 0.54에서 내리는게 아니라 0.6에서 내리는 비율을 조절한다는 말임.
+
+	for (i = 0; i < sfxNum; i++) 
+	{
+		alGetSourcef(al->gSource[i], AL_GAIN, &vol);
+
+		vol /= al->sfx;
+
+		al->volume(i, vol* sfx);
+	}
+
+
+
+	
 	for (i = sfxNum; i < al->bufCount; i++)
-			al->volume(i, bgm);
+	{
+		alGetSourcef(al->gSource[i], AL_GAIN, &vol);
+		
+		vol /= al->bgm;
+		
+		al->volume(i, bgm);
+	}
 	
 }
 

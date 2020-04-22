@@ -448,6 +448,7 @@ bool keyPopSlot(iKeyState stat, iPoint point)
 // -----------------------------------
 iPopup* popSettings;
 iImage** imgSettingsBtn;
+float bgmPop, sfxPop;
 
 void drawPopSettingsBefore(iPopup* me, float dt);
 void createPopSettings()
@@ -520,6 +521,11 @@ void createPopSettings()
 	pop->closePosition = iPointMake((devSize.width - imgBg->tex->width) / 2,
 		(devSize.height - imgBg->tex->height) / 2);
 	pop->methodDrawBefore = drawPopSettingsBefore;
+	
+	bgmPop = 1.0f;
+	sfxPop = 1.0f;
+	imgSettingsBtn[0]->position.x = 200.f;
+	imgSettingsBtn[1]->position.x = 200.f;
 }
 
 void freePopSettings()
@@ -557,6 +563,9 @@ bool keyPopSettings(iKeyState stat, iPoint point)
 
 	case iKeyStateBegan:
 		i = popSettings->selected;
+		if (i == -1)
+			break;
+
 		if (i == 0 || i == 1)
 		{
 			// thumb
@@ -609,12 +618,15 @@ bool keyPopSettings(iKeyState stat, iPoint point)
 		if (i == 0)
 		{
 			printf("BGM : %f\n" , ((imgSettingsBtn[i] -> position.x - 60.f) / 140.f) * 100);
-				
+			bgmPop = (imgSettingsBtn[i]->position.x - 60.f) / 140.f;
+			audioVolume(bgmPop, sfxPop, 2);
 			 // bgm
 		}
 		else if (i == 1)
 		{
 			 printf("sfx : %f\n" , ((imgSettingsBtn[i]->position.x - 60.f) /140.f ) * 100);
+			 sfxPop = (imgSettingsBtn[i]->position.x - 60.f) / 140.f;
+			 audioVolume(bgmPop, sfxPop, 2);
 			 //sfx
 		}
 		break;

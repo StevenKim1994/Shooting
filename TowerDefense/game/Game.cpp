@@ -23,8 +23,8 @@ void loadGame()
 	gameState = 100;
 #endif
 
-	AudioInfo ai[4] = { { "assets/snd/0.wav", false, 1.0f },
-		{"assets/snd/1.wav", false, 1.0f },
+	AudioInfo ai[4] = { { "assets/snd/0.wav", false, 0.6f },
+		{"assets/snd/1.wav", false, 0.6f },
 		{"assets/snd/2.wav", true, 1.0f },
 		{"assets/snd/3.wav", true, 1.0f },
 	};
