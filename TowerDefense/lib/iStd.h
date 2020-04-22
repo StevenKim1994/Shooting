@@ -2,6 +2,7 @@
 
 #include "iGraphics.h"
 #include "iOpenGL.h"
+
 #include "iType.h"
 
 #include "iImage.h"
@@ -11,6 +12,8 @@
 #include "iSort.h"
 
 #include "iFPS.h"
+
+#include "iOpenAL.h"
 
 #if _DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")

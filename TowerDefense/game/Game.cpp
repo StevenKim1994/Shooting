@@ -22,6 +22,15 @@ void loadGame()
 	loadTest();
 	gameState = 100;
 #endif
+
+	AudioInfo ai[4] = { { "assets/snd/0.wav", false, 1.0f },
+		{"assets/snd/1.wav", false, 1.0f },
+		{"assets/snd/2.wav", true, 1.0f },
+		{"assets/snd/3.wav", true, 1.0f },
+	};
+
+	loadAudio(ai , 4);
+	audioPlay(2);
 }
 
 void freeGame()

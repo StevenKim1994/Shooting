@@ -139,6 +139,7 @@ void iOpenAL::initSource(int idx, bool repeat)
 
 	alSourcei(gSource[idx], AL_LOOPING, repeat);
 
+
 	const float sourcePosAL[] = { 0.0f, 0.0f, 0.0f };
 	alSourcefv(gSource[idx], AL_POSITION, sourcePosAL);
 
@@ -152,7 +153,7 @@ void iOpenAL::initSource(int idx, bool repeat)
 
 }
 
-void iOpenAL::play(int idx, bool repeat)
+void iOpenAL::play(int idx)
 {
 	alSourcePlay(gSource[idx]);
 	
@@ -179,19 +180,21 @@ void iOpenAL::volume(int idx, float vol)
 
 
 
+int prevBgm; 
 
 
-
-void loadAudio(int audioNum)
+void loadAudio(AudioInfo* ai, int aiNum)
 {
-	al = new iOpenAL(audioNum);
+	al = new iOpenAL(aiNum);
 
-	for (int i = 0; i < audioNum; i++)
+	for (int i = 0; i < aiNum; i++)
 	{
-		al->initBuffer(i, "");
-		al->initSource(i, false);
-		
+		al->initBuffer(i, ai[i].path);
+		al->initSource(i, ai[i].repeat);
+		al->volume(i, ai[i].volume);
 	}
+
+	prevBgm = -1; // -1이면 이전에 bgm재생을 하지 않았음.
 
 }
 
@@ -208,12 +211,22 @@ void pauseAudio()
 
 void resumeAudio()
 {
+	if (prevBgm!= -1)
+		audioPlay(prevBgm);
+
 
 }
 
 void audioPlay(int sndIdx)
 {
-	//al->play(sndIdx, );
+	al->play(sndIdx);
+
+	//prevBgm
+
+	ALint repeat;
+	alGetSourcei(al->gSource[sndIdx], AL_LOOPING, &repeat);
+	if (repeat) 
+		prevBgm = sndIdx;
 }
 
 void audioStop()
@@ -222,12 +235,24 @@ void audioStop()
 		al->stop(i);
 }
 
+void audioStop(int sndIdx)
+{
+	al->stop(sndIdx);
+}
+
 void audioVolume(float bgm, float sfx, int sfxNum)
 {
-	for (int i = 0; i < al->bufCount; i++)
-		if (i < sfxNum)
+	// 밑 두줄은 그냥 편의를 위해 추가함...
+	if (bgm < 0.1) bgm = 0; else if (bgm > 0.9) bgm = 1.0; 
+	if (sfx < 0.1) sfx = 0; else if (sfx > 0.9) sfx = 1.0;
+
+
+	int i;
+
+	for(int i = 0; i< sfxNum; i++)
 			al->volume(i, sfx);
-		else //if(i < bgm)
+	for (i = sfxNum; i < al->bufCount; i++)
 			al->volume(i, bgm);
+	
 }
 

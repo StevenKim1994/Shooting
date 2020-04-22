@@ -247,6 +247,11 @@ bool keyPopStart(iKeyState stat, iPoint point)
 
 	case iKeyStateBegan:
 		i = popStart->selected;
+		if (i == -1)
+			break;
+		
+		audioPlay(1);
+		
 		if (i == 0)
 		{
 			// start(slot)
@@ -273,7 +278,7 @@ bool keyPopStart(iKeyState stat, iPoint point)
 			}
 		}
 		if (popStart->selected != j)
-			;// audio Play
+			audioPlay(0);// audio Play
 		popStart->selected = j;
 		break;
 
