@@ -1,36 +1,198 @@
 #include "iOpenAL.h"
 
-#include <al.h>
-#include <alc.h>
-
-class iOpenAL
-{
-public:
-	iOpenAL();
-	virtual ~iOpenAL();
-
-public:
-	void initBuffer(int idx, const char* szFormat, ...);
-	void initSource(int idx, bool repeat);
-
-	void play(int idx, bool repeat);
-	void pause(int idx);
-	void stop(int idx);
-	void volume(int idx, float vol); // 0 ~ 1 : 0 (100 ) ~ 1 ( 100) OpenAL에서는 값을 0~1로 씀.
-
-
-public:
-	ALuint* gBuffer;
-	ALuint* gSource;
-	int bufCount;
-
-
-};
+#include "iStd.h"
 
 static iOpenAL* al;
-void loadAudio()
+
+iOpenAL::iOpenAL(int audioNum)
 {
-	al = new iOpenAL();
+	bufCount = audioNum;
+	gBuffer = (ALuint*)malloc(sizeof(ALuint) * audioNum);
+	gSource = (ALuint*)malloc(sizeof(ALuint) * audioNum);
+
+	ALCdevice* newDevice = NULL;
+	ALCcontext* newContext = NULL;
+
+	ALenum error;
+
+	newDevice = alcOpenDevice(NULL);
+
+	if (newDevice)
+	{
+		const ALCint context_atrribs[] = { ALC_FREQUENCY, 22050, 0 };
+		newContext = alcCreateContext(newDevice, context_atrribs);
+
+		if (newContext)
+		{
+			alcMakeContextCurrent(newContext);
+
+			alGenBuffers(bufCount, gBuffer);
+		
+
+			if ((error= alGetError()) != AL_NO_ERROR)
+			{
+				printf("alGenBuffers : %d\n", error);
+				return;
+			}
+				
+			alGenSources(bufCount, gSource);
+			if ((error = alGetError()) != AL_NO_ERROR)
+			{
+				printf("alGenSources %d\n", error);
+				return;
+			}
+
+		}
+	}
+
+	alGetError(); 	//clear any errors , 한번더 부름으로써 에러 로그를 지운다.
+}
+
+ALvoid* gStaticBufferData = NULL; // load된 sound를 저장할 변수 ( 쓸때마다 로드하는게 아니라 한번에 다 로드해서 쓸거임 )
+
+iOpenAL::~iOpenAL()
+{
+	ALCcontext* context = NULL;
+	ALCdevice* device = NULL;
+
+	ALCuint returnedNames[1024]; // bufCount
+
+	alDeleteBuffers(bufCount, returnedNames);
+	alDeleteBuffers(bufCount, returnedNames);
+
+	context = alcGetCurrentContext();
+	device = alcGetContextsDevice(context);
+
+	alcDestroyContext(context);
+	alcCloseDevice(device);
+
+	if (gStaticBufferData)
+		free(gStaticBufferData);
+
+}
+
+typedef struct _WaveHeader0 {
+	char riff[4];            // Chunk ID: "RIFF"
+	unsigned int riffSize;      // Chunk size: 4+n
+	char wave[4];            // WAVE ID: "WAVE"
+
+	char fmt[4];            // Chunk ID: "fmt"
+	unsigned int fmtSize;      // Chunk size: 16 or 18 or 40
+	unsigned short format;      // Format code
+	unsigned short channels;   // Number of interleaved channels
+	unsigned int samplesPerSec;   // Sampling rate (blocks per second)
+	unsigned int bytesPerSec;   // Data rate
+	unsigned short blockAlign;   // Data block size(bytes)
+	unsigned short bitsPerSample;// Bits per sample
+} WaveHeader0;
+
+typedef struct _WaveHeader1 {
+	char data[4];            //'data'
+	unsigned int dataSize;
+} WaveHeader1;
+
+
+void iOpenAL::initBuffer(int idx, const char* szFormat, ...)
+{
+	va_list args;
+	va_start(args, szFormat);
+
+	char szText[1024];
+	_vsnprintf(szText, sizeof(szText), szFormat, args);
+	va_end(args);
+
+	int bufLen;
+	char* buf = loadFile(szText, bufLen);
+
+	WaveHeader0* head0 = (WaveHeader0*)buf;
+	WaveHeader1* head1 = (WaveHeader1*)&buf[sizeof(WaveHeader0) + (head0->fmtSize - 16)];
+
+	ALuint buffer = 0;
+	ALuint format = 0;
+
+	switch (head0->bitsPerSample)
+	{
+	case 8: format = (head0->channels == 1 ? AL_FORMAT_MONO8 : AL_FORMAT_STEREO8); break;
+	case 16: format = (head0->channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16); break;
+	default: return;
+	}
+
+	ALsizei samplesPerSec = head0->samplesPerSec;
+
+	char* data = &buf[sizeof(WaveHeader0) + (head0->fmtSize - 16) + sizeof(WaveHeader1)];
+	int dataLength = head1->dataSize;
+
+	alBufferData(gBuffer[idx], format, data, dataLength, samplesPerSec);
+
+	free(buf);
+
+	ALenum error;
+	if ((error = alGetError()) != AL_NO_ERROR)
+		printf("initBuffer %s %d\n", szText, error);
+	
+}
+
+void iOpenAL::initSource(int idx, bool repeat)
+{
+	ALenum error;
+	error = alGetError(); // clear the error
+
+	alSourcei(gSource[idx], AL_LOOPING, repeat);
+
+	const float sourcePosAL[] = { 0.0f, 0.0f, 0.0f };
+	alSourcefv(gSource[idx], AL_POSITION, sourcePosAL);
+
+	alSourcef(gSource[idx], AL_REFERENCE_DISTANCE, 50.0f);
+
+	alSourcei(gSource[idx], AL_BUFFER, gBuffer[idx]);
+
+	if ((error = alGetError()) != AL_NO_ERROR)
+		printf("initSource %d\n", error);
+
+
+}
+
+void iOpenAL::play(int idx, bool repeat)
+{
+	alSourcePlay(gSource[idx]);
+	
+	ALenum error;
+	if ((error = alGetError()) != AL_NO_ERROR)
+		printf("play %d\n", error);
+
+}
+
+void iOpenAL::pause(int idx)
+{
+	alSourcePause(gSource[idx]);
+}
+
+void iOpenAL::stop(int idx)
+{
+	alSourceStop(gSource[idx]);
+}
+
+void iOpenAL::volume(int idx, float vol)
+{
+	alSourcef(gSource[idx], AL_GAIN, vol);
+}
+
+
+
+
+
+
+void loadAudio(int audioNum)
+{
+	al = new iOpenAL(audioNum);
+
+	for (int i = 0; i < audioNum; i++)
+	{
+		al->initBuffer(i, "");
+		al->initSource(i, false);
+		
+	}
+
 }
 
 void freeAudio()
@@ -68,3 +230,4 @@ void audioVolume(float bgm, float sfx, int sfxNum)
 		else //if(i < bgm)
 			al->volume(i, bgm);
 }
+

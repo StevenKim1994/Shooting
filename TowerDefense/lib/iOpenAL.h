@@ -8,7 +8,7 @@
 class iOpenAL
 {
 public:
-	iOpenAL();
+	iOpenAL(int audioNum);
 	virtual ~iOpenAL();
 
 public:
@@ -29,7 +29,7 @@ public:
 
 };
 
-void loadAudio(); // 게임을 로딩할떄
+void loadAudio(int audioNum); // 게임을 로딩할떄
 void freeAudio(); // 종료할때
 void pauseAudio(); // 게임을 일시정지할떄
 void resumeAudio(); // 재개할때
