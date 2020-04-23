@@ -4,6 +4,12 @@
 
 #include "../resource.h"
 
+extern iPoint cursor;
+void loadCursor();
+void freeCursor();
+void drawCursor(float dt);
+bool updateCursor(bool inClient);
+
 /*
 	1. Encoding - utf-8
 	1) .editorconfig 파일 생성

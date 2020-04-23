@@ -44,8 +44,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
     GetClientRect(hWnd, &rect);
     monitorSizeW = rect.right - rect.left;
     monitorSizeH = rect.bottom - rect.top;
+
     loadLib(hDC);
     loadGame();
+    loadCursor();
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -62,12 +64,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         else
         {
             drawLib(drawGame);
+            drawCursor(0.0f); // #bug
             SwapBuffers(hDC);
         }
     }
 
     freeLib();
     freeGame();
+    freeCursor();
 
     DestroyWindow(hWnd);
     endGdiplus(gpToken);
@@ -114,14 +118,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
         break;
 
+
     case WM_LBUTTONDOWN:
-        keyGame(iKeyStateBegan, convertCoordinate(LOWORD(lParam), HIWORD(lParam)));
+        cursor = convertCoordinate(LOWORD(lParam), HIWORD(lParam));
+        keyGame(iKeyStateBegan, cursor);
         break;
     case WM_MOUSEMOVE:
-        keyGame(iKeyStateMoved, convertCoordinate(LOWORD(lParam), HIWORD(lParam)));
+        cursor = convertCoordinate(LOWORD(lParam), HIWORD(lParam));
+        keyGame(iKeyStateMoved, cursor);
         break;
     case WM_LBUTTONUP:
-        keyGame(iKeyStateEnded, convertCoordinate(LOWORD(lParam), HIWORD(lParam)));
+        cursor = convertCoordinate(LOWORD(lParam), HIWORD(lParam));
+        keyGame(iKeyStateEnded,cursor);
+        break;
+    case WM_SETCURSOR: // 마우스 커서가 프로그램 창에 들어왔을때
+        
+        // 실제 게임이 표시되는 영역에 마우스 좌표가 들어왔다면...
+        if (updateCursor(LOWORD(lParam) == HTCLIENT))
+            return true;
+
         break;
 
     //case WM_CHAR:
@@ -147,3 +162,66 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+//---------------------------------------------------
+//              cursor 
+//---------------------------------------------------
+
+static Texture* texCursor;
+iPoint cursor;
+static bool bCursor;
+
+void loadCursor()
+{
+    texCursor = createImage("assets/cursor.png");
+    cursor = iPointZero;
+    bCursor = false;
+}
+
+void freeCursor()
+{
+    freeImage(texCursor);
+}
+
+void drawCursor(float dt)
+{
+    if( bCursor) // 커서가 화면에 들어왔을떄만
+    { 
+        drawImage(texCursor, cursor.x, cursor.y, TOP | LEFT);
+    }
+}
+
+bool updateCursor(bool inClient)
+{
+    if (bCursor == inClient)
+        return false;
+
+    bCursor = inClient;
+
+    //ShowCursor(bCursor ? FALSE : TRUE); // 게임커서 이미지가 보이면 시스템 커서 안보이게.
+    
+    // 게임을 사용중일떄 다른 프로그램에서 이 시스템 커서를 수정하는 경우 레퍼런스 카운터가 달라지기 때문에 밑의 코드가 필요함.
+    if (bCursor)
+    {
+        while (1)
+        {
+            int n = ShowCursor(FALSE);
+
+            if (n < 0) break;
+        }
+    }
+    
+    else
+    {
+        while (1)
+        {
+            int n = ShowCursor(TRUE);
+
+            if (n > -1) break;
+
+        }
+    }
+
+
+
+    return true;
+}
