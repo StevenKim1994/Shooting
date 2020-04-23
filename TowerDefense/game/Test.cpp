@@ -12,17 +12,6 @@ iPoint offTable;
 
 void loadTest()
 {
-	for (int i = 0; i < 50; i++)
-	{
-		
-		int x = i / 5 * 5;
-
-		printf("i(%d) = > x(%d)\n", i, x);
-
-	}
-
-
-
 
 	texBg = createImage("assets/menu/menuBg.jpg");
 	texTitle = createImage("assets/menu/menuTitle.png");
