@@ -39,6 +39,8 @@ void freeTest()
 	freeImage(texTable);
 }
 
+
+
 void drawTest(float dt)
 {
 	// texBg : 1400 x 933
@@ -148,6 +150,7 @@ void createPopPress()
 
 	iPoint p = iPointMake((devSize.width - tex->width) / 2,
 		devSize.height * 0.67f - tex->height / 2);
+
 	pop->openPosition = p;
 	pop->closePosition = p;
 	pop->methodClose = closePopPress;
