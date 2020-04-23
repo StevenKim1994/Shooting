@@ -10,6 +10,15 @@ void freeCursor();
 void drawCursor(float dt);
 bool updateCursor(bool inClient);
 
+extern bool isFullscreen;
+void goFullscreen();
+
+extern int win_border_width, win_border_height;
+void enforceResolution(int edge, RECT& rect, int win_border_width, int win_border_height);
+
+
+
+
 /*
 	1. Encoding - utf-8
 	1) .editorconfig 파일 생성
