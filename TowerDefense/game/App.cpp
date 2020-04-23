@@ -100,6 +100,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_GETMINMAXINFO:
+    {
+        if (win_border_width == 0 || win_border_height == 0)
+            break;
+
+        float rate = devSize.width / devSize.height;
+        float width = monitorSizeW * DEV_MIN_RATE;
+        float height = width / rate;
+
+        MINMAXINFO* mmi = (MINMAXINFO*)lParam;
+        mmi->ptMinTrackSize.x = width + win_border_width;
+        mmi->ptMinTrackSize.y = height + win_border_height;
+
+        break;
+    }
     case WM_CREATE:
     {
         RECT rt0, rt1;
@@ -110,6 +125,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         
         break;
     }
+
+
     case WM_SIZE:
     {
         // client rect
@@ -326,7 +343,7 @@ void goFullscreen()
 
 }
 
-int win_border_width, win_border_height;
+int win_border_width = 0 , win_border_height = 0;
 void enforceResolution(int edge, RECT& rect, int win_border_width, int win_border_height) // 강제 종횡비
 {
     switch (edge)
