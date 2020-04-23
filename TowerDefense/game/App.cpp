@@ -357,43 +357,113 @@ void enforceResolution(int edge, RECT& rect, int win_border_width, int win_borde
 
     case WMSZ_BOTTOMLEFT:
     {
+      /*
         int h = (rect.bottom - rect.top) - win_border_height;
         int w = h * devSize.width / devSize.height + win_border_width;
 
         rect.left = rect.right - w;
-        //rect.right = rect.left + w;
+      */ // myCode
+
+
+        // w : h = devSize.width : devSize.height
+        int w = (rect.right - rect.left) - win_border_width;
+        int h = (rect.bottom - rect.top) - win_border_height;
+
+        // if(w/h > devSize.width / devSize.height)
+        
+        if (w * devSize.width > devSize.width * h) // 가로가 크다면
+        {
+            w = h * devSize.width / devSize.height + win_border_width;
+            rect.left = rect.right - w;
+        }
+        else // 세로가 크다면
+        {
+            h = w * devSize.height / devSize.width + win_border_height;
+            rect.bottom = rect.top + h;
+        }
+        
+
         break;
     }
     case WMSZ_BOTTOMRIGHT:
     {
+        /*
         int h = (rect.bottom - rect.top) - win_border_height;
         int w = h * devSize.width / devSize.height + win_border_width;
 
-        //rect.left = rect.right - w;
+       
         rect.right = rect.left + w;
+        */ // myCode
+
+
+        int w = (rect.right - rect.left) - win_border_width;
+        int h = (rect.bottom - rect.top) - win_border_height;
+
+        // if(w/h > devSize.width / devSize.height)
+
+        if (w * devSize.width > devSize.width * h) // 가로가 크다면
+        {
+            w = h * devSize.width / devSize.height + win_border_width;
+            rect.right = rect.left + w;
+        }
+        else // 세로가 크다면
+        {
+            h = w * devSize.height / devSize.width + win_border_height;
+            rect.bottom = rect.top + h;
+        }
         break;
     }
     case WMSZ_TOPLEFT:
     {
+        /*
         int h = (rect.bottom - rect.top) - win_border_height;
         int w = h * devSize.width / devSize.height + win_border_width;
 
         rect.left = rect.right - w;
-        //rect.top = (rect.top + rect.bottom) / 2 - h / 2;
-        //.bottom = rect.top + h;
+       
+        */ // myCode
+
+        int w = (rect.right - rect.left) - win_border_width;
+        int h = (rect.bottom - rect.top) - win_border_height;
+
+        if (w * devSize.height > devSize.width * h)
+        {
+            w = h * devSize.width / devSize.height + win_border_width;
+            rect.left = rect.right - w;
+        }
+        else
+        {
+            h = w * devSize.height / devSize.width + win_border_height;
+            rect.top = rect.bottom - h;
+        }
+
         break;
     }
     case WMSZ_TOPRIGHT:
     {
+        /*
         int h = (rect.bottom - rect.top) - win_border_height;
         int w = h * devSize.width / devSize.height + win_border_width;
 
         rect.right = rect.left + w;
      
         break;
+        */ // myCode
 
+        int w = (rect.right - rect.left) - win_border_width;
+        int h = (rect.bottom - rect.top) - win_border_height;
 
-  
+        if (w * devSize.width > devSize.width * h) // 가로가 크다면
+        {
+            w = h * devSize.width / devSize.height + win_border_width;
+            rect.right = rect.left + w;
+        }
+        else
+        {
+            h = w * devSize.height / devSize.width + win_border_height;
+            rect.top = rect.bottom - h;
+        }
+
     }
     }
 }
