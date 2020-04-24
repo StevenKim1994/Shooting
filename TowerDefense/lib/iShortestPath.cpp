@@ -243,6 +243,11 @@ public:
 iShortestPath* sp;
 Me* me;
 
+Texture* texTotal;
+uint8* rgbaTotal;
+iRect rtTotal;
+iImage* imgTotal;
+
 void initShortestPath()
 {
 	sp = new iShortestPath();
@@ -250,6 +255,21 @@ void initShortestPath()
 
 	me = new Me();
 	me->p = me->tp = iPointMake(tile_size_w / 2, tile_size_h / 2);
+
+	const char* path = "assets/atlas0.png";
+	texTotal = createImage(path);
+	{
+		wchar_t* ws = utf8_to_utf16(path);
+		Bitmap* bmp = new Bitmap(ws);
+		free(ws);
+
+		int width, height;
+		uint8* rgba = bmp2rgba(bmp, width, height);
+		delete bmp;
+	}
+
+	
+	imgTotal = NULL;
 }
 
 void freeShortestPath()
@@ -282,6 +302,8 @@ void drawShortestPath(float dt)
 	me->move(dt);
 
 	setRGBA(1, 1, 1, 1);
+	fillRect(0, 0, texTotal->width, texTotal->height);
+	drawImage(texTotal, 0, 0, TOP | LEFT);
 }
 
 
@@ -291,6 +313,21 @@ void keyShortestPath(iKeyState stat, iPoint point)
 {
 	if (stat == iKeyStateBegan)
 	{
+		iRect rt = iRectMake(0, 0, texTotal->width, texTotal->height);
+		if (containPoint(point, rt))
+		{
+			uint8* rgba = rgbaTotal;
+			
+			int x = point.x;
+			int y = point.y;
+			int px = texTotal->potWidth;
+			rgba[px * y + 4 * x + 3];
+			//#bug
+		}
+
+
+
+		return;
 		iPoint off = iPointZero;
 		int sx = me->p.x - off.x;
 		sx /= tile_size_w;
