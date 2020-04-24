@@ -111,11 +111,11 @@ void iShortestPath::removeDuplicate(int* path, int& pathNum)
 	{
 		int cp = path[i];
 		int cx = cp % tileX;
-		int cy = cp / tileY;
+		int cy = cp / tileX;
 
 		int np = path[i + 1];
 		int nx = np % tileX;
-		int ny = np / tileY;
+		int ny = np / tileX;
 
 		if (cx == nx)
 		{
