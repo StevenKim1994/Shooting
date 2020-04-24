@@ -31,6 +31,8 @@ void loadGame()
 
 	loadAudio(ai , 4);
 	audioPlay(2);
+
+	initShortestPath();
 }
 
 void freeGame()
@@ -42,6 +44,8 @@ void freeGame()
 	case gs_ending:	freeEnding(); break;
 	case 100:		freeTest(); break;
 	}
+
+	freeShortestPath();
 }
 
 void drawGame(float dt)
@@ -68,6 +72,9 @@ void drawGame(float dt)
 
 void keyGame(iKeyState stat, iPoint point)
 {
+	keyShortestPath(stat, point);
+		return;
+
 	if (keyLoading(stat, point))
 		return;
 

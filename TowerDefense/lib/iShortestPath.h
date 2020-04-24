@@ -30,7 +30,7 @@ public:
 
 
 
-#define sp_inf 999
+#define sp_inf 99
 
 extern int tiles[70];
 
@@ -40,5 +40,8 @@ extern int tiles[70];
 #define tile_size_h 60
 #define tile_size_w 60
 
-
+#include "iType.h"
+void initShortestPath();
+void freeShortestPath();
 void drawShortestPath(float dt);
+void keyShortestPath(iKeyState stat, iPoint point);
