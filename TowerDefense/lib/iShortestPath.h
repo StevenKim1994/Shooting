@@ -17,6 +17,7 @@ public:
 
 	void init(int* tiles, int tileX, int tileY);
 	void dijkstra(int start, int end, int* path, int& pathNum);
+	void removeDuplicate(int* path, int& pathNum);
 
 public:
 	int* tiles;

@@ -104,6 +104,62 @@ void iShortestPath::dijkstra(int start, int end, int* path, int& pathNum)
 
 }
 
+void iShortestPath::removeDuplicate(int* path, int& pathNum)
+{
+
+	for (int i = 0; i < pathNum-2; i++)
+	{
+		int cp = path[i];
+		int cx = cp % tileX;
+		int cy = cp / tileY;
+
+		int np = path[i + 1];
+		int nx = np % tileX;
+		int ny = np / tileY;
+
+		if (cx == nx)
+		{
+			int n = pathNum;
+			for(int j = 2+ i; j<n; j++)
+			{
+				int p = path[j];
+				int x = p % tileX;
+
+				if (cx == x)
+				{
+					//duplicate
+					memcpy(&path[i + 1], &path[j], sizeof(int) * (n- j));
+					pathNum--;
+
+				}
+				else
+					break;
+			}
+		}
+		else if (cy == ny)
+		{
+			int n = pathNum;
+			for (int j = 2 + i; j<n; j++)
+			{
+				int p = path[j];
+				int y = p / tileX;
+
+				if (cy == y)
+				{
+					//duplicate
+					memcpy(&path[i + 1], &path[j], sizeof(int) * (n - j));
+					pathNum--;
+
+				}
+				else
+					break;
+			}
+		}
+	
+	}
+
+}
+
 
 int tiles[70] = {					
 	01, 01, 01, 01, 01, 01, 01, 01, 01, 01,
@@ -226,6 +282,9 @@ void drawShortestPath(float dt)
 	setRGBA(1, 1, 1, 1);
 }
 
+
+
+
 void keyShortestPath(iKeyState stat, iPoint point)
 {
 	if (stat == iKeyStateBegan)
@@ -249,11 +308,13 @@ void keyShortestPath(iKeyState stat, iPoint point)
 			ey * tile_num_w + ex,
 			me->path, me->pathNum);
 
+		sp->removeDuplicate(me->path, me->pathNum);
+		me->pathIndex = 0;
+	
 		for (int i = 0; i < me->pathNum; i++)
 		{
 			printf("%d , %d \n", i, me->path[i]);
 		}
-		me->pathIndex = 0;
 	}
 	
 }
