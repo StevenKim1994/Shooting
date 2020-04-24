@@ -219,6 +219,9 @@
     <ClInclude Include="lib\iOpenAL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="lib\iShortestPath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -427,6 +430,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="lib\iOpenAL.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\iShortestPath.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

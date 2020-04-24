@@ -10,10 +10,12 @@
 #include "iStrTex.h"
 
 #include "iSort.h"
-
+#include "iShortestPath.h"
 #include "iFPS.h"
 
 #include "iOpenAL.h"
+
+
 
 #if _DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")

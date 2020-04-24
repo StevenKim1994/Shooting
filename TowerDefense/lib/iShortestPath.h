@@ -1,0 +1,44 @@
+#pragma once
+
+struct TileInfo
+{
+	int value;
+	bool visit;
+	int pathNum;
+	int path[1024];
+
+};
+
+class iShortestPath
+{
+public:
+	iShortestPath();
+	virtual ~iShortestPath();
+
+	void init(int* tiles, int tileX, int tileY);
+	void dijkstra(int start, int end, int* path, int& pathNum);
+
+public:
+	int* tiles;
+	int tileX, tileY;
+	int tileXY;
+
+	TileInfo* ti;
+	int tiNum;
+
+};
+
+
+
+#define sp_inf 999
+
+extern int tiles[70];
+
+
+#define tile_num_w 10
+#define tile_num_h 7
+#define tile_size_h 60
+#define tile_size_w 60
+
+
+void drawShortestPath(float dt);

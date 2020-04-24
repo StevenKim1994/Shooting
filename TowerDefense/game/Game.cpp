@@ -46,7 +46,9 @@ void freeGame()
 
 void drawGame(float dt)
 {
-	
+	drawShortestPath(dt);
+	return;
+
 	//setClip(0, 50, devSize.width / 2, 300);
 	switch (gameState) {
 	case gs_intro:	drawIntro(dt); break;
