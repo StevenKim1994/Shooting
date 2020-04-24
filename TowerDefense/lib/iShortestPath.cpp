@@ -59,6 +59,7 @@ void iShortestPath::dijkstra(int start, int end, int* path, int& pathNum)
 		// 방문하지 않은 최소값을 가진 타일을 찾는다.
 		int curr = -1;
 		int min = sp_inf;
+		int next;
 
 		for (int i = 0; i < tileXY; i++)
 		{
@@ -83,79 +84,50 @@ void iShortestPath::dijkstra(int start, int end, int* path, int& pathNum)
 		int x = curr % tileX;
 		int y = curr / tileX;
 
-		if (x > 0) // left
+		for (int i = 0; i < 4; i++)
 		{
-			tiNext = &ti[curr - 1];
-			int value = tiCurr->value + tiles[curr - 1];
-			if (value < tiNext->value)
+			if (i == 0)
 			{
+				if (curr % tileX == 0) continue;
 
-				tiNext->value = value;
-				tiNext->pathNum = tiCurr->pathNum;
-
-				memcpy(tiNext->path, tiCurr->path, sizeof(int) * tiCurr->pathNum);
-
-				tiNext->path[tiCurr->pathNum] = curr - 1;
-				tiNext->pathNum++;
-
-			} // left;
-		}
-		if (x < tileX - 1) // right
-		{
-			tiNext = &ti[curr + 1];
-			int value = tiCurr->value + tiles[curr + 1];
-			if (value < tiNext->value)
-			{
-
-				tiNext->value = value;
-				tiNext->pathNum = tiCurr->pathNum;
-
-				memcpy(tiNext->path, tiCurr->path, sizeof(int) * tiCurr->pathNum);
-
-				tiNext->path[tiCurr->pathNum] = curr + 1;
-				tiNext->pathNum++;
-
-			} // right
-		}
-		if (y > 0) // up
-		{
-			tiNext = &ti[curr - tileX];
-			int value = tiCurr->value + tiles[curr - tileX];
-			if (value < tiNext->value)
-			{
-
-				tiNext->value = value;
-				tiNext->pathNum = tiCurr->pathNum;
-
-				memcpy(tiNext->path, tiCurr->path, sizeof(int) * tiCurr->pathNum);
-
-				tiNext->path[tiCurr->pathNum] = curr - tileX;
-				tiNext->pathNum++;
+				next = curr - 1;
 
 			}
-		}
+			else if (i == 1)
+			{
+				if (curr % tileX == tileX - 1) continue;
 
-		if (y < tileY - 1) // down
-		{
-				tiNext = &ti[curr + tileX];
-				int value = tiCurr->value + tiles[curr + tileX];
-				if (value < tiNext->value)
-				{
-
-				tiNext->value = value;
-				tiNext->pathNum = tiCurr->pathNum;
-
-				memcpy(tiNext->path, tiCurr->path, sizeof(int) * tiCurr->pathNum);
-
-				tiNext->path[tiCurr->pathNum] = curr + tileX;
-				tiNext->pathNum++;
-
-				}
-
+				next = curr + 1;
 			}
+
+			else if (i == 2)
+			{
+				if (curr / tileX == 0) continue;
+
+				next = curr - tileX;
+			}
+
+			else if (i == 3)
+			{
+				if (curr / tileX == tileY - 1) continue;
+
+				next = curr + tileX;
+			}
+
 		}
-		pathNum = ti[end].pathNum;
-		memcpy(path, ti[end].path, sizeof(int) * pathNum);
+		tiNext = &ti[next];
+		int value = tiCurr->value + tiles[next];
+		if (value < tiNext->value)
+		{
+			tiNext->value = value;
+			tiNext->pathNum = tiCurr->pathNum;
+			memcpy(tiNext->path, tiCurr->path, sizeof(int) * tiCurr->pathNum);
+			tiNext->path[tiCurr->pathNum] = next;
+			tiNext->pathNum++;
+		}
+
+
+	}
 	
 }
 
