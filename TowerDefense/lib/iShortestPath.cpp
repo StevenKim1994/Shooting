@@ -47,7 +47,9 @@ void iShortestPath::dijkstra(int start, int end, int* path, int& pathNum)
 
 	TileInfo* t = &ti[start];
 	t->value = 0;
-
+	t->path[0] = start;
+	t->pathNum = 1;
+	
 	while (1)
 	{
 		int curr = -1, next;
@@ -309,7 +311,7 @@ void keyShortestPath(iKeyState stat, iPoint point)
 			me->path, me->pathNum);
 
 		sp->removeDuplicate(me->path, me->pathNum);
-		me->pathIndex = 0;
+		me->pathIndex = 1;
 	
 		for (int i = 0; i < me->pathNum; i++)
 		{
