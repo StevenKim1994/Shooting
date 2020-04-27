@@ -248,7 +248,8 @@ struct TOTAL
 	Texture* tex; // 전체이미지
 	uint8* rgba; // 전체 RGBA값
 	bool* gone; // 비교햇는지...
-	iRect rt; // 선택된 영역
+	iRect rt; // 선택된 영역...
+	iRect rtDrag; // 드래그된 영역...
 	iImage* img; // 선택된 영역의 이미지의 리스트들... 일종의 sprite의 모음...
 };
 
@@ -323,12 +324,63 @@ void drawShortestPath(float dt)
 }
 
 void clickTotal(iPoint point);
-void dragtTotal(iRect drag);
+void dragTotal(iRect drag);
 
 
+iRect rtDrag;
+iPoint p0Drag, p1Drag;
+bool dragging = false;
 
 void keyShortestPath(iKeyState stat, iPoint point)
 {
+	if (stat == iKeyStateBegan)
+	{
+		dragging = true;
+		p0Drag = point;
+
+	}
+	else if (stat == iKeyStateMoved)
+	{
+		if (dragging)
+		{
+			p1Drag = point;
+
+			if (p0Drag.x < p1Drag.x)
+			{
+				total->rtDrag.origin.x = p0Drag.x;
+				total->rtDrag.size.width = p1Drag.x - p0Drag.x;
+			}
+			else
+			{
+				total->rtDrag.origin.x = p1Drag.x;
+				total->rtDrag.size.width = p0Drag.x - p1Drag.x;
+			}
+
+			if (p0Drag.y < p1Drag.y)
+			{
+				total->rtDrag.origin.y = p0Drag.y;
+				total->rtDrag.size.height = p1Drag.y - p0Drag.y;
+			}
+			else
+			{
+				total->rtDrag.origin.y = p1Drag.y;
+				total->rtDrag.size.height = p0Drag.y - p1Drag.y;
+			}
+
+			
+		}
+
+	}
+	else if (stat == iKeyStateEnded)
+	{
+		dragging = false;
+		dragTotal(total->rtDrag);
+		total->rtDrag = iRectMake(0, 0, 0, 0);
+
+	}
+	return;
+
+
 	if (stat == iKeyStateBegan)
 	{
 		iRect rt = iRectMake(0, 0, total->tex->width, total->tex->height);
@@ -511,5 +563,73 @@ void clickTotal(iPoint point)
 
 void dragTotal(iRect drag)
 {
-	total -> rt;
+	Texture* tex = total->tex;
+
+	uint8* rgba = total->rgba;
+	
+	for (int i = drag.origin.x; i < drag.origin.x + drag.size.width; i++)
+	{
+		bool exist = false;
+		for (int j = drag.origin.y; j < drag.origin.y + drag.size.height; j++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+		total->rt.origin.x = i;
+
+	}
+
+	for (int i = drag.origin.x + drag.size.width -1 ; i > drag.origin.x; i--)
+	{
+		bool exist = false;
+		for (int j = drag.origin.y; j < drag.origin.y + drag.size.height; j++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+		total->rt.size.width = i - total->rt.origin.x;
+	}
+
+	for (int j = drag.origin.y; j < drag.origin.y + drag.size.height; j++)
+	{
+		bool exist = false;
+		for (int i = drag.origin.x; i < drag.origin.x + drag.size.width; i++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+		total->rt.origin.y = j;
+
+	}
+
+
+
+	for (int j = drag.origin.y + drag.size.height - 1; j > drag.origin.y-1; j--)
+	{
+		bool exist = false;
+		for (int i = drag.origin.x; i < drag.origin.x + drag.size.width; i++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+		total->rt.size.height = j - total->rt.origin.y;
+
+	}
+
+
+
+
+	total->rt;
 }
