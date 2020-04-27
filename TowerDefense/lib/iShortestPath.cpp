@@ -243,10 +243,17 @@ public:
 iShortestPath* sp;
 Me* me;
 
-Texture* texTotal;
-uint8* rgbaTotal;
-iRect rtTotal;
-iImage* imgTotal;
+struct TOTAL
+{
+	Texture* tex; // 전체이미지
+	uint8* rgba; // 전체 RGBA값
+	bool* gone; // 비교햇는지...
+	iRect rt; // 선택된 영역
+	iImage* img; // 선택된 영역의 이미지의 리스트들... 일종의 sprite의 모음...
+};
+
+TOTAL* total;
+
 
 void initShortestPath()
 {
@@ -256,20 +263,23 @@ void initShortestPath()
 	me = new Me();
 	me->p = me->tp = iPointMake(tile_size_w / 2, tile_size_h / 2);
 
+	total = (TOTAL*)malloc(sizeof(TOTAL));
 	const char* path = "assets/atlas0.png";
-	texTotal = createImage(path);
+	total->tex = createImage(path);
 	{
 		wchar_t* ws = utf8_to_utf16(path);
 		Bitmap* bmp = new Bitmap(ws);
 		free(ws);
 
 		int width, height;
-		uint8* rgba = bmp2rgba(bmp, width, height);
+		total->rgba = bmp2rgba(bmp, width, height);
 		delete bmp;
+
+		total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
 	}
 
-	
-	imgTotal = NULL;
+	total->rt = iRectMake(0, 0, 0, 0);
+	total->img = NULL;
 }
 
 void freeShortestPath()
@@ -302,10 +312,18 @@ void drawShortestPath(float dt)
 	me->move(dt);
 
 	setRGBA(1, 1, 1, 1);
-	fillRect(0, 0, texTotal->width, texTotal->height);
-	drawImage(texTotal, 0, 0, TOP | LEFT);
+	fillRect(0, 0,total->tex->width, total->tex->height);
+	drawImage(total->tex, 0, 0, TOP | LEFT);
+
+	if (total->rt.origin != iPointZero && total->rt.size != iSizeZero)
+	{
+		setRGBA(1, 0, 0, 1);
+		drawRect(total->rt.origin.x, total->rt.origin.y, total->rt.size.width, total->rt.size.height);
+	}
 }
 
+void clickTotal(iPoint point);
+void dragtTotal(iRect drag);
 
 
 
@@ -313,16 +331,10 @@ void keyShortestPath(iKeyState stat, iPoint point)
 {
 	if (stat == iKeyStateBegan)
 	{
-		iRect rt = iRectMake(0, 0, texTotal->width, texTotal->height);
+		iRect rt = iRectMake(0, 0, total->tex->width, total->tex->height);
 		if (containPoint(point, rt))
 		{
-			uint8* rgba = rgbaTotal;
-			
-			int x = point.x;
-			int y = point.y;
-			int px = texTotal->potWidth;
-			rgba[px * y + 4 * x + 3];
-			//#bug
+			clickTotal(point);
 		}
 
 
@@ -356,4 +368,148 @@ void keyShortestPath(iKeyState stat, iPoint point)
 		}
 	}
 	
+}
+
+int _left, _right, _up, _down; // 각 최대 마지막 값
+
+void findRect(int x, int y)
+{
+	int index = (int)total->tex->width * y + x; // gone의 inedx;
+	if (total->gone[index])
+		return;
+
+	total->gone[index] = true;
+
+	index = (int)total->tex->potWidth * 4 * y + 4 * x;
+	
+	if (total->rgba[index + 3] == 0)// alpha != 0 경우 return...
+		return;
+
+	if (x < _left)
+		_left = x;
+
+	if (x > _right)
+		_right = x;
+
+	if (y < _up)
+		_up = y;
+
+	if (y > _down)
+		_down = y;
+
+	findRect(x - 1, y);
+	findRect(x + 1, y);
+	findRect(x, y - 1);
+	findRect(x, y + 1);
+
+
+
+}
+
+void clickTotal(iPoint point)
+{
+	Texture* tex = total->tex;
+	//tex->width, tex->height, tex->potWidth, tex->potHeight;
+	uint8* rgba = total->rgba;
+	memset(total->gone, 0x00, (int)tex->potWidth * tex->potHeight);
+
+	_left = 100000000;
+	_right = -1000000000;
+	_up = 10000000000;
+	_down = -100000000;
+	findRect(point.x, point.y);
+	_left -= 2;
+	_right += 2;
+	_up -= 2;
+	_down += 2;
+
+
+	findRect(point.x, point.y); // _left, _right, _up, _down의 최대 값 구함...
+
+	// left 
+	for (int i = point.x; i > _left; i--)
+	{
+		bool exist = false;
+		for (int j = _up; j < _down; j++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3]) // +3을 해주는 이유는 알파값이 배열의 3번 인덱스기 떄문임.
+			{
+				exist = true;
+				break;
+			}
+		}
+		
+		if (exist == false)
+		{
+			total->rt.origin.x = i + 1;
+			break;
+		}
+	}
+
+	// right
+	for (int i = point.x; i < _right; i++)
+	{
+		bool exist = false;
+		for (int j = _up; j < _down; j++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+
+		if (exist == false)
+		{
+			total->rt.size.width = i - 1 - total->rt.origin.x;
+			break;
+		}
+	}
+
+	// top
+	for(int j = point.y; j > _up; j--)
+	{ 
+		bool exist = false;
+		for (int i = _left; i <= _right; i++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+
+		if (exist == false)
+		{
+			total->rt.origin.y = j + 1;
+			break;
+		}
+	}
+
+	//bottom
+	for (int j = point.y; j < _down; j++)
+	{
+		bool exist = false;
+		for (int i = _left; i <= _right; i++)
+		{
+			if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+			{
+				exist = true;
+				break;
+			}
+		}
+
+		if (exist == false)
+		{
+			total->rt.size.height = j - 1 - total->rt.origin.y;
+			break;
+		}
+	}
+
+
+}
+
+void dragTotal(iRect drag)
+{
+	total -> rt;
 }
