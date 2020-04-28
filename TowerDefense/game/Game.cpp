@@ -6,22 +6,10 @@
 #include "Proc.h"
 #include "Ending.h"
 #include "Test.h"
-
+#include "Jump.h";
 void loadGame()
 {
-#if 0
-	loadIntro();
-	gameState = gs_intro;
-#elif 0
-	loadMenu();
-	gameState = gs_menu;
-#elif 0
-	loadEnding();
-	gameState = gs_ending;
-#else
-	loadTest();
-	gameState = 100;
-#endif
+
 
 	AudioInfo ai[4] = { { "assets/snd/0.wav", false, 0.6f },
 		{"assets/snd/1.wav", false, 0.6f },
@@ -32,7 +20,9 @@ void loadGame()
 	loadAudio(ai , 4);
 	audioPlay(2);
 
-	initShortestPath();
+
+	loadJump();
+	gameState = 101;
 }
 
 void freeGame()
@@ -43,15 +33,16 @@ void freeGame()
 	case gs_proc:	freeProc(); break;
 	case gs_ending:	freeEnding(); break;
 	case 100:		freeTest(); break;
+	case 101:		freeJump(); break;
 	}
 
-	freeShortestPath();
+//	freeShortestPath();
 }
 
 void drawGame(float dt)
 {
-	drawShortestPath(dt);
-	return;
+//	drawShortestPath(dt);
+//	return;
 
 	//setClip(0, 50, devSize.width / 2, 300);
 	switch (gameState) {
@@ -60,6 +51,7 @@ void drawGame(float dt)
 	case gs_proc:	drawProc(dt); break;
 	case gs_ending:	drawEnding(dt); break;
 	case 100:		drawTest(dt); break;
+	case 101:		drawJump(dt); break;
 	}
 
 	//setClip(0, 0, 0, 0);
@@ -72,8 +64,8 @@ void drawGame(float dt)
 
 void keyGame(iKeyState stat, iPoint point)
 {
-	keyShortestPath(stat, point);
-		return;
+	//keyShortestPath(stat, point);
+		//return;
 
 	if (keyLoading(stat, point))
 		return;
@@ -84,5 +76,6 @@ void keyGame(iKeyState stat, iPoint point)
 	case gs_proc:	keyProc(stat, point); break;
 	case gs_ending:	keyEnding(stat, point); break;
 	case 100:		keyTest(stat, point); break;
+	case 101:		keyJump(stat, point); break;
 	}
 }

@@ -155,6 +155,7 @@
     <ClInclude Include="game\Ending.h" />
     <ClInclude Include="game\Game.h" />
     <ClInclude Include="game\Intro.h" />
+    <ClInclude Include="game\Jump.h" />
     <ClInclude Include="game\Loading.h" />
     <ClInclude Include="game\Menu.h" />
     <ClInclude Include="game\Proc.h" />
@@ -234,6 +235,7 @@
     <ClCompile Include="game\Game.cpp" />
     <ClCompile Include="game\glew.c" />
     <ClCompile Include="game\Intro.cpp" />
+    <ClCompile Include="game\Jump.cpp" />
     <ClCompile Include="game\Loading.cpp" />
     <ClCompile Include="game\Menu.cpp" />
     <ClCompile Include="game\Proc.cpp" />
