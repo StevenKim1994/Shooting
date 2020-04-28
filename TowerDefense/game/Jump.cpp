@@ -11,15 +11,14 @@ uint8 tileAttr[MapTileNumX * MapTileNumY] = {
 	2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
 	2, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 2,
 	2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2,
-	2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
 MapTile* mt;
 iPoint offMt;
 
 MapHero* mh;
-
 
 void loadJump()
 {
@@ -35,9 +34,13 @@ void loadJump()
 	offMt = iPointZero;
 
 	mh = (MapHero*)malloc(sizeof(MapHero));
-	mh->position = iPointMake(MapTileWidth / 2, MapTileHeight / 2);
+	mh->position = iPointMake(MapTileWidth * 3 + MapTileWidth / 2,
+		MapTileHeight * 1 + MapTileHeight / 2);
 	mh->size = iSizeMake(MapCharWidth, MapCharHeight);
 	mh->speed = MapCharSpeed;
+	mh->jumpment = iPointZero;
+	mh->jumpNum = 0;
+	mh->_jumpNum = 2;
 }
 
 void freeJump()
@@ -69,6 +72,19 @@ void drawJump(float dt)
 		mh->position.y + offMt.y - mh->size.height / 2,
 		mh->size.width, mh->size.height);
 
+	iPoint movement = iPointMake(0, 1) * powGravity * dt;
+	mh->applyJump(movement, dt);
+
+	if (getKeyDown() & keyboard_space)
+	{
+		if (getKeyStat() & keyboard_down)
+			mh->position.y += 1;
+
+		else
+			mh->jump();
+
+	}
+
 	uint32 keyStat = getKeyStat();
 	iPoint v = iPointZero;
 	if (keyStat & keyboard_left) v.x = -1;
@@ -78,27 +94,10 @@ void drawJump(float dt)
 	if (v != iPointZero)
 	{
 		v /= iPointLength(v);
-		mh->move(v * (mh->speed * dt));
+		iPoint mp = v * (mh->speed * dt);
+		mh->move(mp + movement);
 
 		iPoint vp = offMt + mh->position;
-#if 0// 실시간 + 항상 센터
-		if (vp.x != devSize.width / 2)
-		{
-			offMt.x = devSize.width / 2 - mh->position.x;
-			if (offMt.x > 0)
-				offMt.x = 0;
-			else if (offMt.x < devSize.width - MapTileWidth * MapTileNumX)
-				offMt.x = devSize.width - MapTileWidth * MapTileNumX;
-		}
-		if (vp.y != devSize.height / 2)
-		{
-			offMt.y = devSize.height / 2 - mh->position.y;
-			if (offMt.y > 0)
-				offMt.y = 0;
-			else if (offMt.y < devSize.height - MapTileHeight * MapTileNumY)
-				offMt.y = devSize.height - MapTileHeight * MapTileNumY;
-		}
-#else// 실시간 + 1/3 벗어난 경우
 		if (vp.x < devSize.width * 0.333333f)
 		{
 			// 왼쪽으로 넘어갔을 경우
@@ -127,62 +126,55 @@ void drawJump(float dt)
 			if (offMt.y < devSize.height - MapTileHeight * MapTileNumY)
 				offMt.y = devSize.height - MapTileHeight * MapTileNumY;
 		}
-#endif
 	}
-	else// if(v == iPointZero) // 입력이 없을떄! 다시 카메라 제자리로!
+	else// if(v == iPointZero)
 	{
+		mh->move(movement);
+
 		iPoint vp = offMt + mh->position;
-		
+
 		if (vp.x != devSize.width / 2)
 		{
 			if (vp.x < devSize.width / 2)
 			{
-				offMt.x += natureSpeed * dt;
+				offMt.x += natureSpeed * dt;//
 				vp.x = offMt.x + mh->position.x;
 				if (vp.x > devSize.width / 2)
 					offMt.x = devSize.width / 2 - mh->position.x;
 			}
-			
-
-			else //if (vp.x > devSize.width / 2)
+			else
 			{
-				offMt.x -= natureSpeed * dt;
+				offMt.x -= natureSpeed * dt;//
 				vp.x = offMt.x + mh->position.x;
 				if (vp.x < devSize.width / 2)
 					offMt.x = devSize.width / 2 - mh->position.x;
-
 			}
 			if (offMt.x > 0)
 				offMt.x = 0;
-			else if (offMt.x < devSize.width - MapTileHeight * MapTileNumX)
-				offMt.x = devSize.width - MapTileHeight * MapTileNumX;
+			else if (offMt.x < devSize.width - MapTileWidth * MapTileNumX)
+				offMt.x = devSize.width - MapTileWidth * MapTileNumX;
 		}
 		if (vp.y != devSize.height / 2)
 		{
 			if (vp.y < devSize.height / 2)
 			{
-				offMt.y += natureSpeed * dt;
+				offMt.y += natureSpeed * dt;//
 				vp.y = offMt.y + mh->position.y;
 				if (vp.y > devSize.height / 2)
 					offMt.y = devSize.height / 2 - mh->position.y;
-
 			}
-			else //if (vp.y > devSize.height / 2)
+			else
 			{
-				offMt.y -= natureSpeed * dt;
+				offMt.y -= natureSpeed * dt;//
 				vp.y = offMt.y + mh->position.y;
 				if (vp.y < devSize.height / 2)
 					offMt.y = devSize.height / 2 - mh->position.y;
 			}
-		
-
 			if (offMt.y > 0)
 				offMt.y = 0;
 			else if (offMt.y < devSize.height - MapTileHeight * MapTileNumY)
 				offMt.y = devSize.height - MapTileHeight * MapTileNumY;
-			
 		}
-		
 	}
 
 	// scroll type
@@ -194,6 +186,24 @@ void drawJump(float dt)
 	// 따라가는
 }
 
+void MapHero::applyJump(iPoint& movement, float dt)
+{
+	if (jumpment == iPointZero)
+		return;
+
+	iPoint mp = jumpment * dt;
+	movement += mp;
+	jumpment -= mp;
+}
+
+void MapHero::jump()
+{
+	if (jumpNum == _jumpNum)
+		return;
+
+	jumpNum++;
+	jumpment = iPointMake(0, -1) * powJump;
+}
 void MapHero::move(iPoint mp)
 {
 	if (mp.x < 0)
@@ -305,6 +315,9 @@ void MapHero::move(iPoint mp)
 		position.y += mp.y;
 		if (position.y > min - size.height / 2)
 			position.y = min - size.height / 2;
+
+		if (position.y == min - size.height / 2)
+			jumpNum = 0;
 	}
 }
 
