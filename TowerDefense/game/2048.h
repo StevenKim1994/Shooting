@@ -8,6 +8,12 @@ void draw2048(float dt);
 void key2048(iKeyState stat, iPoint point);
 
 
+struct BLOCK
+{
+	int number;
+	iImage* img; // 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096;
+	bool combine;
+};
 
 /*
 원래는 4 * 4 판 
@@ -31,3 +37,6 @@ Rule /left, right, up, down/
 #define T_SIZE_H 60
 
 void addBlock(int x, int y, int num);
+void combineBlock(BLOCK* b);
+void copyBlock(BLOCK* to, BLOCK* from);
+void moveBlock(int direction);
