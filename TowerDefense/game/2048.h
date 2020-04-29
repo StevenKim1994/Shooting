@@ -13,7 +13,10 @@ struct BLOCK
 	int number;
 	iImage* img; // 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096;
 	bool combine;
+	iPoint p, tp;
 };
+
+#define block_move_dt 0.2
 
 /*
 원래는 4 * 4 판 
