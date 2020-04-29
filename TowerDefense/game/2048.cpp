@@ -162,7 +162,7 @@ void moveBlock(int direction)
 
 				if (b->combine) continue; // 이미 한번 합쳐졌으면 더이상 합치면 안됨!
 
-				for (int k = i - 1; i > -1; i--)
+				for (int k = i - 1; k > -1; i--)
 				{
 					BLOCK* a = block[T_NUM_X * j + k];
 					if (a)
