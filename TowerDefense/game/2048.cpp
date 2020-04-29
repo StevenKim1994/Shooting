@@ -194,7 +194,7 @@ void moveBlock(int direction)
 							
 							block[T_NUM_X * j + k] = NULL; //a =NULL;
 
-							if(block[T_NUM_X*j +i-1 ] != NULL)
+							if(block[T_NUM_X*j +i-1 ] != NULL) // 옴겼을때 바로 옆 또 검사!
 								if (block[T_NUM_X * j + i]->number == block[T_NUM_X * j + i - 1]->number)
 								{
 									combineBlock(block[T_NUM_X * j + i - 1]);
