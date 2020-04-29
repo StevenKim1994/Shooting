@@ -736,6 +736,7 @@ Texture** createDivideImage(int wNum, int hNum, const char* szFormat, ...)
     return texs;
 }
 
+
 void freeImage(Texture* tex)
 {
     if (tex->retainCount > 1)

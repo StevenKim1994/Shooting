@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="game\2048.h" />
     <ClInclude Include="game\App.h" />
     <ClInclude Include="game\Ending.h" />
     <ClInclude Include="game\Game.h" />
@@ -159,8 +160,7 @@
     <ClInclude Include="game\Loading.h" />
     <ClInclude Include="game\Menu.h" />
     <ClInclude Include="game\Proc.h" />
-    <ClInclude Include="game\ProcObject.h" />
-    <ClInclude Include="game\Test.h" />
+    <ClInclude Include="game\Sadari.h" />
     <ClInclude Include="lib\iArray.h" />
     <ClInclude Include="lib\iColor.h" />
     <ClInclude Include="lib\iFPS.h" />
@@ -230,6 +230,7 @@
     <Image Include="TowerDefense.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="game\2048.cpp" />
     <ClCompile Include="game\App.cpp" />
     <ClCompile Include="game\Ending.cpp" />
     <ClCompile Include="game\Game.cpp" />
@@ -239,8 +240,7 @@
     <ClCompile Include="game\Loading.cpp" />
     <ClCompile Include="game\Menu.cpp" />
     <ClCompile Include="game\Proc.cpp" />
-    <ClCompile Include="game\ProcObject.cpp" />
-    <ClCompile Include="game\Test.cpp" />
+    <ClCompile Include="game\Sadari.cpp" />
     <ClCompile Include="lib\iArray.cpp" />
     <ClCompile Include="lib\iColor.cpp" />
     <ClCompile Include="lib\iFPS.cpp" />

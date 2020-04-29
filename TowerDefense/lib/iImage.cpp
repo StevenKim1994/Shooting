@@ -161,14 +161,10 @@ iRect iImage::touchRect(iPoint p)
 iImage* iImage::copy()
 {
 	iImage* img = new iImage();
-
 	memcpy(img, this, sizeof(iImage));
-
-	iArray* array = new iArray(freeTex);
+	img->arrayTex = new iArray(freeTex);
 	for (int i = 0; i < arrayTex->count; i++)
-		array->addObject(arrayTex->objectAtIndex(i));
-
-	img->arrayTex = array;
+		img->addObject((Texture*)arrayTex->objectAtIndex(i));
 
 	return img;
 }

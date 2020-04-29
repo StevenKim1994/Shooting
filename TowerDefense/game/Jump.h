@@ -46,3 +46,12 @@ struct MapHero
 #define MapCharSpeed 200
 
 #define hero_color 0, 0, 1, 1
+
+
+
+
+
+// 한점에서 직선까지의 거리
+float getDistanceLine0(iPoint p, iPoint sp, iPoint ep);
+// 한점에서 선분까지의 거리
+float getDistanceLine1(iPoint p, iPoint sp, iPoint ep);

@@ -36,9 +36,6 @@
     <ClInclude Include="game\Proc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="game\ProcObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="lib\iArray.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -82,9 +79,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="game\Ending.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="game\Test.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="spine-c\include\spine\Animation.h">
@@ -225,6 +219,12 @@
     <ClInclude Include="game\Jump.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="game\2048.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="game\Sadari.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -259,9 +259,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game\Proc.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="game\ProcObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="lib\iArray.cpp">
@@ -304,9 +301,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game\Ending.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="game\Test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="spine-c\src\spine\Animation.c">
@@ -439,6 +433,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game\Jump.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="game\2048.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Sadari.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -35,7 +35,7 @@ void loadJump()
 
 	mh = (MapHero*)malloc(sizeof(MapHero));
 	mh->position = iPointMake(MapTileWidth * 3 + MapTileWidth / 2,
-		MapTileHeight * 1 + MapTileHeight / 2);
+							MapTileHeight * 1 + MapTileHeight / 2);
 	mh->size = iSizeMake(MapCharWidth, MapCharHeight);
 	mh->speed = MapCharSpeed;
 	mh->jumpment = iPointZero;
@@ -69,20 +69,18 @@ void drawJump(float dt)
 
 	setRGBA(hero_color);
 	fillRect(mh->position.x + offMt.x - mh->size.width / 2,
-		mh->position.y + offMt.y - mh->size.height / 2,
-		mh->size.width, mh->size.height);
+			mh->position.y + offMt.y - mh->size.height / 2,
+			mh->size.width, mh->size.height);
 
 	iPoint movement = iPointMake(0, 1) * powGravity * dt;
 	mh->applyJump(movement, dt);
 
 	if (getKeyDown() & keyboard_space)
 	{
-		if (getKeyStat() & keyboard_down)
-			mh->position.y += 1;
-
-		else
-			mh->jump();
-
+		//if (getKeyStat() & keyboard_down)
+		//	mh->position.y += 1;
+		//else
+		mh->jump();
 	}
 
 	uint32 keyStat = getKeyStat();
@@ -209,8 +207,8 @@ void MapHero::move(iPoint mp)
 	if (mp.x < 0)
 	{
 		// left
-		int tlx = position.x - size.width / 2; tlx /= MapTileWidth;
-		int tly = position.y - size.height / 2; tly /= MapTileHeight;
+		int tlx = position.x - size.width/2; tlx /= MapTileWidth;
+		int tly = position.y - size.height/2; tly /= MapTileHeight;
 		int bly = position.y + size.height / 2; bly /= MapTileHeight;
 		int min = 0;
 		for (int x = tlx - 1; x > -1; x--)
@@ -221,7 +219,7 @@ void MapHero::move(iPoint mp)
 				if (mt[MapTileNumX * y + x].attr == 1)
 				{
 					col = true;
-					min = MapTileWidth * (x + 1);
+					min = MapTileWidth * (x+1);
 					break;
 				}
 			}
@@ -240,7 +238,7 @@ void MapHero::move(iPoint mp)
 		int TRY = position.y - size.height / 2; TRY /= MapTileHeight;
 		int BRY = position.y + size.height / 2; BRY /= MapTileHeight;
 		int min = MapTileWidth * MapTileNumX;
-		for (int x = TRX + 1; x < MapTileNumX; x++)
+		for (int x = TRX + 1; x <MapTileNumX; x++)
 		{
 			bool col = false;
 			for (int y = TRY; y < BRY + 1; y++)
@@ -325,3 +323,47 @@ void MapHero::move(iPoint mp)
 void keyJump(iKeyState stat, iPoint point)
 {
 }
+
+// 한점에서 직선까지의 거리
+float getDistanceLine0(iPoint p, iPoint sp, iPoint ep)
+{
+#if 1
+	iPoint n = ep - sp;
+	float len = sqrtf(n.x * n.x + n.y * n.y);
+	n /= len;
+
+	iPoint m = p - sp;
+	iPoint proj = n * (m.x * n.x + m.y * n.y);
+
+	return iPointLength(m - proj);
+#endif
+
+	// sp & ep : y = ax + b
+	float a = (ep.y - sp.y) / (ep.x - sp.x);
+	float b = sp.y - a * sp.x;// y - ax
+	// y = -ax + c
+	float c = p.y + a * p.x; // y + ax
+
+	// ax + b = - ax + c
+	// 2ax = c - b
+	// x = (c-b)/2a;
+	iPoint np;
+	np.x = (c - b) / (2 * a);
+	np.y = a * np.x + b;
+
+	return iPointLength(p - np);
+}
+// 한점에서 선분까지의 거리
+float getDistanceLine1(iPoint p, iPoint sp, iPoint ep)
+{
+	iPoint n = ep - sp;
+	float len = sqrtf(n.x * n.x + n.y * n.y);
+	n /= len;
+
+	iPoint m = p - sp;
+	iPoint proj = n * max(0.0f, min((m.x * n.x + m.y * n.y), len));
+
+	return iPointLength(m - proj);
+}
+
+
