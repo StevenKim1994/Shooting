@@ -12,11 +12,14 @@ struct BLOCK
 {
 	int number;
 	iImage* img; // 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096;
-	bool combine;
-	iPoint p, tp;
+	BLOCK* com;// 더해지는 블록대상의 주소 bool combine; 
+	float createDt; // 생성되는 시간
+	float combineDt;
 };
+#define _createDt 0.1f
 
-#define block_move_dt 0.2
+#define _effectBlockDt 0.2f
+#define _combineDt 0.1f
 
 /*
 원래는 4 * 4 판 
@@ -39,7 +42,41 @@ Rule /left, right, up, down/
 #define T_SIZE_W 60
 #define T_SIZE_H 60
 
-void addBlock(int x, int y, int num);
-void combineBlock(BLOCK* b);
+void addBlock(int x, int y, int num, bool ani = false, bool combine = false);
+
 void copyBlock(BLOCK* to, BLOCK* from);
 void moveBlock(int direction);
+
+iPoint positionOfIndex(int x, int y);
+
+enum BlockStat {
+	BlockStatDestroy = 0,
+	BlockStatIncrease,
+	BlcokStatKeep,
+};
+struct EffectBlock
+{
+	Texture* tex;
+	iPoint sp, ep;
+
+	int number; 
+	BlockStat bs; 
+	BLOCK* b;
+};
+
+extern int directionCreate;
+#define _effectBlockDt 0.2f
+		
+void loadEffectBlock();
+void freeEffectBlock();
+
+bool drawEffectBlock(float dt); // 움직이는것들을 보여줄뿐인 함수
+void addEffectBlock(BLOCK* b, iPoint cp, BlockStat stat); // stat : 0 소멸, 1 증가 2 그대로
+void changeEffectBlock(BLOCK* b, iPoint ep);
+
+// -----------------------------------------------------------
+void createPopGameOver();
+void freePopGameOver();
+void showPopGameOver(bool show);
+void drawPopGameOver(float dt);
+bool keyPopGameOver(iKeyState stat, iPoint point);
