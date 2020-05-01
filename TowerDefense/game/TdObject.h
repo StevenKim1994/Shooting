@@ -19,7 +19,7 @@ void loadTdEffect();
 void freeTdEffect();
 void drawTdEffect(float dt);
 
-void addTdBB(iPoint p, iPoint v, float att);
+void addTdBB(int index, iPoint p, iPoint v, float att);
 void addTdExp(int index, iPoint p);
 
 #define _dmgDt 0.2f
@@ -50,6 +50,7 @@ struct Monster
 // ------------------------------
 struct Tower
 {
+	int index;
 	Texture* tex;
 	bool alive;
 	float att;
@@ -86,3 +87,4 @@ struct BB
 	
 
 };
+
