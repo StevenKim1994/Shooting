@@ -225,6 +225,9 @@
     <ClInclude Include="game\Sadari.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="game\Td.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -439,6 +442,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game\Sadari.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Td.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

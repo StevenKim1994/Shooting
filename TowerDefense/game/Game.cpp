@@ -9,6 +9,7 @@
 #include "Sadari.h"
 #include "Jump.h"
 #include "2048.h"
+#include "Td.h"
 
 void loadGame()
 {
@@ -43,6 +44,7 @@ void freeGame()
 	case gs_sadari: freeSadari(); break;
 	case gs_jump:	freeJump(); break;
 	case gs_2048:	free2048(); break;
+	case gs_td:		freeTd();	break;
 	}
 	freeAudio();
 
@@ -62,6 +64,7 @@ void drawGame(float dt)
 	case gs_sadari:	drawSadari(dt); break;
 	case gs_jump:	drawJump(dt); break;
 	case gs_2048:	draw2048(dt); break;
+	case gs_td:		drawTd(dt);	break;
 	}
 
 	drawLoading(dt);
@@ -83,5 +86,6 @@ void keyGame(iKeyState stat, iPoint point)
 	case gs_sadari:	keySadari(stat, point); break;
 	case gs_jump:	keyJump(stat, point); break;
 	case gs_2048:	key2048(stat, point); break;
+	case gs_td:		keyTd(stat, point); break;
 	}
 }

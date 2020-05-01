@@ -161,6 +161,7 @@
     <ClInclude Include="game\Menu.h" />
     <ClInclude Include="game\Proc.h" />
     <ClInclude Include="game\Sadari.h" />
+    <ClInclude Include="game\Td.h" />
     <ClInclude Include="lib\iArray.h" />
     <ClInclude Include="lib\iColor.h" />
     <ClInclude Include="lib\iFPS.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="game\Menu.cpp" />
     <ClCompile Include="game\Proc.cpp" />
     <ClCompile Include="game\Sadari.cpp" />
+    <ClCompile Include="game\Td.cpp" />
     <ClCompile Include="lib\iArray.cpp" />
     <ClCompile Include="lib\iColor.cpp" />
     <ClCompile Include="lib\iFPS.cpp" />

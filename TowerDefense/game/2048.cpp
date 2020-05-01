@@ -224,7 +224,7 @@ void moveBlock(int direction)
 						break;
 					}
 				}
-			}d
+			}
 			// 땡기기
 			for (int i = 0; i < T_NUM_X - 1; i++)
 			{

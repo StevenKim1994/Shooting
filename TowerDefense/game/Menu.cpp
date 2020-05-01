@@ -6,6 +6,9 @@
 #include "Sadari.h"
 #include "Jump.h"
 #include "2048.h"
+#include "Td.h"
+
+
 
 Texture* texBg;
 Texture* texTitle;
@@ -323,17 +326,19 @@ void createPopSlot()
 	pop->addObject(imgBg);
 
 	// btn - add(slot x3 & x)
-	iPoint posBtn[4] = {
+	iPoint posBtn[5] = {
 		{(256 - 201) / 2, 70 + 80 * 0},
 		{(256 - 201) / 2, 70 + 80 * 1},
 		{(256 - 201) / 2, 70 + 80 * 2},
+		{(256 - 201) / 2, 70 + 80 * 3},
 		{256 - 32, 0}
 	};
-	imgSlotBtn = (iImage**)malloc(sizeof(iImage*) * 4);
-	for (int i = 0; i < 4; i++)
+	const char* strSlot[4] = { "사다리","점프", "2048", "타워디펜스" };
+	imgSlotBtn = (iImage**)malloc(sizeof(iImage*) * 5);
+	for (int i = 0; i < 5; i++)
 	{
 		iImage* imgBtn = new iImage();
-		if (i < 3)
+		if (i < 4)
 		{
 			// slot
 			for (int j = 0; j < 2; j++)
@@ -349,14 +354,14 @@ void createPopSlot()
 				setStringRGBA(1, 1, 1, 1);
 				setStringBorder(0);
 				g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER,
-					"slot %d", 1 + i);
+					strSlot[i]);
 
 				Texture* tex = g->getTexture();
 				imgBtn->addObject(tex);
 				freeImage(tex);
 			}
 		}
-		else// if (i == 3)
+		else// if (i == 4)
 		{
 			// x
 			for (int j = 0; j < 2; j++)
@@ -417,10 +422,10 @@ bool keyPopSlot(iKeyState stat, iPoint point)
 	case iKeyStateBegan:
 		i = popSlot->selected;
 		if (i == -1) break;
-		if (i < 3)
+		if (i < 4)
 		{
 			printf("selected = %d\n", i);
-			METHOD_LOADING m[3] = { loadSadari, loadJump, load2048 };
+			METHOD_LOADING m[4] = { loadSadari, loadJump, load2048 , loadTd};
 			setLoading(gs_sadari + i, freeMenu, m[i]);
 		}
 		else// if (i == 3)
@@ -430,7 +435,7 @@ bool keyPopSlot(iKeyState stat, iPoint point)
 		break;
 
 	case iKeyStateMoved:
-		for (i = 0; i < 4; i++)
+		for (i = 0; i < 5; i++)
 		{
 			if (containPoint(point, imgSlotBtn[i]->touchRect(popSlot->closePosition)))
 			{
@@ -506,7 +511,7 @@ void createPopSettings()
 
 	iPoint posBtn[4] = { {60, 30}, {60, 30 + 70}, // thumb
 						{(256 - 201) / 2, 170},// credits
-						imgSlotBtn[3]->position + iPointMake(20, 0) };
+						imgSlotBtn[4]->position + iPointMake(20, 0) };
 	imgSettingsBtn = (iImage**)malloc(sizeof(iImage*) * 4);
 	for (int i = 0; i < 4; i++)
 	{
@@ -514,7 +519,7 @@ void createPopSettings()
 		if (i == 0)		imgBtn = imgThumb;					// thumb
 		else if (i == 1)imgBtn = imgSettingsBtn[0]->copy();	// thumb
 		else if (i == 2)imgBtn = imgCredits;				// credits
-		else			imgBtn = imgSlotBtn[3]->copy();		// x
+		else			imgBtn = imgSlotBtn[4]->copy();		// x
 		imgBtn->position = posBtn[i];
 		pop->addObject(imgBtn);
 		imgSettingsBtn[i] = imgBtn;
