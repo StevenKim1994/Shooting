@@ -12,6 +12,9 @@ void load2048()
 {
 	printf("load2048()\n");
 
+
+
+
 	int i, num = T_NUM_X * T_NUM_Y;
 	iGraphics* g = iGraphics::instance();
 	iSize size = iSizeMake(T_SIZE_W, T_SIZE_H);

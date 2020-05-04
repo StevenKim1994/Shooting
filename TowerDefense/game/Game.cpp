@@ -13,6 +13,12 @@
 
 void loadGame()
 {
+	iPoint p1 = iPointMake(3,3);
+
+	iPoint p2 = iPointZero;
+	iPoint p3 = iPointMake(10, 20);
+
+	printf("%f\n", iPointAngle(p1, p2, p3));
 #if 0
 	loadIntro();
 	gameState = gs_intro;
