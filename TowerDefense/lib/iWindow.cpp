@@ -27,7 +27,7 @@ void testcheckButton(WPARAM wParam, LPARAM lParam)
 			printf("selected Btn = %d\n", i);
 			if (i == 0)
 			{
-				showChooseColor();
+				showChooseColor(NULL);
 			}
 			return;
 		}
