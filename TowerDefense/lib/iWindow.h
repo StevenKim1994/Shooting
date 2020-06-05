@@ -19,4 +19,4 @@ void testcheckButton(WPARAM wParam, LPARAM lParam);
 
 typedef void (*methodChooseColor) (int r, int g, int b);
 
-void showChooseColor();
+void showChooseColor(methodChooseColor);
