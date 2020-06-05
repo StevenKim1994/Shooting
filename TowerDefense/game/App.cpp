@@ -2,6 +2,7 @@
 
 #include "Game.h"
 
+#if (TOOL ==0)
 HINSTANCE hInstance;
 HWND hWnd;
 HDC hDC;
@@ -179,7 +180,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_KEYDOWN:
         if (wParam == VK_ESCAPE)
             goFullscreen();
+
+        if(wParam != VK_ESCAPE)
+            keyGame(iKeyStateBegan, cursor);
+        
         keyLib(iKeyStateBegan, wParam);
+
+
         break;
     case WM_KEYUP:
         keyLib(iKeyStateEnded, wParam);
@@ -398,3 +405,4 @@ void enforceResolution(int edge, RECT& rect, int win_border_width, int win_borde
     }
     }
 }
+#endif

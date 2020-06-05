@@ -1,53 +1,64 @@
-//Microsoft Visual C++에서 생성한 리소스 스크립트입니다.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
-// TEXTINCLUDE 리소스에서 생성되었습니다.
+// Generated from the TEXTINCLUDE 2 resource.
 //
+#ifndef APSTUDIO_INVOKED
+//#include "targetver.h"
+#endif
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
+
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
+/////////////////////////////////////////////////////////////////////////////
+// 한국어(대한민국) resources
+
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
-LANGUAGE 18, 1
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// 아이콘
+// Icon
 //
 
-// 애플리케이션 아이콘이 모든 시스템에서 일관된 상태로 유지되도록
-// 가장 낮은 ID 값을 가진 아이콘이 맨 처음 배치됩니다.
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_TOWERDEFENSE        ICON                    "TowerDefense.ico"
 
-IDI_TOWERDEFENSE       ICON         "TowerDefense.ico"
-IDI_SMALL               ICON         "small.ico"
+IDI_SMALL               ICON                    "small.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// 메뉴
+// Menu
 //
 
 IDC_TOWERDEFENSE MENU
 BEGIN
-    POPUP "파일(&F)"
+    POPUP "File(&F)"
     BEGIN
-        MENUITEM "끝내기(&X)",                IDM_EXIT
+        MENUITEM "Open(&O)",                    IDM_OPEN
+        MENUITEM "Save(&S)",                    IDM_SAVE
+        MENUITEM "Exit(&X)",                    IDM_EXIT
     END
-    POPUP "도움말(&H)"
+    POPUP "Help(&H)"
     BEGIN
-        MENUITEM "정보(&A)...",           IDM_ABOUT
+        MENUITEM "Info(&A)",                    IDM_ABOUT
     END
 END
 
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// 액셀러레이터 키
+// Accelerator
 //
 
 IDC_TOWERDEFENSE ACCELERATORS
@@ -59,19 +70,20 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// 대화 상자
+// Dialog
 //
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "정보 TowerDefense"
-FONT 9, "MS Shell Dlg"
+CAPTION "TowerDefense"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "TowerDefense, 버전 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "TowerDefense, 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2020",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "확인",IDOK,113,41,50,14,WS_GROUP
+    DEFPUSHBUTTON   "aaa",IDOK,113,41,50,14,WS_GROUP
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -91,17 +103,19 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
 //
-1 TEXTINCLUDE
+
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE
+2 TEXTINCLUDE 
 BEGIN
     "#ifndef APSTUDIO_INVOKED\r\n"
     "#include ""targetver.h""\r\n"
@@ -112,7 +126,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -120,18 +134,19 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
-// 문자열 테이블
+// String Table
 //
 
 STRINGTABLE
 BEGIN
-   IDC_TOWERDEFENSE   "TOWERDEFENSE"
-   IDS_APP_TITLE       "TowerDefense"
+    IDS_APP_TITLE           "TowerDefense"
+    IDC_TOWERDEFENSE        "TOWERDEFENSE"
 END
 
-#endif
+#endif    // 한국어(대한민국) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -139,8 +154,10 @@ END
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
-// TEXTINCLUDE 리소스에서 생성되었습니다.
+// Generated from the TEXTINCLUDE 3 resource.
 //
+
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+

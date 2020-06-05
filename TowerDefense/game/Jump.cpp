@@ -80,6 +80,7 @@ void drawJump(float dt)
 		//if (getKeyStat() & keyboard_down)
 		//	mh->position.y += 1;
 		//else
+	
 		mh->jump();
 	}
 
@@ -182,6 +183,8 @@ void drawJump(float dt)
 	// 카메라
 	// 실시간
 	// 따라가는
+
+	printf("%f %f\n", offMt.x, offMt.y);
 }
 
 void MapHero::applyJump(iPoint& movement, float dt)
@@ -218,6 +221,7 @@ void MapHero::move(iPoint mp)
 			{
 				if (mt[MapTileNumX * y + x].attr == 1)
 				{
+					printf("!!!\n");
 					col = true;
 					min = MapTileWidth * (x+1);
 					break;
@@ -245,6 +249,7 @@ void MapHero::move(iPoint mp)
 			{
 				if (mt[MapTileNumX * y + x].attr == 1)
 				{
+					printf("!!!\n");
 					col = true;
 					min = MapTileWidth * x - 1;
 					break;
@@ -274,6 +279,7 @@ void MapHero::move(iPoint mp)
 			{
 				if (mt[MapTileNumX * y + x].attr == 1)
 				{
+					printf("!!!\n");
 					col = true;
 					min = MapTileHeight * (y + 1);
 					break;
@@ -301,6 +307,7 @@ void MapHero::move(iPoint mp)
 			{
 				if (mt[MapTileNumX * y + x].attr == 1)
 				{
+					printf("!!!\n");
 					col = true;
 					min = MapTileHeight * y - 1;
 					break;

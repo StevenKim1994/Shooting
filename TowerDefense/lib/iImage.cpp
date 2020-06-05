@@ -99,6 +99,7 @@ void iImage::paint(float dt, iPoint off)
 						frame = 0;
 					else// if (repeatNum == _repeatNum)
 					{
+						printf("frame: %d\n", frame);
 						if (method)
 							method(this);
 						if (lastFrame)

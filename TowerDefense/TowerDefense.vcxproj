@@ -103,7 +103,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TOOL=1;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\TowerDefense\openal\include;..\TowerDefense\spine-c\include;..\TowerDefense\lib;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include\spine;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -164,6 +164,7 @@
     <ClInclude Include="game\Td.h" />
     <ClInclude Include="game\TdData.h" />
     <ClInclude Include="game\TdObject.h" />
+    <ClInclude Include="lib\AppForCtrl.h" />
     <ClInclude Include="lib\iArray.h" />
     <ClInclude Include="lib\iColor.h" />
     <ClInclude Include="lib\iFPS.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="lib\iString.h" />
     <ClInclude Include="lib\iStrTex.h" />
     <ClInclude Include="lib\iType.h" />
+    <ClInclude Include="lib\iWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="spine-c\include\spine\Animation.h" />
     <ClInclude Include="spine-c\include\spine\AnimationState.h" />
@@ -247,6 +249,7 @@
     <ClCompile Include="game\Td.cpp" />
     <ClCompile Include="game\TdData.cpp" />
     <ClCompile Include="game\TdObject.cpp" />
+    <ClCompile Include="lib\AppForCtrl.cpp" />
     <ClCompile Include="lib\iArray.cpp" />
     <ClCompile Include="lib\iColor.cpp" />
     <ClCompile Include="lib\iFPS.cpp" />
@@ -264,6 +267,7 @@
     <ClCompile Include="lib\iStd.cpp" />
     <ClCompile Include="lib\iString.cpp" />
     <ClCompile Include="lib\iStrTex.cpp" />
+    <ClCompile Include="lib\iWindow.cpp" />
     <ClCompile Include="spine-c\src\spine\Animation.c" />
     <ClCompile Include="spine-c\src\spine\AnimationState.c" />
     <ClCompile Include="spine-c\src\spine\AnimationStateData.c" />

@@ -1,21 +1,11 @@
 #pragma once
 
+
+#if(TOOL==1)
 #include "iStd.h"
 
 #include "../resource.h"
 
-#if(TOOL==0)
-extern iPoint cursor;
-void loadCursor();
-void freeCursor();
-void drawCursor(float dt);
-bool updateCursor(bool inClient);
-
-extern bool isFullscreen;
-void goFullscreen();
-
-extern int win_border_width, win_border_height;
-void enforceResolution(int edge, RECT& rect, int win_border_width, int win_border_height);
 
 #define DEV_MIN_RATE 1/3.
 /*
@@ -60,7 +50,7 @@ void enforceResolution(int edge, RECT& rect, int win_border_width, int win_borde
 	4. image - frequency / size
 	5. storage - 숫자 / 지역변수
 	6. file io - struct padding
-	7. sound - 
+	7. sound -
 */
 
 

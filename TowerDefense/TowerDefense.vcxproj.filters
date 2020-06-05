@@ -234,6 +234,12 @@
     <ClInclude Include="game\TdObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="lib\AppForCtrl.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\iWindow.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -457,6 +463,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game\TdObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\AppForCtrl.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\iWindow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

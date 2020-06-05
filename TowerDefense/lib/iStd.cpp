@@ -205,6 +205,8 @@ static void keyLib(uint32& key, iKeyState stat, int c)
 
 void keyLib(iKeyState stat, int c)
 {
+
+
     if (stat == iKeyStateBegan)
     {
         takeScreenshot = true;
