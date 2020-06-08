@@ -26,3 +26,24 @@ void showChooseColor(methodChooseColor);
 //wchar_t
 const char* openFileDlg(bool open, LPCWSTR filter); // true : load, false : save
 
+HANDLE startOnlyRun(const wchar_t* className);
+void endOnlyRun(HANDLE handle);
+
+
+class iCriticalSection
+{
+private:
+	iCriticalSection();
+
+public :
+
+	static iCriticalSection* instance();
+	virtual ~iCriticalSection();
+
+	void start();
+	void end();
+
+private:
+	CRITICAL_SECTION cs;
+
+};

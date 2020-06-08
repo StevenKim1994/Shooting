@@ -18,6 +18,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
+    HANDLE handle = startOnlyRun(szWindowClass);
+    
+    if (handle == NULL)
+    {
+        MessageBox(NULL, TEXT("중복실행"), TEXT("Title"), MB_OK);
+        return 0;
+    }
+
+
     ULONG_PTR gpToken = startGdiplus();
 
     hInstance = hInst;
@@ -35,6 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
     wc.lpszMenuName = MAKEINTRESOURCEW(IDC_TOWERDEFENSE);
     wc.lpszClassName = szWindowClass;
     wc.hIconSm = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
     RegisterClassExW(&wc);
 
     hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
@@ -66,7 +76,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
-
         }
         else
         {
@@ -76,9 +85,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         }
     }
 
-
     DestroyWindow(hWnd);
     endGdiplus(gpToken);
+    endOnlyRun(handle);
 
     return (int)msg.wParam;
 }
@@ -122,6 +131,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_DROPFILES:
+    {
+        HDROP hDrop = (HDROP)wParam;
+        HWND hwnd = (HWND)lParam;
+        wchar_t wstrPath[1024]; 
+        DragQueryFile(hDrop, 0, wstrPath, 1024);
+        char* strPath = utf16_to_utf8(wstrPath);
+        printf("strPath = [%s]\n", strPath);
+        free(strPath);
+
+        break;
+    }
+
 
     case WM_COMMAND:
     {

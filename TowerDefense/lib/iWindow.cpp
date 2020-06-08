@@ -14,10 +14,12 @@ void initWndCtrlSystem()
 	InitCommonControls(); 
 	ctrlNum = 0;
 
+
 }
 
 HWND* hBt;
 HWND hBtnCheck;
+
 void testcheckButton(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = (HWND)lParam;
@@ -119,10 +121,29 @@ const char* openFileDlg(bool open, LPCWSTR filter)
 
 }
 
+HANDLE startOnlyRun(const wchar_t* className)
+{
+	HANDLE event = CreateEvent(NULL, TRUE, FALSE, className);
+	if (GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		CloseHandle(event);
+		return NULL;
+	}
+	return event;
+}
+
+void endOnlyRun(HANDLE handle)
+{
+	CloseHandle(handle);
+}
+
 void testCtrlSystem(HWND hwnd, HINSTANCE hinstance)
 {
 	hWnd = hwnd;
 	hInstance = hinstance;
+
+	DragAcceptFiles(hWnd, true);
+
 	createWndStatic(10, 10, 200, 80, "TOOL");
 	
 	hBt = (HWND*)malloc(sizeof(HWND) * 3);
@@ -132,6 +153,7 @@ void testCtrlSystem(HWND hwnd, HINSTANCE hinstance)
 		hBt[i]=createWndButton(10+220*i, 120, 200, 80, strBtn[i]);
 
 	hBtnCheck = createWndCheckBox(10, 220, 200, 80, "동의함");
+
 
 }
 
@@ -172,4 +194,36 @@ HWND createWndCheckBox(int x, int y, int width, int height, const char* str)
 
 	return hwnd;
 
+}
+
+static iCriticalSection* instanceCS = NULL;
+
+iCriticalSection::iCriticalSection()
+{
+	InitializeCriticalSection(&cs);
+}
+
+iCriticalSection* iCriticalSection::instance()
+{
+	if (instanceCS == NULL)
+		instanceCS = new iCriticalSection();
+	return instanceCS;
+}
+
+iCriticalSection::~iCriticalSection()
+{
+	DeleteCriticalSection(&cs);
+	delete instanceCS;
+
+	instanceCS = NULL;
+}
+
+void iCriticalSection::start()
+{
+	EnterCriticalSection(&cs);
+}
+
+void iCriticalSection::end()
+{
+	LeaveCriticalSection(&cs);
 }
