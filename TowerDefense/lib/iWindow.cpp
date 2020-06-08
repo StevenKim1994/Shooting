@@ -19,6 +19,8 @@ void initWndCtrlSystem()
 
 HWND* hBt;
 HWND hBtnCheck;
+HWND* hBtnRadio;
+HWND hCbWho;
 
 void testcheckButton(WPARAM wParam, LPARAM lParam)
 {
@@ -44,6 +46,21 @@ void testcheckButton(WPARAM wParam, LPARAM lParam)
 		setCheckBox(hwnd, !getCheckBox(hwnd));
 		return;
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (hwnd == hBtnRadio[i])
+		{
+			setWndRadio(hBtnRadio[i], true);
+		}
+		else
+		{
+			setWndRadio(hBtnRadio[i], false);
+		}
+	}
+
+
+
 }
 
 bool getCheckBox(HWND hwnd)
@@ -54,6 +71,162 @@ bool getCheckBox(HWND hwnd)
 void setCheckBox(HWND hwnd, bool on)
 {
 	SendMessage(hwnd, BM_SETCHECK, on ? BST_CHECKED : BST_UNCHECKED, 0);
+}
+
+HWND createWndRadio(int x, int y, int width, int height, const char* str)
+{
+	wchar_t* ws = utf8_to_utf16(str);
+
+	HWND hwnd = CreateWindow(WC_BUTTON, ws, WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+
+	ctrlNum++;
+	free(ws);
+
+	return hwnd;
+}
+
+bool getWndRadio(HWND hwnd)
+{
+	return SendMessage(hwnd, (UINT)BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+}
+
+void setWndRadio(HWND hwnd, bool on)
+{
+	SendMessage(hwnd, BM_SETCHECK, on ? BST_CHECKED : BST_UNCHECKED, 0);
+}
+
+HWND createWndGroup(int x, int y, int width, int height, const char* str)
+{
+	wchar_t* ws = utf8_to_utf16(str);
+
+	HWND hwnd = CreateWindow(WC_BUTTON, ws, WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_GROUPBOX, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+
+	ctrlNum++;
+	free(ws);
+
+	return hwnd;
+}
+
+HWND createWndComboBox(int x, int y, int width, int height, const char** line, int lineNum)
+{
+	HWND hwnd = CreateWindow(WC_COMBOBOX, NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_BORDER | CBS_DROPDOWN | CBS_HASSTRINGS, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+	
+
+
+	ctrlNum++;
+	addWndComboBox(hwnd, line, lineNum);
+
+	setWndComboBox(hwnd, 0);
+
+	return hwnd;
+}
+
+void addWndComboBox(HWND hwnd, int index, const char* str)
+{
+	wchar_t* ws = utf8_to_utf16(str);
+
+	SendMessage(hwnd, CB_INSERTSTRING, (WPARAM)index, (LPARAM)ws);
+	
+	free(ws);
+
+}
+
+void addWndComboBox(HWND hwnd, const char** line, int lineNum)
+{
+	for (int i = 0; i < lineNum; i++)
+	{
+		addWndComboBox(hwnd, i, line[i]);
+	}
+}
+
+void removeWndComboBox(HWND hwnd, int index)
+{
+	SendMessage(hwnd, CB_DELETESTRING, (WPARAM)index, (LPARAM)0);
+}
+
+void setWndComboBox(HWND hwnd, int index)
+{
+	SendMessage(hwnd, CB_SETCURSEL, (WPARAM)index, (LPARAM)0);
+}
+
+int indexWndComboBox(HWND hwnd)
+{
+	int index = SendMessage(hwnd, CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+	return index;
+}
+
+int countWndComboBox(HWND hwnd)
+{
+	SendMessage(hwnd, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+}
+
+char* getWndComboBox(HWND hwnd, int index)
+{
+	wchar_t wstr[128];
+
+	SendMessage(hwnd, CB_GETLBTEXT, (WPARAM)index, (LPARAM)wstr);
+
+	return utf16_to_utf8(wstr);
+}
+
+HWND createWndListBox(int x, int y, int width, int height, const char** line, int lineNum)
+{
+
+	HWND hwnd = CreateWindow(WC_LISTBOX, NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_HSCROLL| WS_VSCROLL|  LBS_NOTIFY | LBS_HASSTRINGS, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+
+	ctrlNum++;
+	addWndListBox(hwnd, line, lineNum);
+
+	setWndListBox(hwnd, 0);
+
+	return hwnd;
+}
+
+void addWndListBox(HWND hwnd, int index, const char* str)
+{
+	wchar_t* ws = utf8_to_utf16(str);
+
+	SendMessage(hwnd, LB_INSERTSTRING, (WPARAM)index, (LPARAM)ws);
+
+	free(ws);
+}
+
+void addWndListBox(HWND hwnd, const char** line, int lineNum)
+{
+	for (int i = 0; i < lineNum; i++)
+	{
+		addWndListBox(hwnd, i, line[i]);
+	}
+}
+
+void removeWndListBox(HWND hwnd, int index)
+{
+	SendMessage(hwnd, LB_DELETESTRING, (WPARAM)index, (LPARAM)0);
+}
+
+void setWndListBox(HWND hwnd, int index)
+{
+	SendMessage(hwnd, LB_SETCURSEL, (WPARAM)index, (LPARAM)0);
+}
+
+int indexWndListBox(HWND hwnd)
+{
+	int index = SendMessage(hwnd, LB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+	return index;
+}
+
+int countWndListBox(HWND hwnd)
+{
+	SendMessage(hwnd, LB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+}
+
+char* getWndListBox(HWND hwnd, int index)
+{
+	wchar_t wstr[128];
+
+	SendMessage(hwnd, LB_GETTEXT, (WPARAM)index, (LPARAM)wstr);
+
+	return utf16_to_utf8(wstr);
 }
 
 void showChooseColor(methodChooseColor method)
@@ -153,7 +326,16 @@ void testCtrlSystem(HWND hwnd, HINSTANCE hinstance)
 		hBt[i]=createWndButton(10+220*i, 120, 200, 80, strBtn[i]);
 
 	hBtnCheck = createWndCheckBox(10, 220, 200, 80, "동의함");
+	hBtnRadio = (HWND*)malloc(sizeof(HWND) * 3);
+	createWndGroup(5, 300, 300, 120, "설문지");
 
+	const char* strBtnRadio[3] = { "1", "2", "3" };
+	for (int i = 0; i < 3; i++)
+		hBtnRadio[i] = createWndRadio(10 + 100 * i, 320, 80, 80, strBtnRadio[i]);
+
+	const char* strLine[5] = { "최정훈", "정성원", "이호민", "김시윤", "김종민" };
+
+	hCbWho = createWndComboBox(10, 450, 120, 120 * 2, strLine, 5);
 
 }
 
@@ -174,7 +356,7 @@ HWND createWndButton(int x, int y, int width, int height, const char* str)
 {
 	wchar_t* ws = utf8_to_utf16(str);
 
-	HWND hwnd = CreateWindow(WC_BUTTON, ws, WS_TABSTOP |WS_CHILD | WS_VISIBLE | BS_PUSHBOX, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+	HWND hwnd = CreateWindow(WC_BUTTON, ws, WS_TABSTOP |WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
 
 	ctrlNum++;
 	free(ws);
