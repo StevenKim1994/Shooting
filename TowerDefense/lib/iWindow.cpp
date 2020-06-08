@@ -21,6 +21,8 @@ HWND* hBt;
 HWND hBtnCheck;
 HWND* hBtnRadio;
 HWND hCbWho;
+HWND hLbWho;
+HWND hBtnWhoAdd, hBtnWhoRemove;
 
 void testcheckButton(WPARAM wParam, LPARAM lParam)
 {
@@ -59,7 +61,32 @@ void testcheckButton(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
+	if (hwnd == hBtnWhoAdd)
+	{
+		int index =	indexWndComboBox(hCbWho);
+		char* str = getWndComboBox(hCbWho, index);
+		
+		int last = countWndListBox(hLbWho) - 1;
+		addWndListBox(hLbWho, last, getWndComboBox(hCbWho, index));
+		free(str);
+	}
+	else if (hwnd == hBtnWhoRemove)
+	{
+#if 0
+		int index = indexWndListBox(hLbWho);
 
+		if (index != countWndListBox(hLbWho) - 1)
+		{
+			removeWndListBox(hLbWho, index);
+			setWndListBox(hLbWho, index);
+		}
+#else
+		int index = indexWndComboBox(hCbWho);
+		removeWndComboBox(hCbWho, index);
+		setWndComboBox(hCbWho, index);
+
+#endif
+	}
 
 }
 
@@ -157,7 +184,9 @@ int indexWndComboBox(HWND hwnd)
 
 int countWndComboBox(HWND hwnd)
 {
-	SendMessage(hwnd, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+	
+	return SendMessage(hwnd, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+	
 }
 
 char* getWndComboBox(HWND hwnd, int index)
@@ -171,7 +200,6 @@ char* getWndComboBox(HWND hwnd, int index)
 
 HWND createWndListBox(int x, int y, int width, int height, const char** line, int lineNum)
 {
-
 	HWND hwnd = CreateWindow(WC_LISTBOX, NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_HSCROLL| WS_VSCROLL|  LBS_NOTIFY | LBS_HASSTRINGS, x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
 
 	ctrlNum++;
@@ -217,7 +245,9 @@ int indexWndListBox(HWND hwnd)
 
 int countWndListBox(HWND hwnd)
 {
-	SendMessage(hwnd, LB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+
+	return SendMessage(hwnd, LB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+
 }
 
 char* getWndListBox(HWND hwnd, int index)
@@ -334,8 +364,12 @@ void testCtrlSystem(HWND hwnd, HINSTANCE hinstance)
 		hBtnRadio[i] = createWndRadio(10 + 100 * i, 320, 80, 80, strBtnRadio[i]);
 
 	const char* strLine[5] = { "최정훈", "정성원", "이호민", "김시윤", "김종민" };
-
+	const char* strList[1] = { "List of End" };
 	hCbWho = createWndComboBox(10, 450, 120, 120 * 2, strLine, 5);
+	hLbWho = createWndListBox(140, 450, 120, 120 * 2, strList, 1);
+
+	hBtnWhoAdd = createWndButton(300, 450, 80, 30, "Add");
+	hBtnWhoRemove = createWndButton(300, 450+80, 80, 30, "Del");
 
 }
 
