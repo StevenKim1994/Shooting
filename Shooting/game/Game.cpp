@@ -11,8 +11,8 @@ void loadGame()
 	loadIntro();
 	gameState = gs_intro;
 #else
-	loadMenu();
-	gameState = gs_menu;
+	loadProc();
+	gameState = gs_proc;
 #endif
 }
 

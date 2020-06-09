@@ -29,7 +29,7 @@ void loadScript(HWND hwnd, HINSTANCE hinstance)
 	hEbItem = createWndEditBox(5, 150, 100, 30, "name");
 	hBtnItemAdd = createWndButton(110, 150, 100, 30, "ADD");
 	const char* lineItem[1] = { "End of Item" };
-	hEbItem = createWndListBox(5, 185, 120, 100, lineItem, 1);
+	hLbItem = createWndListBox(5, 185, 120, 100, lineItem, 1);
 
 
 }
@@ -96,7 +96,6 @@ void updateScript(WPARAM wParam, LPARAM lParam)
 			free(str);
 		}
 	}
-
 	else if (hBtnItemAdd == hwnd)
 	{
 		char* str = getWndText(hEbItem);
@@ -126,19 +125,19 @@ void updateScript(WPARAM wParam, LPARAM lParam)
 
 		inputItem = newItem();
 	}
-
-	else if (hLbItem == hwnd)
+	else if(hLbItem == hwnd)
 	{
 		int index = indexWndListBox(hLbItem);
-		int count = countWndListBox(hLbItem);
+		int count = indexWndListBox(hLbItem);
 
-		if (index < count - 1)
+		if(index <count -1)
 		{
 			char* str = getWndListBox(hLbItem, index);
-			setWndText(hEbItem, str);
+			setWndText(hLbItem, str);
 			free(str);
 		}
 	}
+	
 }
 
 void drawScript(float dt)

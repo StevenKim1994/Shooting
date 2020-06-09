@@ -105,13 +105,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>TOOL=1;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\user\Documents\GitHub\Shooting\TowerDefense\ctrl;..\TowerDefense\openal\include;..\TowerDefense\spine-c\include;..\TowerDefense\lib;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include\spine;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\TowerDefense\ctrl;..\TowerDefense\openal\include;..\TowerDefense\spine-c\include;..\TowerDefense\lib;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include\spine;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Shooting\TowerDefense\openal\libs\Win64;..\TowerDefense\openal\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win64;..\Shooting\TowerDefense\openal\libs\Win64;..\TowerDefense\openal\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
