@@ -2,6 +2,7 @@
 #if (TOOL ==1)
 #include "AppForCtrl.h"
 #include "iWindow.h"
+#include "Script.h"
 
 HINSTANCE hInstance;
 HWND hWnd;
@@ -51,8 +52,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
     hDC = GetDC(hWnd);
 
-    initWndCtrlSystem();
-    testCtrlSystem(hWnd,hInstance);
+    loadScript(hWnd, hInstance);
+    //testCtrlSystem(hWnd,hInstance);
 
     RECT rect;
     GetClientRect(hWnd, &rect);
@@ -132,22 +133,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_DROPFILES:
-    {
-        HDROP hDrop = (HDROP)wParam;
-        HWND hwnd = (HWND)lParam;
-        wchar_t wstrPath[1024]; 
-        DragQueryFile(hDrop, 0, wstrPath, 1024);
-        char* strPath = utf16_to_utf8(wstrPath);
-        printf("strPath = [%s]\n", strPath);
-        free(strPath);
-
+   
+        dragScript(wParam, lParam);
         break;
-    }
+    
 
 
     case WM_COMMAND:
     {
-        testcheckButton(wParam, lParam);
+        updateScript(wParam, lParam);
 
         int wmID = LOWORD(wParam);
 
