@@ -3,17 +3,11 @@
 #include "iStd.h"
 #include "iWindow.h"
 
-struct Nom
+typedef struct _Nom
 {
 	char* name;
 	char* path;
-};
-
-struct Item
-{
-	char* name;
-	char* path;
-};
+} Nom, Item;
 
 struct Quest
 {

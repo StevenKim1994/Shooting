@@ -5,10 +5,13 @@
 static HWND hWnd;
 static HINSTANCE hInstance;
 int ctrlNum;
-void initWndCtrlSystem()
+void initWndCtrlSystem(HWND hwnd, HINSTANCE hinstance)
 {
 	InitCommonControls();
 	ctrlNum = 0;
+
+	hWnd = hwnd;
+	hInstance = hinstance;
 }
 
 HWND createWndStatic(int x, int y, int width, int height,

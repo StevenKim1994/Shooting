@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "comctl32")
 
-void initWndCtrlSystem();
+void initWndCtrlSystem(HWND hwnd, HINSTANCE hinstance);
 
 //
 // Static
