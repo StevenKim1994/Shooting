@@ -14,7 +14,6 @@ void initWndCtrlSystem()
 	InitCommonControls(); 
 	ctrlNum = 0;
 
-
 }
 
 HWND* hBt;
@@ -23,7 +22,8 @@ HWND* hBtnRadio;
 HWND hCbWho;
 HWND hLbWho;
 HWND hBtnWhoAdd, hBtnWhoRemove;
-
+HWND hEbTmp;
+HWND hDlgTest;
 void testcheckButton(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = (HWND)lParam;
@@ -43,9 +43,15 @@ void testcheckButton(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
+
 	if (hwnd == hBtnCheck)
 	{
-		setCheckBox(hwnd, !getCheckBox(hwnd));
+		bool check = getCheckBox(hwnd);
+		setCheckBox(hwnd, !check);
+		enableWnd(hEbTmp, !check);
+		ShowWindow(hDlgTest, SW_SHOW);
+	
+
 		return;
 	}
 
@@ -259,6 +265,143 @@ char* getWndListBox(HWND hwnd, int index)
 	return utf16_to_utf8(wstr);
 }
 
+static int ebMaxLength = 10;
+
+void setWndEditBoxLength(int maxLength)
+{
+	ebMaxLength = maxLength;
+}
+
+LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) // 메인윈도우보다 우선순위를 먼저하기 위해서!
+{
+	WNDPROC wpOld = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+	switch (msg)
+	{
+	case WM_NCDESTROY:
+		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)wpOld);
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
+		break;
+
+	case WM_CHAR:
+	{
+		//숫자 값은 제외
+		if (wParam >= '0' && wParam <= '9')
+			return 0;
+
+		//return 0; 실제 화면에 입력안되게 하려면 리턴해버리면됨 예를들어서 숫자만 들어와야하는데 문자가 들어올떄 예외처리할때 씀!
+		
+		wchar_t ws[1024]; // 완성된 값
+		int length = GetWindowTextLength(hwnd) + 1;
+		GetWindowText(hwnd, ws, length);
+		char* s = utf16_to_utf8(ws);
+		printf("%c %s\n", wParam, s);
+		free(s);
+		break;
+	} // end of WM_CHAR
+
+
+	}// end of switch
+
+	return CallWindowProc(wpOld, hwnd, msg, wParam, lParam);
+
+}
+
+HWND createWndEditBox(int x, int y, int width, int height, const char* str)
+{
+	wchar_t* s = utf8_to_utf16(str);
+	HWND hwnd = CreateWindow(WC_EDIT, s, WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_BORDER| ES_CENTER , x, y, width, height, (HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+	free(s);
+	ctrlNum++;
+	SendMessage(hwnd, (UINT)EM_LIMITTEXT, (WPARAM)ebMaxLength, (LPARAM)0);
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)WndEditBoxProc);
+	return hwnd;
+}
+
+void enableWnd(HWND hwnd, bool enable)
+{
+	EnableWindow(hwnd, enable);
+}
+
+void setWndText(HWND hwnd, const char* szFormat, ...)
+{
+	char szText[1024];
+	va_list args;
+
+	va_start(args, szFormat);
+	_vsnprintf(szText, sizeof(szText), szFormat, args);
+	va_end(args);
+
+	wchar_t* ws = utf8_to_utf16(szText);
+	SetWindowText(hwnd, ws);
+	free(ws);
+}
+
+char* getWndText(HWND hwnd)
+{
+	wchar_t ws[1024];
+	int length = GetWindowTextLength(hwnd) + 1;
+	GetWindowText(hwnd, ws, length);
+
+	return utf16_to_utf8(ws);
+}
+
+int getWndInt(HWND hwnd)
+{
+	char* str = getWndText(hwnd);
+	int n = atoi(str);
+	free(str);
+	return n;
+}
+
+float getWndFloat(HWND hwnd)
+{
+	char* str = getWndText(hwnd);
+	float n = atof(str);
+	free(str);
+	return n;
+}
+
+LRESULT CALLBACK dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_CLOSE:
+
+		//unshow
+		ShowWindow(hDlgTest, SW_HIDE);
+
+		//destroy
+
+		break;
+	default:
+		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
+	return 0;
+}
+
+HWND createWndDlg(int x, int y, int width, int height, const char* strTitle, WNDPROC wndProc)
+{
+	wchar_t* ws = utf8_to_utf16(strTitle);
+	LPCWSTR dlgClassName = ws;
+
+	WNDCLASSEX wc;
+	if (GetClassInfoEx(NULL, TEXT("#32770"), &wc))
+	{
+		wc.cbSize = sizeof(WNDCLASSEX);
+		wc.lpfnWndProc = wndProc;
+		wc.lpszClassName = dlgClassName;
+		RegisterClassEx(&wc);
+	}
+
+	HWND hDlg = CreateWindowEx(WS_EX_DLGMODALFRAME,dlgClassName, ws, WS_SYSMENU | WS_CAPTION, x, y, width, height, (HWND)NULL, (HMENU)0, hInstance, NULL);
+	free(ws);
+
+	return hDlg;
+	 
+}
+
 void showChooseColor(methodChooseColor method)
 {
 	CHOOSECOLOR cc;// 색선택하는 이미 만들어져있는 윈도우
@@ -370,6 +513,10 @@ void testCtrlSystem(HWND hwnd, HINSTANCE hinstance)
 
 	hBtnWhoAdd = createWndButton(300, 450, 80, 30, "Add");
 	hBtnWhoRemove = createWndButton(300, 450+80, 80, 30, "Del");
+
+	hEbTmp = createWndEditBox(10, 500, 100, 50, "aaa");
+
+	hDlgTest = createWndDlg(0, 0, 200, 200, "TestDlg", dlgProc);
 
 }
 

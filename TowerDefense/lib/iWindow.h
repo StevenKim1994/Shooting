@@ -55,7 +55,21 @@ int indexWndListBox(HWND hwnd);
 int countWndListBox(HWND hwnd);
 char* getWndListBox(HWND hwnd, int index);
 
+//
+//EditBox
+//
+void setWndEditBoxLength(int maxLength);
+HWND createWndEditBox(int x, int y, int width, int height, const char* str);
+void enableWnd(HWND hwnd, bool enable);
+void setWndText(HWND hwnd, const char* szFormat,...);
+char* getWndText(HWND hwnd);
+int getWndInt(HWND hwnd);
+float getWndFloat(HWND hwnd);
 
+//
+//Dialog
+//
+HWND createWndDlg(int x, int y, int width, int height, const char* strTitle, WNDPROC wndProc);
 
 typedef void (*methodChooseColor) (int r, int g, int b);
 void showChooseColor(methodChooseColor);
