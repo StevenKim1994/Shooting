@@ -151,6 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ctrl\DlgItem.h" />
+    <ClInclude Include="ctrl\DlgNom.h" />
+    <ClInclude Include="ctrl\DlgQuest.h" />
     <ClInclude Include="ctrl\Script.h" />
     <ClInclude Include="ctrl\ScriptData.h" />
     <ClInclude Include="game\2048.h" />
@@ -237,6 +240,9 @@
     <Image Include="TowerDefense.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ctrl\DlgItem.cpp" />
+    <ClCompile Include="ctrl\DlgNom.cpp" />
+    <ClCompile Include="ctrl\DlgQuest.cpp" />
     <ClCompile Include="ctrl\Script.cpp" />
     <ClCompile Include="ctrl\ScriptData.cpp" />
     <ClCompile Include="game\2048.cpp" />

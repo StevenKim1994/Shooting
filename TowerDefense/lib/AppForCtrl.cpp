@@ -130,11 +130,23 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    LRESULT result; 
+
     switch (message)
     {
     case WM_DROPFILES:
    
         dragScript(wParam, lParam);
+        break;
+   
+    case WM_CTLCOLORSTATIC:
+    case WM_CTLCOLORBTN:
+    case WM_CTLCOLORDLG:
+    case WM_CTLCOLOREDIT:
+    case WM_CTLCOLORLISTBOX:
+        result = colorScript(wParam, lParam);
+        if (result)
+            return result;
         break;
     
 
@@ -153,6 +165,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             break;
         }
+
+
 
         case IDM_ABOUT:
         {

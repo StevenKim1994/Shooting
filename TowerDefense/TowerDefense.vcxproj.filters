@@ -246,6 +246,15 @@
     <ClInclude Include="ctrl\ScriptData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ctrl\DlgNom.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl\DlgItem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl\DlgQuest.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -481,6 +490,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ctrl\ScriptData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl\DlgNom.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl\DlgItem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl\DlgQuest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

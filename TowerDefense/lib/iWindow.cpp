@@ -2,33 +2,147 @@
 
 #include "iStd.h"
 
-static HWND hWnd;
-static HINSTANCE hInstance;
-int ctrlNum;
-void initWndCtrlSystem(HWND hwnd, HINSTANCE hinstance)
+WndCtrlSystem::WndCtrlSystem(HWND hwnd, HINSTANCE hinst)
+{
+	hwndParent = hwnd;
+	hinstance = hinst;
+	wc = (WndCtrl*)malloc(sizeof(WndCtrl) * 1024);
+	wcNum = 0;
+}
+
+WndCtrlSystem::~WndCtrlSystem()
+{
+	for (int i = 0; i < wcNum; i++)
+		DestroyWindow(wc[i].hwnd);
+
+	free(wc);
+}
+
+
+void WndCtrlSystem::dragAcceptFiles(WndDrag drag)
+{
+	DragAcceptFiles(hwndParent, true);
+	methodDrag = drag;
+}
+
+void WndCtrlSystem::dropFiles(WPARAM wParam, LPARAM lParam)
+{
+	HDROP hDrop = (HDROP)wParam;
+	HWND hwnd = (HWND)lParam;
+	wchar_t wstrPath[1024];
+	DragQueryFile(hDrop, 0, wstrPath, 1024);
+
+	char* strPath = utf16_to_utf8(wstrPath);
+	if (methodDrag)
+		methodDrag(strPath);
+	free(strPath);
+}
+
+void WndCtrlSystem::add(HWND hwnd, WndStyle style, WndCtrlColor color,  WndCtrlUpdate update)
+{
+	WndCtrl* c = &wc[wcNum];
+	c->hwnd = hwnd;
+	c->style = style;
+	c->color = color;
+	c->update = update;
+
+	wcNum++;
+}
+
+LRESULT WndCtrlSystem::color(WPARAM wParam, LPARAM lParam)
+{
+	//HDC hdc = (HDC)wParam;
+	HWND hwnd = (HWND)lParam;
+	
+	for (int i = 0; i < wcNum; i++)
+	{
+		WndCtrl* c = &wc[i];
+		if (c->hwnd == hwnd)
+		{
+			if(c->color)
+				return c->color(wParam, lParam);
+
+			return (LRESULT)0;
+		}
+	}
+
+	return (LRESULT)0;
+}
+
+void WndCtrlSystem::update(WPARAM wParam, LPARAM lParam)
+{
+	int id = LOWORD(wParam);
+
+	WndCtrl* c = &wc[id];
+
+	switch (c->style)
+	{
+	case WndStyle_static: // none
+		break;
+	case WndStyle_button:
+	case WndStyle_checkBox:
+	case WndStyle_radio:
+		if(c->update)
+		c->update(wParam, lParam);
+		break;
+
+	case WndStyle_comboBox:
+		if (c->update)
+		c->update(wParam, lParam);
+		break;
+
+	case WndStyle_listBox:
+		if (c->update)
+		c->update(wParam, lParam);
+		break;
+
+	case WndStyle_editBox:
+		if (c->update)
+			c->update(wParam, lParam);
+		break;
+
+	case WndStyle_dialog:
+		break;
+	case WndStyle_opengl:
+		break;
+	}
+	c->hwnd;
+	c->style;
+
+
+}
+
+void initWndCtrlSystem()
 {
 	InitCommonControls();
-	ctrlNum = 0;
 
-	hWnd = hwnd;
-	hInstance = hinstance;
+}
+
+
+WndCtrlSystem* wcs; // 현재 사용하고 있는 컨트롤시스템
+
+
+void setWndCtrlSystem(WndCtrlSystem* _wcs)
+{
+	wcs = _wcs;
 }
 
 HWND createWndStatic(int x, int y, int width, int height,
-	const char* str)
+	const char* str, WndCtrlColor color , WndCtrlUpdate update)
 {
 	wchar_t* ws = utf8_to_utf16(str);
 	HWND hwnd = CreateWindow(WC_STATIC, ws,
 		WS_CHILD | WS_VISIBLE | ES_CENTER, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_static, color, update);
+
 	free(ws);
 
 	return hwnd;
 }
 
 HWND createWndButton(int x, int y, int width, int height,
-	const char* str)
+	const char* str, WndCtrlColor color, WndCtrlUpdate update)
 {
 	wchar_t* ws = utf8_to_utf16(str);
 	//HWND hwnd = CreateWindow(
@@ -36,22 +150,22 @@ HWND createWndButton(int x, int y, int width, int height,
 		WC_BUTTON, ws,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_button, color, update);
 	free(ws);
 
 	return hwnd;
 }
 
 HWND createWndCheckBox(int x, int y, int width, int height,
-	const char* str)
+	const char* str, WndCtrlColor color, WndCtrlUpdate update)
 {
 	wchar_t* ws = utf8_to_utf16(str);
 	HWND hwnd = CreateWindow(WC_BUTTON, ws,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | BS_CHECKBOX, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_checkBox, color, update);
 	free(ws);
 
 	return hwnd;
@@ -68,14 +182,14 @@ void setCheckBox(HWND hwnd, bool on)
 }
 
 HWND createWndRadio(int x, int y, int width, int height,
-	const char* str)
+	const char* str, WndCtrlColor color, WndCtrlUpdate update)
 {
 	wchar_t* ws = utf8_to_utf16(str);
 	HWND hwnd = CreateWindow(WC_BUTTON, ws,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_radio, color, update);
 	free(ws);
 
 	return hwnd;
@@ -92,27 +206,27 @@ void setWndRadio(HWND hwnd, bool on)
 }
 
 HWND createWndGroup(int x, int y, int width, int height,
-	const char* str)
+	const char* str, WndCtrlColor color, WndCtrlUpdate update)
 {
 	wchar_t* ws = utf8_to_utf16(str);
 	HWND hwnd = CreateWindow(WC_BUTTON, ws,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | BS_GROUPBOX, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_static, color, update);
 	free(ws);
 
 	return hwnd;
 }
 
 HWND createWndComboBox(int x, int y, int width, int height,
-	const char** line, int lineNum)
+	const char** line, int lineNum, WndCtrlColor color, WndCtrlUpdate update)
 {
 	HWND hwnd = CreateWindow(WC_COMBOBOX, NULL,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | WS_BORDER | CBS_DROPDOWN | CBS_HASSTRINGS, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_comboBox, color, update);
 	addWndComboBox(hwnd, line, lineNum);
 	setWndComboBox(hwnd, 0);
 	return hwnd;
@@ -160,14 +274,14 @@ void setWndComboBox(HWND hwnd, int index)
 }
 
 HWND createWndListBox(int x, int y, int width, int height,
-	const char** line, int lineNum)
+	const char** line, int lineNum, WndCtrlColor color, WndCtrlUpdate update)
 {
 	HWND hwnd = CreateWindow(WC_LISTBOX, NULL,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOTIFY |
 		WS_HSCROLL | WS_VSCROLL, x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
-	ctrlNum++;
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	wcs->add(hwnd, WndStyle_listBox, color, update);
 	addWndListBox(hwnd, line, lineNum);
 	setWndListBox(hwnd, 0);
 	return hwnd;
@@ -248,16 +362,16 @@ LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 }
 
 HWND createWndEditBox(int x, int y, int width, int height,
-	const char* str)
+	const char* str, WndCtrlColor color, WndCtrlUpdate update)
 {
 	wchar_t* s = utf8_to_utf16(str);
 	HWND hwnd = CreateWindow(WC_EDIT, s,
 		WS_TABSTOP |
 		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER,
 		x, y, width, height,
-		(HWND)hWnd, (HMENU)ctrlNum, (HINSTANCE)hInstance, NULL);
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
 	free(s);
-	ctrlNum++;
+	wcs->add(hwnd, WndStyle_editBox, color, update);
 	SendMessage(hwnd, (UINT)EM_LIMITTEXT, (WPARAM)ebMaxLength, (LPARAM)0);
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)WndEditBoxProc);
@@ -307,6 +421,9 @@ float getWndFloat(HWND hwnd)
 	return n;
 }
 
+extern HINSTANCE hInstance; // 외부에 있는 하나의 유일한 인스턴스
+extern HWND hWnd;
+
 HWND createWndDlg(int x, int y, int width, int height,
 	const char* strTitle, WNDPROC wndProc)
 {
@@ -322,10 +439,11 @@ HWND createWndDlg(int x, int y, int width, int height,
 		RegisterClassEx(&wc);
 	}
 
+
 	//HWND hDlg = CreateWindow(WC_DIALOG,
 	HWND hDlg = CreateWindowEx(WS_EX_DLGMODALFRAME, dlgClassName,//WC_DIALOG,
 		ws, WS_SYSMENU | WS_CAPTION, x, y, width, height,
-		(HWND)NULL, (HMENU)0, hInstance, NULL);
+		(HWND)hWnd, (HMENU)0, hInstance, NULL);
 	free(ws);
 
 	return hDlg;
