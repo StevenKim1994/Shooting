@@ -71,10 +71,31 @@ void keyDlgQuest(iKeyState stat, iPoint point)
 
 LRESULT dlgQuestProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	LRESULT result;
 	switch (msg)
 	{
+
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORLISTBOX:
+		result = wcsQuest->color(wParam, lParam);
+		if (result)
+			return result;
+		break;
+	case WM_DROPFILES:
+
+		wcsQuest->dropFiles(wParam, lParam);
+		break;
+
+	case WM_COMMAND:
+		wcsQuest->update(wParam, lParam);
+		break;
+
 	case WM_CLOSE:
-		ShowWindow(hDlgQuest, SW_HIDE);
+		showDlgQuest(false);
+
 		break;
 
 	case WM_DESTROY:

@@ -69,10 +69,30 @@ void keyDlgItem(iKeyState stat, iPoint point)
 
 LRESULT dlgItemProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	LRESULT result;
 	switch(msg)
 	{
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORLISTBOX:
+		result = wcsItem->color(wParam, lParam);
+		if (result)
+			return result;
+		break;
+	case WM_DROPFILES:
+
+		wcsItem->dropFiles(wParam, lParam);
+		break;
+
+	case WM_COMMAND:
+		wcsItem->update(wParam, lParam);
+		break;
+
 	case WM_CLOSE:
-		ShowWindow(hDlgItem, SW_HIDE);
+		showDlgItem(false);
+
 		break;
 
 	case WM_DESTROY:

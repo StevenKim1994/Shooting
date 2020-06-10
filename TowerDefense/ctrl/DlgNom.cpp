@@ -59,10 +59,7 @@ void drawDlgNom(float dt)
 	
 }
 
-LRESULT coloDlgNom(WPARAM wParam, LPARAM lParam)
-{
-	return wcsNom->color(wParam, lParam);
-}
+
 
 void keyDlgNom(iKeyState stat, iPoint point)
 {
@@ -71,10 +68,32 @@ void keyDlgNom(iKeyState stat, iPoint point)
 
 LRESULT dlgNomProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	LRESULT result;
+
 	switch (msg)
 	{
+
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORLISTBOX:
+		result = wcsNom->color(wParam, lParam);
+		if (result)
+			return result;
+		break;
+	case WM_DROPFILES:
+
+		wcsNom->dropFiles(wParam, lParam);
+		break;
+
+	case WM_COMMAND:
+		wcsNom->update(wParam, lParam);
+		break;
+
 	case WM_CLOSE:
-		ShowWindow(hDlgNom, SW_HIDE);
+		showDlgNom(false);
+
 		break;
 
 	case WM_DESTROY:

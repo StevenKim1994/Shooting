@@ -8,7 +8,7 @@ void dragDlgNom(WPARAM wParam, LPARAM lParam);
 void showDlgNom(bool show);
 void updateDlgNom(WPARAM wParam, LPARAM lParam);
 void drawDlgNom(float dt);
-LRESULT coloDlgNom(WPARAM wParam, LPARAM lParam);
+
 void keyDlgNom(iKeyState stat, iPoint point);
 
 LRESULT CALLBACK dlgNomProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
