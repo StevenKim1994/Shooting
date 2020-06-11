@@ -2,10 +2,12 @@
 
 #include "iStd.h"
 
-WndCtrlSystem::WndCtrlSystem(HWND hwnd, HINSTANCE hinst)
+WndCtrlSystem::WndCtrlSystem(HWND hwnd)
 {
 	hwndParent = hwnd;
-	hinstance = hinst;
+
+	
+	hinstance = (HINSTANCE)GetWindowLong(hwnd,GWLP_HINSTANCE); 
 	wc = (WndCtrl*)malloc(sizeof(WndCtrl) * 1024);
 	wcNum = 0;
 }
@@ -444,6 +446,9 @@ HWND createWndDlg(int x, int y, int width, int height,
 	HWND hDlg = CreateWindowEx(WS_EX_DLGMODALFRAME, dlgClassName,//WC_DIALOG,
 		ws, WS_SYSMENU | WS_CAPTION, x, y, width, height,
 		(HWND)hWnd, (HMENU)0, hInstance, NULL);
+
+	//SetWindowPos(hDlg, HWND_TOPMOST, x, y, width, height, SWP_HIDEWINDOW); 항상위로
+
 	free(ws);
 
 	return hDlg;

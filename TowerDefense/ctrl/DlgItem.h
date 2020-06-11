@@ -3,10 +3,9 @@
 #include "iStd.h"
 
 
-
-void loadDlg(HWND hwnd, HINSTANCE hinstance);
 void freeDlgItem();
 void showDlgItem(bool show);
+void loadDlgItem();
 void dragDlgItem(WPARAM wParam, LPARAM lParam);
 void updateDlgItem(WPARAM wParam, LPARAM lParam);
 void drawDlgItem(float dt);

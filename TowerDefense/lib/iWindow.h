@@ -34,7 +34,7 @@ struct WndCtrl
 class WndCtrlSystem
 {
 public:
-    WndCtrlSystem(HWND hwnd, HINSTANCE hinst);
+    WndCtrlSystem(HWND hwnd);
     virtual ~WndCtrlSystem();
 
     void dragAcceptFiles(WndDrag drag);

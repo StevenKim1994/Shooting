@@ -2,7 +2,7 @@
 
 #include "iStd.h"
 
-void loadDlgQuest(HWND hwnd, HINSTANCE hinstance);
+void loadDlgQuest();
 void freeDlgQuest();
 void showDlgQuest(bool show);
 void dragDlgQuest(WPARAM wParam, LPARAM lParam);

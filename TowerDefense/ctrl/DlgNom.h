@@ -2,7 +2,7 @@
 
 #include "iStd.h"
 
-void loadDlgNom(HWND hwnd, HINSTANCE hinstance);
+void loadDlgNom();
 void freeDlgNom();
 void dragDlgNom(WPARAM wParam, LPARAM lParam);
 void showDlgNom(bool show);

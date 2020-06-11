@@ -2,7 +2,7 @@
 
 #include "iStd.h"
 
-void loadScript(HWND hwnd, HINSTANCE hinstance);
+void loadScript(HWND hwnd);
 void freeScript();
 void dragScript(WPARAM wParam, LPARAM lParam);
 void updateScript(WPARAM wParam, LPARAM lParam);

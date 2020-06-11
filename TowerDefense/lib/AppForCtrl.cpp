@@ -27,7 +27,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         return 0;
     }
 
-
     ULONG_PTR gpToken = startGdiplus();
 
     hInstance = hInst;
@@ -52,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
     hDC = GetDC(hWnd);
 
-    loadScript(hWnd, hInstance);
+    loadScript(hWnd);
     //testCtrlSystem(hWnd,hInstance);
 
     RECT rect;

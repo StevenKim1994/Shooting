@@ -1,18 +1,11 @@
 #include "Script.h"
 #include "ScriptData.h"
 #include "DlgNom.h"
-
-
+#include "DlgQuest.h"
+#include "DlgItem.h"
 static HWND hWnd;
 static HINSTANCE hInstance;
 
-HWND hEbNom;
-void ebNomUpdate(WPARAM wParam, LPARAM lParam);
-
-HWND hBtnNomAdd;
-void btnNomAddUpdate(WPARAM wParam, LPARAM lParam);
-HWND hLbNom;
-void lbNomUpdate(WPARAM wParam, LPARAM lParam);
 HWND hEbItem;
 void ebItemUpdate(WPARAM wParam, LPARAM lParam);
 HWND hBtnItemAdd;
@@ -21,6 +14,9 @@ HWND hLbItem;
 void lbItemUpdate(WPARAM wParam, LPARAM lParam);
 
 WndCtrlSystem* wcsScript;
+
+HWND* hBtnOpenDlg;
+void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam);
 
 void dragScript(const char* path)
 {
@@ -34,28 +30,29 @@ void dragScript(const char* path)
 }
 
 
-void loadScript(HWND hwnd, HINSTANCE hinstance)
+void loadScript(HWND hwnd)
 {
+	int i;
+
 	initWndCtrlSystem(); // 무조건해야댐 이미만들어진거 부를라면 무조건!!!
 
 	// to do....
-
 	loadScriptData();
 
-	wcsScript = new WndCtrlSystem(hwnd, hinstance);
+	wcsScript = new WndCtrlSystem(hwnd);
 	wcsScript->dragAcceptFiles(dragScript);
-
 	setWndCtrlSystem(wcsScript);
-		hEbNom = createWndEditBox(5, 5, 100, 30, "name", NULL, ebNomUpdate);
-	hBtnNomAdd = createWndButton(110, 5, 100, 30, "ADD", NULL, btnNomAddUpdate);
-	const char* lineNom[1] = { "End of Nom" };
-	hLbNom = createWndListBox(5, 40, 120, 100, lineNom, 1, NULL, lbNomUpdate);
 
-	hEbItem = createWndEditBox(5, 150, 100, 30, "name" , NULL , ebItemUpdate);
-	hBtnItemAdd = createWndButton(110, 150, 100, 30, "ADD", NULL, btnItemAddUpdate);
-	const char* lineItem[1] = { "End of Item" };
-	hLbItem = createWndListBox(5, 185, 120, 100, lineItem, 1, NULL, lbItemUpdate);
-	
+	const char* strOpenDlg[3] = { "DlgNom", "DlgItem", "DlgQuest" };
+	hBtnOpenDlg = (HWND*)malloc(sizeof(HWND) * 3);
+	for (i = 0; i < 3; i++)
+		hBtnOpenDlg[i] = createWndButton(5 + 65 * i, 5, 60, 30, strOpenDlg[i], NULL, btnOpenDlgUpdate);
+
+	loadDlgNom();
+	loadDlgItem();
+	loadDlgQuest();
+
+
 
 }
 
@@ -133,45 +130,12 @@ void ebNomUpdate(WPARAM wParam, LPARAM lParam)
 
 void btnNomAddUpdate(WPARAM wParam, LPARAM lParam)
 {
-	char* str = getWndText(hEbNom);
-
-	int index = indexWndListBox(hLbNom);
-	int count = countWndListBox(hLbNom);
-
-	if (index < count - 1)
-		removeWndListBox(hLbNom, index);
-
-	addWndListBox(hLbNom, index, str);
-
-	if (index < count - 1)
-		setWndListBox(hLbNom, index);
-
-	else
-		setWndListBox(hLbNom, index + 1);
-
-	free(inputNom->name);
-	inputNom->name = str;
-
-	if (index < count - 1)
-		arrayNom->addObject(index, inputNom);
-
-	else
-		arrayNom->addObject(inputNom);
-
-	inputNom = newNom();
+	
 }
 
 void lbNomUpdate(WPARAM wParam, LPARAM lParam)
 {
-	int index = indexWndListBox(hLbNom);
-	int count = countWndListBox(hLbNom);
-
-	if (index < count - 1)
-	{
-		char* str = getWndListBox(hLbNom, index);
-		setWndText(hEbNom, str);
-		free(str);
-	}
+	
 }
 
 void ebItemUpdate(WPARAM wParam, LPARAM lParam)
@@ -219,4 +183,23 @@ void lbItemUpdate(WPARAM wParam, LPARAM lParam)
 		setWndText(hLbItem, str);
 		free(str);
 	}
+}
+
+void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam)
+{
+	void (*show[3])(bool) = { showDlgNom, showDlgItem, showDlgQuest };
+	
+	HWND hwnd = (HWND)lParam;
+	int i;
+	for (i = 0; i < 3; i++)
+	{
+		if (hBtnOpenDlg[i] == hwnd)
+		{
+			show[i](true);
+			return;
+		}
+	}
+	
+
+
 }
