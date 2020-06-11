@@ -207,6 +207,14 @@ void saveDataItem(const char* path)
 	fclose(pf);
 }
 
+void loadDataItem(FILE* pf)
+{
+}
+
+void saveDataItem(FILE* pf)
+{
+}
+
 void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = (HWND)lParam;

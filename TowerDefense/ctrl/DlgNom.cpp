@@ -145,7 +145,7 @@ LRESULT dlgNomProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void loadDataNom(const char* path)
+void loadDataNom(FILE* pf)
 {
 	int i;
 	int num = countWndListBox(hLbNomList) - 1;
@@ -155,9 +155,6 @@ void loadDataNom(const char* path)
 
 	arrayNom->removeAll();
 
-	FILE* pf = fopen(path, "rb");
-
-	//int i;
 	fread(&num, sizeof(int), 1, pf);
 
 	for (int i = 0; i < num; i++)
@@ -180,9 +177,8 @@ void loadDataNom(const char* path)
 	fclose(pf);
 }
 
-void saveDataNom(const char* path)
+void saveDataNom(FILE* pf)
 {
-	FILE* pf = fopen(path, "wb");
 	int i;
 	int num = arrayNom->count;
 	fwrite(&num, sizeof(int), 1, pf);
@@ -202,6 +198,20 @@ void saveDataNom(const char* path)
 	}
 
 
+}
+
+void loadDataNom(const char* path)
+{
+	FILE* pf = fopen(path, "rb");
+	loadDataNom(pf);
+	fclose(pf);
+	
+}
+
+void saveDataNom(const char* path)
+{
+	FILE* pf = fopen(path, "wb");
+	saveDataNom(pf);
 	fclose(pf);
 }
 

@@ -18,12 +18,33 @@ WndCtrlSystem* wcsScript;
 HWND* hBtnOpenDlg;
 void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam);
 
+HWND hLbSayList;
+void lbSayListUpdate(WPARAM wParam, LPARAM lParam);
+
+HWND hCbSayNom;
+void cbSayNomUpdate(WPARAM wParam, LPARAM lParam);
+
+HWND hEbSayComment;
+void ebSayComentUpdate(WPARAM wParam, LPARAM lParam);
+
+HWND hCbSayRewardItem;
+void cbSayRewardItemUpdate(WPARAM wParam, LPARAM lParam);
+
+HWND hEbSayRewardGold;
+void ebSayRewardGoldUpdate(WPARAM wParam, LPARAM lParam);
+
+HWND hEbSayRewardExp;
+void ebSayRewardExpUpdate(WPARAM wParam, LPARAM lParam);
+
+HWND hCbSayQuest;
+void cbSayQuestUpdate(WPARAM wPram, LPARAM lParam);
+
 void dragScript(const char* path)
 {
 	const char* ext = &path[strlen(path) - 4];
 
 	if (strcmp(ext, SCRIPT_EXTENSION) == 0)
-		loadDataScript(path);
+		loadDataProject(path);
 
 	else if (strcmp(ext, PROJECT_EXTENSION) == 0)
 		loadDataProject(path);
@@ -47,6 +68,10 @@ void loadScript(HWND hwnd)
 	hBtnOpenDlg = (HWND*)malloc(sizeof(HWND) * 3);
 	for (i = 0; i < 3; i++)
 		hBtnOpenDlg[i] = createWndButton(5 + 65 * i, 5, 60, 30, strOpenDlg[i], NULL, btnOpenDlgUpdate);
+
+
+
+
 
 	loadDlgNom();
 	loadDlgItem();
@@ -118,9 +143,39 @@ void saveDataScript(const char* paht)
 
 void loadDataProject(const char* path)
 {
+	FILE* pf = fopen(path, "wb");
+	loadDataNom(pf);
+	loadDataItem(pf);
+	loadDataQuest(pf);
+	loadDataSay(pf);
+
+	fclose(pf);
 }
 
 void saveDataProject(const char* path)
+{
+	FILE* pf = fopen(path, "wb");
+
+	saveDataNom(pf);
+	saveDataItem(pf);
+	saveDataQuest(pf);
+	saveDataSay(pf);
+	fclose(pf);
+}
+
+void loadDataSay(FILE* pf)
+{
+}
+
+void loadDataSay(const char* path)
+{
+}
+
+void saveDataSay(FILE* pf)
+{
+}
+
+void saveDataSay(const char* path)
 {
 }
 

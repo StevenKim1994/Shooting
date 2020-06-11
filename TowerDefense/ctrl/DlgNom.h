@@ -15,5 +15,8 @@ LRESULT CALLBACK dlgNomProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #define NOM_EXTENSION ".nom"
 
+
+void saveDataNom(FILE* pf);
+void loadDataNom(FILE* pf);
 void loadDataNom(const char* path);
 void saveDataNom(const char* path);

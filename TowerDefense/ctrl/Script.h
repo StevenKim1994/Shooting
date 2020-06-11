@@ -20,3 +20,8 @@ void saveDataScript(const char* paht);
 #define PROJECT_EXTENSION ".pjt"
 void loadDataProject(const char* path);
 void saveDataProject(const char* path);
+
+void loadDataSay(FILE* pf);
+void loadDataSay(const char* path);
+void saveDataSay(FILE* pf);
+void saveDataSay(const char* path);

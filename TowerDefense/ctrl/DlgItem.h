@@ -20,3 +20,5 @@ LRESULT CALLBACK dlgItemProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 void loadDataItem(const char* path);
 void saveDataItem(const char* path);
+void loadDataItem(FILE* pf);
+void saveDataItem(FILE* pf);
