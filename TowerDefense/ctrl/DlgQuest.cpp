@@ -21,6 +21,9 @@ void lbQuestListUpdate(WPARAM wParam, LPARAM lParam);
 HWND hEbQuestContent;
 void ebQuestContentUpdate(WPARAM wPram, LPARAM lParam);
 
+
+extern HWND hCbSayQuest;
+
 // ~Window
 
 
@@ -162,10 +165,13 @@ void saveDataQuest(const char* path)
 void loadDataQuest(FILE* pf)
 {
 	int i;
-	int num = countWndListBox(hLbQuestList) - 1;
+	int num = countWndListBox(hLbQuestList); -1;
 
 	for (i = 0; i < num; i++)
+	{
 		removeWndListBox(hLbQuestList, i);
+		removeWndComboBox(hCbSayQuest, i);
+	}
 
 	arrayQuest->removeAll();
 
@@ -187,6 +193,7 @@ void loadDataQuest(FILE* pf)
 		fread(quest->content, sizeof(char), len, pf);
 
 		addWndListBox(hLbQuestList, i, quest->title);
+		addWndComboBox(hCbSayQuest, i, quest->title);
 		arrayQuest->addObject(quest);
 	}
 
@@ -214,7 +221,6 @@ void saveDataQuest(FILE* pf)
 	}
 
 
-	fclose(pf);
 }
 
 void btnQuestOpenUpdate(WPARAM wParam, LPARAM lParam)
@@ -242,7 +248,7 @@ void btnQuestOpenUpdate(WPARAM wParam, LPARAM lParam)
 		const char* path = openFileDlg(false, TEXT("Quest Files(*.qst)\0*.qst\0"));;
 		if (path)
 		{
-			char _path[256];
+			char _path[256];	
 			if (strcmp(&path[strlen(path) - 4], ".qst") == 0)
 				strcpy(_path, path);
 			else
@@ -259,18 +265,31 @@ void ebQuestNameUpdate(WPARAM wParam, LPARAM lParam)
 
 void setStringLimit(const char* str, int num, char* output)
 {
-	int i, len = strlen(str);
-	int n;
+	int i, len = strlen(str), n;
 
-	if (num > len)
-		num = len;
-	for (i = 0, n = 0; i < len;)
+	int _num = 0;
+	for (i = 0; i < len;)
 	{
-		n++;
 		if (iString::isUnicode(&str[i]))
 			i += 3;
 		else
 			i++;
+		_num++;
+	}
+	if (num > _num)
+		num = _num;
+	for (i = 0, n =0; i < len;)
+	{
+		if (iString::isUnicode(&str[i]))
+		{
+			i += 3;
+	
+		}
+		else
+		{
+			i++;
+		}
+		n++;
 
 		if (n == num)
 		{
@@ -317,21 +336,28 @@ void btnQuestSubmitUpdate(WPARAM wParam, LPARAM lParam)
 		addWndListBox(hLbQuestList, index, strComment);
 		setWndListBox(hLbQuestList, index);
 		
+		removeWndComboBox(hCbSayQuest, index);
+		addWndListBox(hCbSayQuest, index, strComment);
+		setWndListBox(hCbSayQuest, index);
+
 		Quest* qst = (Quest*)arrayQuest->objectAtIndex(index);
 
-		free(inputQuest->title);
+		free(qst->title);
 		qst->title = strTitle;
 
-		free(inputQuest->content);
+		free(qst->content);
 		qst->content = strContent;
 
-		arrayQuest->addObject(index, inputQuest);
+		//arrayQuest->addObject(index, inputQuest);
 
 	}
 	else
 	{
 		addWndListBox(hLbQuestList, index, strComment);
-		setWndListBox(hLbQuestList, index +1 );
+		setWndListBox(hLbQuestList, index +1);
+
+		addWndComboBox(hCbSayQuest, index, strComment);
+		setWndListBox(hCbSayQuest, index+1);
 
 		free(inputQuest->title);
 		inputQuest->title = strTitle;
@@ -340,10 +366,10 @@ void btnQuestSubmitUpdate(WPARAM wParam, LPARAM lParam)
 		inputQuest->content = strContent;
 
 		arrayQuest->addObject(inputQuest);
+		inputQuest = newQuest();
 		
 	}
 
-	inputQuest = newQuest();
 
 }
 

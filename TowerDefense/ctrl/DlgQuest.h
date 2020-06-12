@@ -21,3 +21,6 @@ void loadDataQuest(const char* path);
 void saveDataQuest(const char* path);
 void loadDataQuest(FILE* pf);
 void saveDataQuest(FILE* pf);
+
+
+void setStringLimit(const char* str, int num, char* output);

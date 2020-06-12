@@ -4,8 +4,6 @@
 HWND hDlgItem;
 WndCtrlSystem* wcsItem;
 
-// Window
-
 HWND* hBtnItemOpen;
 void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam);
 
@@ -18,17 +16,42 @@ void btnItemSubmitUpdate(WPARAM wParam, LPARAM lParam);
 HWND hLbItemList;
 void lbItemListUpdate(WPARAM wParam, LPARAM lParam);
 
-
-// ~Window
+extern HWND hCbSayRewardItem;// Script.cpp
 
 void dragDlgItem(const char* path)
 {
-	//chcek .nom 인지..
-
 	if (strcmp(&path[strlen(path) - 4], ITEM_EXTENSION))
 		return;
 
 	loadDataItem(path);
+}
+
+void loadDlgItem()
+{
+	int i;
+
+	hDlgItem = createWndDlg(0, 0, 400, 400, "Item", dlgItemProc);
+
+	wcsItem = new WndCtrlSystem(hDlgItem);
+	wcsItem->dragAcceptFiles(dragDlgItem);
+	setWndCtrlSystem(wcsItem);
+
+	// add ctrl.....
+	const char* strBtn[2] = { "Open", "Save" };
+	hBtnItemOpen = (HWND*)malloc(sizeof(HWND) * 2);
+	for (i = 0; i < 2; i++)
+		hBtnItemOpen[i] = createWndButton(5 + 65 * i, 5, 60, 30, strBtn[i], NULL, btnItemOpenUpdate);
+
+	// name + submit
+	hEbItemName = createWndEditBox(5, 40, 80, 30, "Name", NULL, ebItemNameUpdate);
+	hBtnItemSubmit = createWndButton(90, 40, 60, 30, "Submit", NULL, btnItemSubmitUpdate);
+
+	// listBox 
+	const char* strItemList[1] = { "End of Item" };
+	hLbItemList = createWndListBox(5, 130, 110, 200, strItemList, 1, NULL, lbItemListUpdate);
+
+	// open Image
+	// photo
 }
 
 void freeDlgItem()
@@ -43,7 +66,6 @@ void showDlgItem(bool show)
 {
 	if (show == false)
 		ShowWindow(hDlgItem, SW_HIDE);
-
 	else
 	{
 		ShowWindow(hDlgItem, SW_RESTORE);
@@ -51,41 +73,14 @@ void showDlgItem(bool show)
 	}
 }
 
-void loadDlgItem()
-{
-	int i;
-
-	hDlgItem= createWndDlg(0, 0, 400, 400, "Item", dlgItemProc); // dlg create
-
-	wcsItem = new WndCtrlSystem(hDlgItem);
-	wcsItem->dragAcceptFiles(dragDlgItem);
-	setWndCtrlSystem(wcsItem);
-
-	// add ctrl...
-
-	const char* strBtn[2] = { "OPEN", "SAVE" }; // 프로젝트 여는 버튼
-	hBtnItemOpen = (HWND*)malloc(sizeof(HWND) * 2);
-
-	for (int i = 0; i < 2; i++)
-		hBtnItemOpen[i] = createWndButton(5 + 65 * i, 5, 60, 30, strBtn[i], NULL, btnItemOpenUpdate);
-
-	hEbItemName = createWndEditBox(5, 40, 80, 30, "Name", NULL, ebItemNameUpdate);
-
-	hBtnItemSubmit = createWndButton(90, 40, 60, 30, "Submit", NULL, btnItemSubmitUpdate);
-
-	const char* strItemList[1] = { "End of Item" };
-	hLbItemList = createWndListBox(5, 130, 110, 200, strItemList, 1, NULL, lbItemListUpdate);
-
-	// listBox 
-
-	// openImgBtn;
-	// Img
-}
-
-
 void dragDlgItem(WPARAM wParam, LPARAM lParam)
 {
+	wcsItem->dropFiles(wParam, lParam);
+}
 
+LRESULT colorDlgItem(WPARAM wParam, LPARAM lParam)
+{
+	return wcsItem->color(wParam, lParam);
 }
 
 void updateDlgItem(WPARAM wParam, LPARAM lParam)
@@ -98,31 +93,28 @@ void drawDlgItem(float dt)
 
 }
 
-LRESULT coloDlgItem(WPARAM wParam, LPARAM lParam)
-{
-	return wcsItem->color(wParam, lParam);
-}
-
 void keyDlgItem(iKeyState stat, iPoint point)
 {
+
 }
 
-LRESULT dlgItemProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK dlgItemProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT result;
-	switch(msg)
-	{
+
+	switch (msg) {
+
 	case WM_CTLCOLORSTATIC:
 	case WM_CTLCOLORBTN:
-	case WM_CTLCOLORDLG:
 	case WM_CTLCOLOREDIT:
 	case WM_CTLCOLORLISTBOX:
+	case WM_CTLCOLORDLG:
 		result = wcsItem->color(wParam, lParam);
 		if (result)
 			return result;
 		break;
-	case WM_DROPFILES:
 
+	case WM_DROPFILES:
 		wcsItem->dropFiles(wParam, lParam);
 		break;
 
@@ -131,8 +123,9 @@ LRESULT dlgItemProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_CLOSE:
+		//DestroyWindow(hDlgItem);
+		// unshow
 		showDlgItem(false);
-
 		break;
 
 	case WM_DESTROY:
@@ -140,79 +133,72 @@ LRESULT dlgItemProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	default:
-		return DefDlgProc(hwnd, msg, wParam, lParam);
-		
+		return DefDlgProc(hWnd, msg, wParam, lParam);
 	}
-
 	return 0;
 }
 
 void loadDataItem(const char* path)
 {
-	int i;
-	int num = countWndListBox(hLbItemList) - 1;
-
+	//printf("path = %s\n", path);
+	FILE* pf = fopen(path, "rb");
+	loadDataItem(pf);
+	fclose(pf);
+}
+void loadDataItem(FILE* pf)
+{
+	int i, num;
+	num = countWndListBox(hLbItemList) - 1;
 	for (i = 0; i < num; i++)
-		removeWndListBox(hLbItemList, i);
+	{
+		removeWndListBox(hLbItemList, 0);
+		removeWndComboBox(hCbSayRewardItem, 0);
+	}
 
 	arrayItem->removeAll();
 
-	FILE* pf = fopen(path, "rb");
-
-	//int i;
 	fread(&num, sizeof(int), 1, pf);
-
-	for (int i = 0; i < num; i++)
+	for (i = 0; i < num; i++)
 	{
-		Item* item = (Item*)malloc(sizeof(Item));
+		Item* itm = (Item*)malloc(sizeof(Item));
+
 		int len;
+		fread(&len, sizeof(int), 1, pf);
+		itm->name = (char*)calloc(sizeof(char), 1 + len);
+		fread(itm->name, sizeof(char), len, pf);
 
 		fread(&len, sizeof(int), 1, pf);
-		item->name = (char*)calloc(sizeof(char), 1 + len);
-		fread(item->name, sizeof(char), len, pf);
+		itm->path = (char*)calloc(sizeof(char), 1 + len);
+		fread(itm->path, sizeof(char), len, pf);
 
-		fread(&len, sizeof(int), 1, pf);
-		item->path = (char*)calloc(sizeof(char), 1 + len);
-		fread(item->path, sizeof(char), len, pf);
-
-		addWndListBox(hLbItemList, i,item->name);
-		arrayItem->addObject(item);
+		addWndListBox(hLbItemList, i, itm->name);
+		addWndComboBox(hCbSayRewardItem, i, itm->name);
+		arrayItem->addObject(itm);
 	}
-
-	fclose(pf);
 }
 
 void saveDataItem(const char* path)
 {
+	//printf("path = %s\n", path);
 	FILE* pf = fopen(path, "wb");
-	int i;
-	int num = arrayItem->count;
+	saveDataItem(pf);
+	fclose(pf);
+}
+void saveDataItem(FILE* pf)
+{
+	int i, num = arrayItem->count;
 	fwrite(&num, sizeof(int), 1, pf);
 
 	for (i = 0; i < num; i++)
 	{
-		Item* item = (Item*)arrayItem->objectAtIndex(i);
-
-		int len = strlen(item->name);
-
+		Item* itm = (Item*)arrayItem->objectAtIndex(i);
+		int len = strlen(itm->name);
 		fwrite(&len, sizeof(int), 1, pf);
-		fwrite(item->name, sizeof(char), len, pf);
-		len = strlen(item->path);
+		fwrite(itm->name, sizeof(char), len, pf);
+		len = strlen(itm->path);
 		fwrite(&len, sizeof(int), 1, pf);
-		fwrite(item->path, sizeof(char), len, pf);
-
+		fwrite(itm->path, sizeof(char), len, pf);
 	}
-
-
-	fclose(pf);
-}
-
-void loadDataItem(FILE* pf)
-{
-}
-
-void saveDataItem(FILE* pf)
-{
 }
 
 void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam)
@@ -220,23 +206,22 @@ void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam)
 	HWND hwnd = (HWND)lParam;
 
 	int i;
-
 	for (i = 0; i < 2; i++)
 	{
-		if (hwnd == hBtnItemOpen[i])
-		{
+		if (hBtnItemOpen[i] == hwnd)
 			break;
-		}
 	}
 
-	if (i == 0) // OPEN
+	if (i == 0)
 	{
+		// open
 		const char* path = openFileDlg(true, TEXT("Item Files(*.itm)\0*.itm\0"));
 		if (path)
 			loadDataItem(path);
 	}
-	else // SAVE
+	else
 	{
+		// save
 		const char* path = openFileDlg(false, TEXT("Item Files(*.itm)\0*.itm\0"));
 		if (path)
 		{
@@ -248,71 +233,76 @@ void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam)
 			saveDataItem(_path);
 		}
 	}
-	//SetFocus(hDlgNom);
+	//SetFocus(hDlgItem);
+	//SetWindowPos(hDlgItem, HWND_TOPMOST, x, y, width, height, SWP_HIDEWINDOW);
 }
 
 void ebItemNameUpdate(WPARAM wParam, LPARAM lParam)
 {
+	// 금지어, 숫자 차단
+
+	char* s = getWndText(hEbItemName);
+	printf("%s\n", s);
+	free(s);
 }
 
 void btnItemSubmitUpdate(WPARAM wParam, LPARAM lParam)
 {
-	// 에디트박스에 잇는 내용 리스트박스로 push!
-
 	char* str = getWndText(hEbItemName);
 
 	int index = indexWndListBox(hLbItemList);
 	int count = countWndListBox(hLbItemList);
-
 	if (index < count - 1)
+	{
 		removeWndListBox(hLbItemList, index);
-
-	addWndListBox(hLbItemList, index, str);
-
-	if (index < count - 1)
+		addWndListBox(hLbItemList, index, str);
 		setWndListBox(hLbItemList, index);
 
+		removeWndComboBox(hCbSayRewardItem, index);
+		addWndComboBox(hCbSayRewardItem, index, str);
+		setWndComboBox(hCbSayRewardItem, index);
+
+		Item* itm = (Item*)arrayItem->objectAtIndex(index);
+		//free(str);
+		free(itm->name);
+		itm->name = str;
+	}
 	else
+	{
+		addWndListBox(hLbItemList, index, str);
 		setWndListBox(hLbItemList, index + 1);
 
-	free(inputItem->name);
-	inputItem->name = str;
+		addWndComboBox(hCbSayRewardItem, index, str);
+		setWndComboBox(hCbSayRewardItem, index + 1);
 
-	if (index < count - 1)
-		arrayItem->addObject(index, inputItem);
-
-	else
+		//free(str);
+		free(inputItem->name);
+		inputItem->name = str;
 		arrayItem->addObject(inputItem);
-
-	inputItem = newItem();
+		inputItem = newItem();
+	}
 }
 
 void lbItemListUpdate(WPARAM wParam, LPARAM lParam)
 {
 	int event = HIWORD(wParam);
-
-	switch (event)
-	{
-	case LBN_DBLCLK:
+	switch (event) {
 	case LBN_SELCHANGE:
+	case LBN_DBLCLK:
 	case LBN_SELCANCEL:
 	case LBN_SETFOCUS:
 	case LBN_KILLFOCUS:
-		break;
-
-	default:
 		break;
 	}
 
 	int index = indexWndListBox(hLbItemList);
 	int count = countWndListBox(hLbItemList);
-
 	if (index < count - 1)
 	{
 		char* str = getWndListBox(hLbItemList, index);
-		setWndText(hLbItemList, str);
+		setWndText(hEbItemName, str);
 		free(str);
 	}
 	else
-		setWndText(hLbItemList, "Name");
+		setWndText(hEbItemName, "Name");
 }
