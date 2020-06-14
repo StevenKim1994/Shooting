@@ -143,7 +143,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CTLCOLORDLG:
     case WM_CTLCOLOREDIT:
     case WM_CTLCOLORLISTBOX:
-        result = colorScript(wParam, lParam);
+        result = colorScrip(wParam, lParam);//colorScript(wParam, lParam);
         if (result)
             return result;
         break;

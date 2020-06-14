@@ -101,7 +101,7 @@ void dragScript(WPARAM wParam, LPARAM lParam)
 	wcsScript->dropFiles(wParam, lParam);
 }
 
-LRESULT colorScript(WPARAM wParam, LPARAM lParam)
+LRESULT colorScrip(WPARAM wParam, LPARAM lParam)
 {
 	return wcsScript->color(wParam, lParam);
 }

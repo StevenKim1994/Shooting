@@ -53,7 +53,7 @@ void iArray::remove(int index)
 {
 	xArray* a = curr;
 	xArray* b = NULL;
-	for (int i=1; ;i++)
+	for (int i = 1; ; i++)
 	{
 		if (count - i == index)
 		{

@@ -1,6 +1,5 @@
 #include "ScriptData.h"
 
-
 void loadScriptData()
 {
 	arrayNom = new iArray(freeNom);
@@ -31,9 +30,6 @@ void freeScriptData()
 	freeSay(inputSay);
 }
 
-
-
-
 iArray* arrayNom;
 Nom* inputNom;
 void freeNom(void* parm)
@@ -48,7 +44,6 @@ Nom* newNom()
 	Nom* n = (Nom*)malloc(sizeof(Nom));
 	n->name = (char*)malloc(1);
 	n->path = (char*)malloc(1);
-
 	return n;
 }
 
@@ -66,7 +61,6 @@ Item* newItem()
 	Item* i = (Item*)malloc(sizeof(Item));
 	i->name = (char*)malloc(1);
 	i->path = (char*)malloc(1);
-
 	return i;
 }
 
@@ -84,7 +78,6 @@ Quest* newQuest()
 	Quest* q = (Quest*)malloc(sizeof(Quest));
 	q->title = (char*)malloc(1);
 	q->content = (char*)malloc(1);
-
 	return q;
 }
 
@@ -100,7 +93,6 @@ Say* newSay()
 {
 	Say* s = (Say*)malloc(sizeof(Say));
 	s->comment = (char*)malloc(1);
-
 	return s;
 }
 
