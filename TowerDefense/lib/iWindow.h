@@ -193,6 +193,7 @@ public:
 
 };
 
+
 #include "iStd.h"
 
 typedef void (*MethodWndGLUpdate)(float dt);

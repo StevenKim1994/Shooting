@@ -966,7 +966,7 @@ void updateOpenGL(float dt)
 
 		RECT rt;
 		GetClientRect(wg->gl->hWnd, &rt);
-		devSize = iSizeMake(rt.right - rt.left, rt.bottom - rt.top);
+		devSize = wg->devSize;
 
 		reshapeOpenGL(rt.right - rt.left, rt.bottom - rt.top);
 
