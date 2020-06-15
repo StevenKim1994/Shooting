@@ -63,7 +63,7 @@ LRESULT WndCtrlSystem::color(WPARAM wParam, LPARAM lParam)
 		if (c->hwnd == hwnd)
 		{
 			if(c->color)
-				return c->color(wParam, lParam);
+				return c->color((HDC)wParam, hwnd);
 
 			return (LRESULT)0;
 		}
@@ -85,31 +85,58 @@ void WndCtrlSystem::update(WPARAM wParam, LPARAM lParam)
 	case WndStyle_static: // none
 		break;
 	case WndStyle_button:
-		if (c->update)
-			c->update(wParam, lParam);
-		break;
-	case WndStyle_checkBox:
-		if(c->update)
-			c->update(wParam, lParam);
-		break;
 	case WndStyle_radio:
 		if(c->update)
-			c->update(wParam, lParam);
+			c->update(c->hwnd); // (HWND)lParm == c->hwnd
 		break;
+	case WndStyle_checkBox:
+	{
+		bool checked = getCheckBox(c->hwnd);
+		setCheckBox(c->hwnd, !checked);
+
+		if (c->update)
+			c->update(c->hwnd);
+		break;
+	}
 
 	case WndStyle_comboBox:
-		if (c->update)
-			c->update(wParam, lParam);
+
+		if (event == CBN_SELCHANGE)
+		{
+			if (c->update)
+				c->update(c->hwnd);
+		}
 		break;
 
 	case WndStyle_listBox:
-		if (c->update)
-			c->update(wParam, lParam);
+		switch (HIWORD(wParam))
+		{
+		case LBN_SELCHANGE:
+			if (c->update)
+				c->update(c->hwnd);
+			break;
+		case LBN_DBLCLK:
+			// to do...
+			break;
+		}
 		break;
 
 	case WndStyle_editBox:
-		if (c->update)
-			c->update(wParam, lParam);
+		switch (event)
+		{
+		case EN_MAXTEXT:
+			// alert : 몇자 제한 입니다. 
+
+			break;
+
+		case EN_UPDATE:
+			break;
+		case EN_KILLFOCUS:
+		case EN_CHANGE:
+			if (c->update)
+				c->update(c->hwnd);
+			break;
+		}
 		break;
 
 	case WndStyle_dialog:
@@ -275,8 +302,8 @@ char* getWndComboBox(HWND hwnd, int index)
 
 int indexWndComboBox(HWND hwnd)
 {
-	int index = SendMessage(hwnd, CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
-	return index;
+int index = SendMessage(hwnd, CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+return index;
 }
 
 void setWndComboBox(HWND hwnd, int index)
@@ -333,14 +360,29 @@ void setWndListBox(HWND hwnd, int index)
 {
 	SendMessage(hwnd, LB_SETCURSEL, (WPARAM)index, (LPARAM)0);
 }
+LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, WndEditBoxStyle style);
 
 static int ebMaxLength = 10;
 void setWndEditBosLength(int maxLength)
 {
 	ebMaxLength = maxLength;
 }
+LRESULT CALLBACK WndEditBoxAllProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	return WndEditBoxProc(hwnd, msg, wParam, lParam, WndEditBoxStyle_all);
+}
 
-LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndEditBoxIntProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	return WndEditBoxProc(hwnd, msg, wParam, lParam, WndEditBoxStyle_int);
+}
+
+LRESULT CALLBACK WndEditBoxFloatProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	return WndEditBoxProc(hwnd, msg, wParam, lParam, WndEditBoxStyle_float);
+}
+
+LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, WndEditBoxStyle style)
 {
 	WNDPROC wpOld = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
@@ -352,28 +394,52 @@ LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		break;
 
 	case WM_CHAR:
-	{
-		// 숫자값은 제외
-		if (wParam >= '0' && wParam <= '9')
-			//printf("%c\n", wParam);// 현재 입력값
-			return 0;
 
-		wchar_t ws[1024];// 완성된 값
-		int length = GetWindowTextLength(hwnd) + 1;
-		GetWindowText(hwnd, ws, length);
-		char* s = utf16_to_utf8(ws);
-		printf("%c %s\n", wParam, s);
-		free(s);
+		if (style == WndEditBoxStyle_all)
+		{
+			// ok
+		}
+		else if (style == WndEditBoxStyle_int)
+		{
+			if (wParam == VK_RETURN || wParam == VK_BACK || (wParam == '-' || wParam >= '0' && wParam <= '9'))
+			{
+				// ok
+			}
+			else
+				return 0; // key blocking
+		}
+		else if (style == WndEditBoxStyle_float)
+		{
+			if (wParam == '.')
+			{
+				wchar_t ws[1024];
+				int length = GetWindowTextLength(hwnd) + 1;
+				GetWindowText(hwnd, ws, length);
+				for (int i = 0; i < length; i++)
+				{
+					if (ws[i] == '.') // 점이 두개가 존재할수없게함.
+					{
+						return 0;
+					}
+				}
+			}
+			else if (wParam == VK_RETURN || wParam == VK_BACK || (wParam == '-' || wParam >= '0' && wParam <= '9'))
+			{
+				// ok
+			}
+			else
+				return 0; // key blocking
+		}
 		break;
-	}// end of WM_CHAR
 
 	}// end of switch
 
 	return CallWindowProc(wpOld, hwnd, msg, wParam, lParam);
 }
 
+
 HWND createWndEditBox(int x, int y, int width, int height,
-	const char* str, WndCtrlColor color, WndCtrlUpdate update)
+	const char* str, WndEditBoxStyle style, WndCtrlColor color, WndCtrlUpdate update)
 {
 	wchar_t* s = utf8_to_utf16(str);
 	HWND hwnd = CreateWindow(WC_EDIT, s,
@@ -385,9 +451,63 @@ HWND createWndEditBox(int x, int y, int width, int height,
 	wcs->add(hwnd, WndStyle_editBox, color, update);
 	SendMessage(hwnd, (UINT)EM_LIMITTEXT, (WPARAM)ebMaxLength, (LPARAM)0);
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, GetWindowLongPtr(hwnd, GWLP_WNDPROC));
-	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)WndEditBoxProc);
+	LRESULT(CALLBACK * m[3])(HWND, UINT, WPARAM, LPARAM) = { WndEditBoxAllProc , WndEditBoxIntProc, WndEditBoxFloatProc};
+	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)m[style]);
+
 	return hwnd;
 }
+
+LRESULT CALLBACK WndEditBoxProcMultiProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	WNDPROC wpOld = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+	switch (msg) {
+
+	case WM_NCDESTROY:
+		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)wpOld);
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
+		break;
+
+	case WM_GETDLGCODE:
+	{
+		LRESULT ret = CallWindowProc(wpOld, hwnd, msg, wParam, lParam);
+		ret &= ~(DLGC_HASSETSEL | DLGC_WANTTAB);
+
+		if (lParam &&
+			((LPMSG)lParam)->message == WM_KEYDOWN &&
+			((LPMSG)lParam)->wParam == VK_TAB)
+			ret &= ~DLGC_WANTMESSAGE;
+		return ret;
+	
+		//break;
+	} // end of WM_GETDLGCODE	
+	}// end of switch
+
+	return CallWindowProc(wpOld, hwnd, msg, wParam, lParam);
+}
+
+HWND createWndEditBoxMultiline(int x, int y, int width, int height, const char* str, WndCtrlColor color, WndCtrlUpdate update)
+{
+	
+	wchar_t* s = utf8_to_utf16(str);
+	HWND hwnd = CreateWindow(WC_EDIT, s,
+		WS_TABSTOP |
+		WS_CHILD | WS_VISIBLE | WS_BORDER |
+		ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_AUTOVSCROLL |ES_AUTOHSCROLL, // WANTRETURN 엔터먹히게함
+		x, y, width, height,
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	free(s);
+	wcs->add(hwnd, WndStyle_editBox, color, update);
+	SendMessage(hwnd, (UINT)EM_LIMITTEXT, (WPARAM)ebMaxLength, (LPARAM)0);
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetWindowLongPtr(hwnd, GWLP_WNDPROC,(LONG_PTR)WndEditBoxProcMultiProc);
+
+	return hwnd;
+
+
+}
+
+
 
 void enableWnd(HWND hwnd, bool enable)
 {
@@ -535,6 +655,8 @@ void endOnlyRun(HANDLE event)
 	CloseHandle(event);
 }
 
+
+
 static iCriticalSection* instanceCS = NULL;
 iCriticalSection* iCriticalSection::instance()
 {
@@ -565,4 +687,287 @@ void iCriticalSection::end()
 }
 
 
+// for Games
+iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, const char* name, bool fullscreen)
+{
+	DWORD dwExStyle;
+	DWORD dwStyle;
 
+	if (fullscreen)
+	{
+		dwExStyle = WS_EX_APPWINDOW;
+		dwStyle + WS_POPUP;
+	}
+	else
+	{
+		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+		dwStyle = WS_OVERLAPPEDWINDOW;
+
+	}
+	RECT rect;
+	rect.left = x;
+	rect.right = x + width;
+	rect.top = y;
+	rect.bottom = y + height;
+
+	AdjustWindowRectEx(&rect, dwStyle, FALSE, dwExStyle);
+
+	wchar_t* szWindowClass = utf8_to_utf16(name);
+	HWND hwnd = CreateWindowEx(dwExStyle, szWindowClass, szWindowClass,dwStyle|WS_CLIPSIBLINGS | WS_CLIPCHILDREN, x, y, width, height, (HWND)NULL, (HMENU)NULL, hInstance, NULL);
+	free(szWindowClass);
+
+	HDC hdc = GetDC(hwnd);
+
+	PIXELFORMATDESCRIPTOR pfd;
+	memset(&pfd, 0x00, sizeof(PIXELFORMATDESCRIPTOR));
+	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	pfd.nVersion = 1;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	pfd.iPixelType = PFD_TYPE_RGBA;
+	pfd.cColorBits = bits;
+	pfd.cDepthBits = bits;
+	pfd.iLayerType = PFD_MAIN_PLANE;
+
+	int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+	SetPixelFormat(hdc, pixelFormat, &pfd);
+
+	HGLRC hrc = wglCreateContext(hdc);
+	wglMakeCurrent(hdc, hrc);
+
+	glewExperimental = TRUE;
+	GLenum error = glewInit();
+	if (error != GLEW_OK)
+	{
+		dispose();
+		return;
+	}
+
+#if 0
+	int attr[] = {
+		WGL_CONTEXT_MAJOR_VERSION_ARB,
+		WGL_CONTEXT_MINOR_VERSION_ARB,
+		WGL_CONTEXT_FLAGS_ARB, 0,
+		0
+	};
+
+	if (wglewIsSupported("WGL_ARB_create_context"))
+	{
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(hrc);
+
+		hrc = wglCreateContextAttribsARB(hdc, NULL, attr);
+
+		wglMakeCurrent(hdc, hrc);
+	}
+#endif
+	hWnd = hwnd;
+	hDC = hdc;
+	hRC = hrc;
+}
+
+
+// for Ctrl
+iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, bool visible)
+{
+	DWORD dwStyle = WS_CHILD | WS_BORDER;
+	HWND hwnd = CreateWindow(WC_STATIC, NULL, dwStyle, x, y, width, height, wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+
+	HDC hdc = GetDC(hwnd);
+	wcs->add(hwnd, WndStyle_opengl, NULL, NULL);
+	PIXELFORMATDESCRIPTOR pfd;
+	memset(&pfd, 0x00, sizeof(PIXELFORMATDESCRIPTOR));
+
+	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	pfd.nVersion = 1;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	pfd.iPixelType = PFD_TYPE_RGBA;
+	pfd.cColorBits = bits;
+	pfd.cDepthBits = bits;
+	pfd.iLayerType = PFD_MAIN_PLANE;
+
+	int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+	SetPixelFormat(hdc, pixelFormat, &pfd);
+
+
+	glewExperimental = TRUE;
+	GLenum error = glewInit();
+	if (error != GLEW_OK)
+	{
+		dispose();
+		return;
+	}
+	int attr[] = {
+		WGL_CONTEXT_MAJOR_VERSION_ARB,
+		WGL_CONTEXT_MINOR_VERSION_ARB,
+		WGL_CONTEXT_FLAGS_ARB, 0,
+		0,
+	};
+
+
+	static HGLRC _hrc = NULL;
+	if (_hrc)
+	{
+		HGLRC hrc = wglCreateContextAttribsARB(hdc, _hrc, attr);
+		wglShareLists(_hrc, hrc);
+
+		hWnd = hwnd;
+		hDC = hdc;
+		hRC = hrc;
+
+		wglMakeCurrent(hdc, hrc);
+		return;
+	}
+
+	HGLRC hrc = wglCreateContext(hdc);
+	wglMakeCurrent(hdc, hrc);
+
+	glewExperimental = TRUE;
+
+
+	if (error != GLEW_OK)
+	{
+		dispose();
+		return;
+	}
+#if 1
+	if (wglewIsSupported("WGL_ARB_create_context"))
+	{
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(hrc);
+
+		hrc = wglCreateContextAttribsARB(hdc, NULL, attr);
+		_hrc = hrc;
+
+		wglMakeCurrent(hdc, hrc);
+	}
+#endif
+	hWnd = hwnd;
+	hDC = hdc;
+	hRC = hrc;
+}
+
+iOpenGL::~iOpenGL()
+{
+	dispose();
+}
+
+void iOpenGL::setMakeCurrent()
+{
+	wglMakeCurrent(hDC, hRC);
+}
+
+void iOpenGL::swapBuffer()
+{
+	SwapBuffers(hDC);
+	wglMakeCurrent(NULL, NULL);
+}
+
+void iOpenGL::dispose()
+{
+	if (hRC)
+	{
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(hRC);
+		hRC = NULL;
+	}
+
+	if (hWnd && hDC)
+	{
+		ReleaseDC(hWnd, hDC);
+		hDC = NULL;
+	}
+
+	if (hWnd)
+	{
+		DestroyWindow(hWnd);
+		hWnd = NULL;
+	}
+
+}
+
+WndCtrlSystem* wcsOpenGL;
+iArray* arrayGL;
+
+void freeGL(void* parm)
+{	
+	WndGL* wg = (WndGL*)parm;
+
+	delete wg->gl;
+
+	if(wg->vao!= 1004)
+		glDeleteVertexArrays(1, &wg->vao);
+	free(wg);
+}
+
+
+void setupOpenGL(bool setup)
+{
+	if (setup == false)
+	{
+		delete wcsOpenGL;
+
+		if (arrayGL)
+			delete arrayGL;
+		return;
+	}
+	wcsOpenGL = new WndCtrlSystem(hWnd);
+	setWndCtrlSystem(wcs);
+
+	WndGL* wg = (WndGL*)malloc(sizeof(WndGL));
+	wg->gl = new iOpenGL(0, 0, 480, 320, 32, false);
+	initOpenGL();
+	wg->vao = 1004;       
+
+	arrayGL = new iArray(freeGL);
+	arrayGL->addObject(wg);
+}
+
+WndGL* createOpenGL(int x, int y, int width, int height, MethodWndGLUpdate m, int devWidth, int devHeight)
+{
+	WndGL* wg = (WndGL*)malloc(sizeof(WndGL));
+	wg->gl = new iOpenGL(x, y, width, height, 32);
+	wg->gl->setMakeCurrent();
+
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glGenVertexArrays(1, &wg->vao);
+	glBindVertexArray(wg->vao);
+
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+
+	//3D glDepthFun(GL_LEQUAL);
+
+	glDepthFunc(GL_ALWAYS);
+	glClearDepth(1.0f);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	wglMakeCurrent(NULL, NULL);
+
+	wg->method = m;
+	wg->devSize = iSizeMake(devWidth, devHeight);
+
+	arrayGL->addObject(wg);
+
+	return wg;
+}
+
+void updateOpenGL(float dt)
+{
+	for (int i = 1; i < arrayGL->count; i++)
+	{
+		WndGL* wg = (WndGL*)arrayGL->objectAtIndex(i);
+		wg->gl->setMakeCurrent();
+
+		RECT rt;
+		GetClientRect(wg->gl->hWnd, &rt);
+		devSize = iSizeMake(rt.right - rt.left, rt.bottom - rt.top);
+
+		reshapeOpenGL(rt.right - rt.left, rt.bottom - rt.top);
+
+		wg->method(dt);
+
+		wg->gl->swapBuffer();
+	}
+}

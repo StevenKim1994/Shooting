@@ -5,19 +5,19 @@ HWND hDlgQuest;
 WndCtrlSystem* wcsQuest;
 
 HWND* hBtnQuestOpen;
-void btnQuestOpenUpdate(WPARAM wParam, LPARAM lParam);
+void btnQuestOpenUpdate(HWND hwnd);
 
 HWND hEbQuestName;
-void ebQuestNameUpdate(WPARAM wParam, LPARAM lParam);
+void ebQuestNameUpdate(HWND hwnd);
 
 HWND hEbQuestContent;
-void ebQuestContentUpdate(WPARAM wParam, LPARAM lParam);
+void ebQuestContentUpdate(HWND hwnd);
 
 HWND hBtnQuestSubmit;
-void btnQuestSubmitUpdate(WPARAM wParam, LPARAM lParam);
+void btnQuestSubmitUpdate(HWND hwnd);
 
 HWND hLbQuestList;
-void lbQuestListUpdate(WPARAM wParam, LPARAM lParam);
+void lbQuestListUpdate(HWND hwnd);
 
 extern HWND hCbSayQuest;// Script.cpp
 
@@ -46,8 +46,9 @@ void loadDlgQuest()
 		hBtnQuestOpen[i] = createWndButton(5 + 65 * i, 5, 60, 30, strBtn[i], NULL, btnQuestOpenUpdate);
 
 	// name + submit
-	hEbQuestName = createWndEditBox(5, 40, 80, 30, "Title", NULL, ebQuestNameUpdate);
-	hEbQuestContent = createWndEditBox(5, 75, 80, 30, "Content", NULL, ebQuestContentUpdate);
+	setWndEditBosLength(70);
+	hEbQuestName = createWndEditBox(5, 40, 80, 30, "Title", WndEditBoxStyle_all, NULL, ebQuestNameUpdate);
+	hEbQuestContent = createWndEditBox(5, 75, 80, 30, "Content",WndEditBoxStyle_all, NULL, ebQuestContentUpdate);
 	hBtnQuestSubmit = createWndButton(90, 40, 60, 30, "Submit", NULL, btnQuestSubmitUpdate);
 
 	// listBox 
@@ -191,9 +192,9 @@ void saveDataQuest(FILE* pf)
 	}
 }
 
-void btnQuestOpenUpdate(WPARAM wParam, LPARAM lParam)
+void btnQuestOpenUpdate(HWND hwnd)
 {
-	HWND hwnd = (HWND)lParam;
+	
 
 	int i;
 	for (i = 0; i < 2; i++)
@@ -227,7 +228,7 @@ void btnQuestOpenUpdate(WPARAM wParam, LPARAM lParam)
 	//SetWindowPos(hDlgQuest, HWND_TOPMOST, x, y, width, height, SWP_HIDEWINDOW);
 }
 
-void ebQuestNameUpdate(WPARAM wParam, LPARAM lParam)
+void ebQuestNameUpdate(HWND hwnd)
 {
 	// 금지어, 숫자 차단
 
@@ -236,7 +237,7 @@ void ebQuestNameUpdate(WPARAM wParam, LPARAM lParam)
 	free(s);
 }
 
-void ebQuestContentUpdate(WPARAM wParam, LPARAM lParam)
+void ebQuestContentUpdate(HWND hwnd)
 {
 	//////////////////
 }
@@ -277,7 +278,7 @@ void setStringLimit(const char* str, int num, char* output)
 	}
 }
 
-void btnQuestSubmitUpdate(WPARAM wParam, LPARAM lParam)
+void btnQuestSubmitUpdate(HWND hwnd)
 {
 	char* strTitle = getWndText(hEbQuestName);
 	char* strContent = getWndText(hEbQuestContent);
@@ -335,17 +336,9 @@ void btnQuestSubmitUpdate(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void lbQuestListUpdate(WPARAM wParam, LPARAM lParam)
+void lbQuestListUpdate(HWND hwnd)
 {
-	int event = HIWORD(wParam);
-	switch (event) {
-	case LBN_SELCHANGE:
-	case LBN_DBLCLK:
-	case LBN_SELCANCEL:
-	case LBN_SETFOCUS:
-	case LBN_KILLFOCUS:
-		break;
-	}
+	
 
 	int index = indexWndListBox(hLbQuestList);
 	int count = countWndListBox(hLbQuestList);

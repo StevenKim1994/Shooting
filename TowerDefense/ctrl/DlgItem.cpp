@@ -5,16 +5,16 @@ HWND hDlgItem;
 WndCtrlSystem* wcsItem;
 
 HWND* hBtnItemOpen;
-void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam);
+void btnItemOpenUpdate(HWND hwnd);
 
 HWND hEbItemName;
-void ebItemNameUpdate(WPARAM wParam, LPARAM lParam);
+void ebItemNameUpdate(HWND hwnd);
 
 HWND hBtnItemSubmit;
-void btnItemSubmitUpdate(WPARAM wParam, LPARAM lParam);
+void btnItemSubmitUpdate(HWND hwnd);
 
 HWND hLbItemList;
-void lbItemListUpdate(WPARAM wParam, LPARAM lParam);
+void lbItemListUpdate(HWND hwnd);
 
 extern HWND hCbSayRewardItem;// Script.cpp
 
@@ -42,8 +42,9 @@ void loadDlgItem()
 	for (i = 0; i < 2; i++)
 		hBtnItemOpen[i] = createWndButton(5 + 65 * i, 5, 60, 30, strBtn[i], NULL, btnItemOpenUpdate);
 
+	setWndEditBosLength(21);
 	// name + submit
-	hEbItemName = createWndEditBox(5, 40, 80, 30, "Name", NULL, ebItemNameUpdate);
+	hEbItemName = createWndEditBox(5, 40, 80, 30, "Name",WndEditBoxStyle_all, NULL, ebItemNameUpdate);
 	hBtnItemSubmit = createWndButton(90, 40, 60, 30, "Submit", NULL, btnItemSubmitUpdate);
 
 	// listBox 
@@ -202,10 +203,8 @@ void saveDataItem(FILE* pf)
 	}
 }
 
-void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam)
+void btnItemOpenUpdate(HWND hwnd)
 {
-	HWND hwnd = (HWND)lParam;
-
 	int i;
 	for (i = 0; i < 2; i++)
 	{
@@ -238,7 +237,7 @@ void btnItemOpenUpdate(WPARAM wParam, LPARAM lParam)
 	//SetWindowPos(hDlgItem, HWND_TOPMOST, x, y, width, height, SWP_HIDEWINDOW);
 }
 
-void ebItemNameUpdate(WPARAM wParam, LPARAM lParam)
+void ebItemNameUpdate(HWND hwnd)
 {
 	// 금지어, 숫자 차단
 
@@ -247,7 +246,7 @@ void ebItemNameUpdate(WPARAM wParam, LPARAM lParam)
 	free(s);
 }
 
-void btnItemSubmitUpdate(WPARAM wParam, LPARAM lParam)
+void btnItemSubmitUpdate(HWND hwnd)
 {
 	char* str = getWndText(hEbItemName);
 
@@ -284,18 +283,9 @@ void btnItemSubmitUpdate(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void lbItemListUpdate(WPARAM wParam, LPARAM lParam)
+void lbItemListUpdate(HWND hwnd)
 {
-	int event = HIWORD(wParam);
-	switch (event) {
-	case LBN_SELCHANGE:
-	case LBN_DBLCLK:
-	case LBN_SELCANCEL:
-	case LBN_SETFOCUS:
-	case LBN_KILLFOCUS:
-		break;
-	}
-
+	
 	int index = indexWndListBox(hLbItemList);
 	int count = countWndListBox(hLbItemList);
 	if (index < count - 1)

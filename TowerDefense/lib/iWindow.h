@@ -5,6 +5,13 @@
 
 #pragma comment(lib, "comctl32")
 
+#include <gl/glew.h>
+#include <gl/wglew.h>
+//#include <gl/GL.h>
+//#include <gl/GLU.h>
+
+#pragma comment(lib, "opengl32")
+
 enum WndStyle
 {
     WndStyle_NULL = -1,
@@ -20,8 +27,9 @@ enum WndStyle
 };
 
 typedef void (*WndDrag)(const char* path);
-typedef void (*WndCtrlUpdate)(WPARAM wParam, LPARAM lParam);
-typedef LRESULT (*WndCtrlColor)(WPARAM wParam, LPARAM lParam); // wparam : hdc , lparam : color;
+typedef void (*WndCtrlUpdate)(HWND hwnd);
+typedef LRESULT (*WndCtrlColor)(HDC hdc, HWND hwnd); // wparam : hdc , lparam : color;
+
 
 struct WndCtrl
 {
@@ -110,9 +118,22 @@ int indexWndListBox(HWND hwnd);
 char* getWndListBox(HWND hwnd, int index);
 void setWndListBox(HWND hwnd, int index);
 
+
+//EditBox
+enum WndEditBoxStyle
+{
+    WndEditBoxStyle_all = 0,
+    WndEditBoxStyle_int, 
+    WndEditBoxStyle_float,
+       
+};
+
 void setWndEditBosLength(int maxLength);
 HWND createWndEditBox(int x, int y, int width, int height,
+    const char* str, WndEditBoxStyle style, WndCtrlColor color, WndCtrlUpdate update);
+HWND createWndEditBoxMultiline(int x, int y, int width, int height,
     const char* str, WndCtrlColor color, WndCtrlUpdate update);
+
 
 void enableWnd(HWND hwnd, bool enable);
 void setWndText(HWND hwnd, const char* szFormat, ...);
@@ -147,3 +168,44 @@ private:
     CRITICAL_SECTION cs;
 };
 
+class iOpenGL
+{
+public:
+
+    // for Games
+    iOpenGL(int x, int y, int width, int height, int bits, const char* name, bool fullscreen);
+    
+    // for Ctrl
+    iOpenGL(int x, int y, int width, int height, int bits, bool visible = true);
+
+    virtual ~iOpenGL();
+
+    void setMakeCurrent();
+    void swapBuffer();
+
+private:
+    void dispose();
+
+public: 
+    HWND hWnd;
+    HDC hDC;
+    HGLRC hRC;
+
+};
+
+#include "iStd.h"
+
+typedef void (*MethodWndGLUpdate)(float dt);
+struct WndGL
+{
+    iOpenGL* gl;
+    GLuint vao;
+    MethodWndGLUpdate method;
+    iSize devSize;
+};
+
+extern iArray* arrayGL;
+
+void setupOpenGL(bool setup);
+WndGL* createOpenGL(int x, int y, int width, int height, MethodWndGLUpdate m, int devWidth, int devHeight);
+void updateOpenGL(float dt);

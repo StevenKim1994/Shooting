@@ -51,6 +51,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
     hDC = GetDC(hWnd);
 
+    
+    setupOpenGL(true);
     loadScript(hWnd);
     //testCtrlSystem(hWnd,hInstance);
 
@@ -79,11 +81,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         }
         else
         {
-          
-     
-            SwapBuffers(hDC);
+            static DWORD prevTickCount = GetTickCount();
+            DWORD d = GetTickCount();
+            float delta = (d - prevTickCount) / 1000.f;
+            prevTickCount = d;
+       
+            updateOpenGL(delta);
         }
     }
+
+    
+    freeScript();
+    setupOpenGL(false);
 
     DestroyWindow(hWnd);
     endGdiplus(gpToken);

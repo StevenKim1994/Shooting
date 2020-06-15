@@ -5,16 +5,16 @@ HWND hDlgNom;
 WndCtrlSystem* wcsNom;
 
 HWND* hBtnNomOpen;
-void btnNomOpenUpdate(WPARAM wParam, LPARAM lParam);
+void btnNomOpenUpdate(HWND hwnd);
 
 HWND hEbNomName;
-void ebNomNameUpdate(WPARAM wParam, LPARAM lParam);
+void ebNomNameUpdate(HWND hwnd);
 
 HWND hBtnNomSubmit;
-void btnNomSubmitUpdate(WPARAM wParam, LPARAM lParam);
+void btnNomSubmitUpdate(HWND hwnd);
 
 HWND hLbNomList;
-void lbNomListUpdate(WPARAM wParam, LPARAM lParam);
+void lbNomListUpdate(HWND hwnd);
 
 extern HWND hCbSayNom;// Script.cpp
 
@@ -43,7 +43,8 @@ void loadDlgNom()
 		hBtnNomOpen[i] = createWndButton(5 + 65 * i, 5, 60, 30, strBtn[i], NULL, btnNomOpenUpdate);
 
 	// name + submit
-	hEbNomName = createWndEditBox(5, 40, 80, 30, "Name", NULL, ebNomNameUpdate);
+	setWndEditBosLength(21);
+	hEbNomName = createWndEditBox(5, 40, 80, 30, "Name", WndEditBoxStyle_all, NULL, ebNomNameUpdate);
 	hBtnNomSubmit = createWndButton(90, 40, 60, 30, "Submit", NULL, btnNomSubmitUpdate);
 
 	// listBox 
@@ -187,9 +188,8 @@ void saveDataNom(FILE* pf)
 	}
 }
 
-void btnNomOpenUpdate(WPARAM wParam, LPARAM lParam)
+void btnNomOpenUpdate(HWND hwnd)
 {
-	HWND hwnd = (HWND)lParam;
 
 	int i;
 	for (i = 0; i < 2; i++)
@@ -223,7 +223,7 @@ void btnNomOpenUpdate(WPARAM wParam, LPARAM lParam)
 	//SetWindowPos(hDlg, HWND_TOPMOST, x, y, width, height, SWP_HIDEWINDOW);
 }
 
-void ebNomNameUpdate(WPARAM wParam, LPARAM lParam)
+void ebNomNameUpdate(HWND hwnd)
 {
 	// 금지어, 숫자 차단
 
@@ -232,7 +232,7 @@ void ebNomNameUpdate(WPARAM wParam, LPARAM lParam)
 	free(s);
 }
 
-void btnNomSubmitUpdate(WPARAM wParam, LPARAM lParam)
+void btnNomSubmitUpdate(HWND hwnd)
 {
 	char* str = getWndText(hEbNomName);
 
@@ -269,17 +269,9 @@ void btnNomSubmitUpdate(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void lbNomListUpdate(WPARAM wParam, LPARAM lParam)
+void lbNomListUpdate(HWND hwnd)
 {
-	int event = HIWORD(wParam);
-	switch (event) {
-	case LBN_SELCHANGE:
-	case LBN_DBLCLK:
-	case LBN_SELCANCEL:
-	case LBN_SETFOCUS:
-	case LBN_KILLFOCUS:
-		break;
-	}
+
 
 	int index = indexWndListBox(hLbNomList);
 	int count = countWndListBox(hLbNomList);

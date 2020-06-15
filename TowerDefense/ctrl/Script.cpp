@@ -8,30 +8,30 @@
 WndCtrlSystem* wcsScript;
 // 최상단
 HWND* hBtnOpenDlg;
-void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam);
+void btnOpenDlgUpdate(HWND hwnd);
 
 // 대화목록
 HWND hLbSayList;
-void lbSayListUpdate(WPARAM wParam, LPARAM lParam);
+void lbSayListUpdate(HWND hwnd);
 
 // 좌하단 - 말하는 놈, 보상아이템
 HWND hCbSayNom, hCbSayRewardItem;
-void cbSayNomUpdate(WPARAM wParam, LPARAM lParam);
-void cbSayRewardItemUpdate(WPARAM wParam, LPARAM lParam);
+void cbSayNomUpdate(HWND hwnd);
+void cbSayRewardItemUpdate(HWND hwnd);
 
 HWND hEbSayRewardGold, hEbSayRewardExp;
-void ebSayRewardGoldUpdate(WPARAM wParam, LPARAM lParam);
-void ebSayRewardExpUpdate(WPARAM wParam, LPARAM lParam);
+void ebSayRewardGoldUpdate(HWND hwnd);
+void ebSayRewardExpUpdate(HWND hwnd);
 
 HWND hCbSayQuest;
-void cbSayQuestUpdate(WPARAM wParam, LPARAM lParam);
+void cbSayQuestUpdate(HWND hwnd);
 
 // 중우하단 - 멘트
 HWND hEbSayComment;
-void ebSayCommentUpdate(WPARAM wParam, LPARAM lParam);
+void ebSayCommentUpdate(HWND hwnd);
 
 HWND hBtnSaySubmit;
-void btnSaySubmitUpdate(WPARAM wParam, LPARAM lParam);
+void btnSaySubmitUpdate(HWND hwnd);
 
 
 void dragScript(const char* path)
@@ -73,20 +73,32 @@ void loadScript(HWND hwnd)
 	const char* strItem[1] = { "End of Item" };
 	hCbSayRewardItem = createWndComboBox(5, 390, 90, 400, strItem, 1, NULL, cbSayRewardItemUpdate);
 	createWndStatic(5, 420, 90, 25, "Gold", NULL, NULL);
-	hEbSayRewardGold = createWndEditBox(5, 450, 90, 25, "0", NULL, ebSayRewardGoldUpdate);
+	setWndEditBosLength(10);
+	hEbSayRewardGold = createWndEditBox(5, 450, 90, 25, "0", WndEditBoxStyle_int, NULL, ebSayRewardGoldUpdate);
 	createWndStatic(5, 480, 90, 25, "Exp", NULL, NULL);
-	hEbSayRewardExp = createWndEditBox(5, 510, 90, 25, "0", NULL, ebSayRewardExpUpdate);
+	hEbSayRewardExp = createWndEditBox(5, 510, 90, 25, "0", WndEditBoxStyle_int, NULL, ebSayRewardExpUpdate);
 	const char* strQuest[1] = { "End of Quest" };
 	hCbSayQuest = createWndComboBox(5, 540, 90, 400, strQuest, 1, NULL, cbSayQuestUpdate);
 
 	// 중우하단 - 멘트
-	hEbSayComment = createWndEditBox(100, 350, 430, 250, "Comment", NULL, ebSayRewardGoldUpdate);
+	setWndEditBosLength(300);
+	hEbSayComment = createWndEditBox(100, 350, 430, 250, "Comment", WndEditBoxStyle_all, NULL, ebSayRewardGoldUpdate);
 
 	hBtnSaySubmit = createWndButton(100, 610, 430, 25, "Submit", NULL, btnSaySubmitUpdate);
+
+	void updateTestGL(float dt);
+
+	createOpenGL(550, 5, 200, 200, updateTestGL, 200, 200);
 
 	loadDlgNom();
 	loadDlgItem();
 	loadDlgQuest();
+}
+
+void updateTestGL(float dt)
+{
+	glClearColor(1, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void freeScript()
@@ -205,7 +217,7 @@ void loadDataSay(FILE* pf)
 			setWndText(hEbSayRewardGold, "%d", s->gold);
 			setWndText(hEbSayRewardExp, "%d", s->exp);
 			setWndListBox(hLbSayList, i);
-			btnSaySubmitUpdate(0, 0);
+			btnSaySubmitUpdate(NULL);
 			free(s->comment);
 			free(s);
 		}
@@ -251,11 +263,11 @@ void saveDataSay(FILE* pf)
 	}
 }
 
-void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam)
+void btnOpenDlgUpdate(HWND hwnd)
 {
 	void (*show[3])(bool) = { showDlgNom, showDlgItem, showDlgQuest, };
 
-	HWND hwnd = (HWND)lParam;
+
 	for (int i = 0; i < 3; i++)
 	{
 		if (hBtnOpenDlg[i] == hwnd)
@@ -291,7 +303,7 @@ void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void lbSayListUpdate(WPARAM wParam, LPARAM lParam)
+void lbSayListUpdate(HWND hwnd)
 {
 	int index = indexWndListBox(hLbSayList);
 	int count = countWndListBox(hLbSayList);
@@ -308,37 +320,37 @@ void lbSayListUpdate(WPARAM wParam, LPARAM lParam)
 }
 
 // 좌하단 - 말하는 놈, 보상아이템
-void cbSayNomUpdate(WPARAM wParam, LPARAM lParam)
+void cbSayNomUpdate(HWND hwnd)
 {
 
 }
 
-void cbSayRewardItemUpdate(WPARAM wParam, LPARAM lParam)
+void cbSayRewardItemUpdate(HWND hwnd)
 {
 
 }
 
-void ebSayRewardGoldUpdate(WPARAM wParam, LPARAM lParam)
+void ebSayRewardGoldUpdate(HWND hwnd)
 {
 
 }
-void ebSayRewardExpUpdate(WPARAM wParam, LPARAM lParam)
+void ebSayRewardExpUpdate(HWND hwnd)
 {
 
 }
 
-void cbSayQuestUpdate(WPARAM wParam, LPARAM lParam)
+void cbSayQuestUpdate(HWND hwnd)
 {
 
 }
 
 // 중우하단 - 멘트
-void ebSayCommentUpdate(WPARAM wParam, LPARAM lParam)
+void ebSayCommentUpdate(HWND hwnd)
 {
 
 }
 
-void btnSaySubmitUpdate(WPARAM wParam, LPARAM lParam)
+void btnSaySubmitUpdate(HWND hwnd)
 {
 	int nomIndex = indexWndComboBox(hCbSayNom);
 	const char* strNom = "X";
