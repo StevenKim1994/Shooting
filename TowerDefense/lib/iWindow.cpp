@@ -692,30 +692,32 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, const char* name
 {
 	DWORD dwExStyle;
 	DWORD dwStyle;
-
 	if (fullscreen)
 	{
 		dwExStyle = WS_EX_APPWINDOW;
-		dwStyle + WS_POPUP;
+		dwStyle = WS_POPUP;
 	}
 	else
 	{
 		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 		dwStyle = WS_OVERLAPPEDWINDOW;
-
 	}
 	RECT rect;
 	rect.left = x;
 	rect.right = x + width;
 	rect.top = y;
 	rect.bottom = y + height;
-
 	AdjustWindowRectEx(&rect, dwStyle, FALSE, dwExStyle);
 
 	wchar_t* szWindowClass = utf8_to_utf16(name);
-	HWND hwnd = CreateWindowEx(dwExStyle, szWindowClass, szWindowClass,dwStyle|WS_CLIPSIBLINGS | WS_CLIPCHILDREN, x, y, width, height, (HWND)NULL, (HMENU)NULL, hInstance, NULL);
+	HWND hwnd = CreateWindowEx(dwExStyle,
+		szWindowClass,
+		szWindowClass,
+		dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+		x, y,
+		width, height,
+		(HWND)NULL, (HMENU)NULL, hInstance, NULL);
 	free(szWindowClass);
-
 	HDC hdc = GetDC(hwnd);
 
 	PIXELFORMATDESCRIPTOR pfd;
@@ -743,13 +745,13 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, const char* name
 	}
 
 #if 0
-	int attr[] = {
-		WGL_CONTEXT_MAJOR_VERSION_ARB,
-		WGL_CONTEXT_MINOR_VERSION_ARB,
+	int attr[] =
+	{
+		WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+		WGL_CONTEXT_MINOR_VERSION_ARB, 2,
 		WGL_CONTEXT_FLAGS_ARB, 0,
-		0
+		0,
 	};
-
 	if (wglewIsSupported("WGL_ARB_create_context"))
 	{
 		wglMakeCurrent(NULL, NULL);
@@ -760,6 +762,7 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, const char* name
 		wglMakeCurrent(hdc, hrc);
 	}
 #endif
+
 	hWnd = hwnd;
 	hDC = hdc;
 	hRC = hrc;
@@ -770,17 +773,17 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, const char* name
 iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, bool visible)
 {
 	DWORD dwStyle = WS_CHILD | WS_BORDER;
-	
 	if (visible)
 		dwStyle |= WS_VISIBLE;
 
-	HWND hwnd = CreateWindow(WC_STATIC, NULL, dwStyle, x, y, width, height, wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
-
+	HWND hwnd = CreateWindow(WC_STATIC, NULL,
+		dwStyle,
+		x, y, width, height, wcs->hwndParent, (HMENU)wcs->wcNum, wcs->hinstance, NULL);
 	HDC hdc = GetDC(hwnd);
 	wcs->add(hwnd, WndStyle_opengl, NULL, NULL);
+
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0x00, sizeof(PIXELFORMATDESCRIPTOR));
-
 	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	pfd.nVersion = 1;
 	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
@@ -792,22 +795,13 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, bool visible)
 	int pixelFormat = ChoosePixelFormat(hdc, &pfd);
 	SetPixelFormat(hdc, pixelFormat, &pfd);
 
-
-	glewExperimental = TRUE;
-	GLenum error = glewInit();
-	if (error != GLEW_OK)
+	int attr[] =
 	{
-		dispose();
-		return;
-	}
-	int attr[] = {
-		WGL_CONTEXT_MAJOR_VERSION_ARB,
-		WGL_CONTEXT_MINOR_VERSION_ARB,
+		WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+		WGL_CONTEXT_MINOR_VERSION_ARB, 2,
 		WGL_CONTEXT_FLAGS_ARB, 0,
 		0,
 	};
-
-
 	static HGLRC _hrc = NULL;
 	if (_hrc)
 	{
@@ -826,13 +820,13 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, bool visible)
 	wglMakeCurrent(hdc, hrc);
 
 	glewExperimental = TRUE;
-
-
+	GLenum error = glewInit();
 	if (error != GLEW_OK)
 	{
 		dispose();
 		return;
 	}
+
 #if 1
 	if (wglewIsSupported("WGL_ARB_create_context"))
 	{
@@ -845,6 +839,7 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, bool visible)
 		wglMakeCurrent(hdc, hrc);
 	}
 #endif
+
 	hWnd = hwnd;
 	hDC = hdc;
 	hRC = hrc;
@@ -909,18 +904,17 @@ void setupOpenGL(bool setup)
 	if (setup == false)
 	{
 		delete wcsOpenGL;
-
 		if (arrayGL)
 			delete arrayGL;
 		return;
 	}
 	wcsOpenGL = new WndCtrlSystem(hWnd);
-	setWndCtrlSystem(wcs);
+	setWndCtrlSystem(wcsOpenGL);
 
 	WndGL* wg = (WndGL*)malloc(sizeof(WndGL));
 	wg->gl = new iOpenGL(0, 0, 480, 320, 32, false);
 	initOpenGL();
-	wg->vao = 1004;       
+	wg->vao = 1004;///////////////////////
 
 	arrayGL = new iArray(freeGL);
 	arrayGL->addObject(wg);
@@ -932,19 +926,12 @@ WndGL* createOpenGL(int x, int y, int width, int height, MethodWndGLUpdate m, in
 	wg->gl = new iOpenGL(x, y, width, height, 32);
 	wg->gl->setMakeCurrent();
 
-	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	glGenVertexArrays(1, &wg->vao);
-	glBindVertexArray(wg->vao);
-
-	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-
-	//3D glDepthFun(GL_LEQUAL);
 
 	glDepthFunc(GL_ALWAYS);
 	glClearDepth(1.0f);
 
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	wglMakeCurrent(NULL, NULL);
@@ -963,13 +950,22 @@ void updateOpenGL(float dt)
 	{
 		WndGL* wg = (WndGL*)arrayGL->objectAtIndex(i);
 		wg->gl->setMakeCurrent();
-
+#if 0
 		RECT rt;
 		GetClientRect(wg->gl->hWnd, &rt);
 		devSize = wg->devSize;
-
 		reshapeOpenGL(rt.right - rt.left, rt.bottom - rt.top);
+#else
+		devSize = wg->devSize;
 
+		glViewport(0, 0, devSize.width, devSize.height);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, devSize.width, devSize.height, 0, -1000, 1000);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+#endif
 		wg->method(dt);
 
 		wg->gl->swapBuffer();
