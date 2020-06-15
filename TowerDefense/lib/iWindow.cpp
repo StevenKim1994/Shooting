@@ -770,6 +770,10 @@ iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, const char* name
 iOpenGL::iOpenGL(int x, int y, int width, int height, int bits, bool visible)
 {
 	DWORD dwStyle = WS_CHILD | WS_BORDER;
+	
+	if (visible)
+		dwStyle |= WS_VISIBLE;
+
 	HWND hwnd = CreateWindow(WC_STATIC, NULL, dwStyle, x, y, width, height, wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
 
 	HDC hdc = GetDC(hwnd);
