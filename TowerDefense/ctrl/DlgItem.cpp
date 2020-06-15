@@ -106,9 +106,10 @@ LRESULT CALLBACK dlgItemProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_CTLCOLORSTATIC:
 	case WM_CTLCOLORBTN:
-	case WM_CTLCOLOREDIT:
 	case WM_CTLCOLORLISTBOX:
 	case WM_CTLCOLORDLG:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORSCROLLBAR:
 		result = wcsItem->color(wParam, lParam);
 		if (result)
 			return result;

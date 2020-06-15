@@ -21,3 +21,5 @@ void loadDataSay(FILE* pf);
 void loadDataSay(const char* path);
 void saveDataSay(FILE* pf);
 void saveDataSay(const char* path);
+
+void setStringLimit(const char* str, int num, char* output);

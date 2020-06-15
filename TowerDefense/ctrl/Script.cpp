@@ -1,4 +1,5 @@
 #include "Script.h"
+#include "iWindow.h"
 #include "ScriptData.h"
 #include "DlgNom.h"
 #include "DlgItem.h"
@@ -92,6 +93,9 @@ void freeScript()
 {
 	// to do.....
 	freeScriptData();
+	freeDlgNom();
+	freeDlgItem();
+	freeDlgQuest();
 
 	delete wcsScript;
 }
@@ -119,6 +123,22 @@ void drawScript(float dt)
 void keyScript(iKeyState stat, iPoint point)
 {
 
+}
+
+LRESULT dlgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_CLOSE:
+		// unshow 
+
+		// destory 시키거나, 
+		break;
+
+	default:
+		return DefWindowProc(hWnd, msg, wParam, lParam);        //화면에 있는게 갱신
+	}
+	return 0;
 }
 
 void loadDataProject(const char* path)
@@ -149,60 +169,57 @@ void loadDataSay(const char* path)
 }
 void loadDataSay(FILE* pf)
 {
-	bool ready = true;
-
-	int i, num;
-	num = countWndListBox(hLbSayList) - 1;
-	for (i = 0; i < num; i++)
+	int i, len, num;
+	int listBoxnum = countWndListBox(hLbSayList) - 1;
+	for (i = 0; i < listBoxnum; i++)
+	{
 		removeWndListBox(hLbSayList, 0);
-
+	}
 	arraySay->removeAll();
 
+	bool ready = true;
 	fread(&num, sizeof(int), 1, pf);
 	for (i = 0; i < num; i++)
 	{
-		Say* say = (Say*)malloc(sizeof(Say));
+		Say* s = (Say*)malloc(sizeof(Say));
 
-		fread(&say->nomIndex, sizeof(int), 1, pf);
+		fread(&s->nomIndex, sizeof(int), 1, pf);
 
-		int len;
 		fread(&len, sizeof(int), 1, pf);
-		say->comment = (char*)calloc(sizeof(char), 1 + len);
-		fread(say->comment, sizeof(char), len, pf);
+		s->comment = (char*)calloc(sizeof(char*), 1 + len);
+		fread(s->comment, sizeof(char), len, pf);
 
-		fread(&say->itemIndex, sizeof(int), 1, pf);
-		fread(&say->gold, sizeof(int), 1, pf);
-		fread(&say->exp, sizeof(int), 1, pf);
-		fread(&say->questIndex, sizeof(int), 1, pf);
+		fread(&s->itemIndex, sizeof(int), 1, pf);
+		fread(&s->gold, sizeof(int), 1, pf);
+		fread(&s->exp, sizeof(int), 1, pf);
+		fread(&s->questIndex, sizeof(int), 1, pf);
 
-		//addWndListBox(hLbSayList, i, say->comment);
-#if 1
-		if (say->nomIndex < arrayNom->count - 1 &&
-			say->itemIndex < arrayItem->count - 1 &&
-			say->questIndex < arrayQuest->count - 1)
+		if (s->nomIndex < arrayNom->count &&
+			s->questIndex < arrayQuest->count &&
+			s->itemIndex < arrayItem->count)
 		{
-			setWndComboBox(hCbSayNom, say->nomIndex);
-			setWndText(hEbSayComment, say->comment);
-			setWndComboBox(hCbSayRewardItem, say->itemIndex);
-			setWndText(hEbSayRewardGold, "%d", say->gold);
-			setWndText(hEbSayRewardExp, "%d", say->exp);
-			setWndComboBox(hCbSayQuest, say->questIndex);
+			setWndComboBox(hCbSayNom, s->nomIndex);
+			setWndComboBox(hCbSayQuest, s->questIndex);
+			setWndComboBox(hCbSayRewardItem, s->questIndex);
+			setWndText(hEbSayComment, s->comment);
+			setWndText(hEbSayRewardGold, "%d", s->gold);
+			setWndText(hEbSayRewardExp, "%d", s->exp);
 			setWndListBox(hLbSayList, i);
-			btnSaySubmitUpdate(0, 0);//arraySay->addObject(say);
-			free(say->comment);
-			free(say);
+			btnSaySubmitUpdate(0, 0);
+			free(s->comment);
+			free(s);
 		}
 		else
 		{
 			ready = false;
-			arraySay->addObject(say);
+			arraySay->addObject(s);
 		}
-#endif
-	}
 
-	if (ready == false)
-	{
-		MessageBox(NULL, TEXT("놈,아이템,퀘스트 로딩X"), TEXT("경고"), MB_OK);
+		if (ready == false)
+		{
+			MessageBox(NULL, TEXT(".nom, .qst, .itm의 값이 전부 로드되지 않습니다 "), TEXT("ERROR"), MB_OK);
+			return;
+		}
 	}
 }
 
@@ -236,7 +253,7 @@ void saveDataSay(FILE* pf)
 
 void btnOpenDlgUpdate(WPARAM wParam, LPARAM lParam)
 {
-	void (*show[3])(bool) = { showDlgNom, showDlgItem, showDlgQuest };
+	void (*show[3])(bool) = { showDlgNom, showDlgItem, showDlgQuest, };
 
 	HWND hwnd = (HWND)lParam;
 	for (int i = 0; i < 3; i++)

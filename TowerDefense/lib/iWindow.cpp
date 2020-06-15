@@ -10,6 +10,7 @@ WndCtrlSystem::WndCtrlSystem(HWND hwnd)
 	hinstance = (HINSTANCE)GetWindowLong(hwnd,GWLP_HINSTANCE); 
 	wc = (WndCtrl*)malloc(sizeof(WndCtrl) * 1024);
 	wcNum = 0;
+	methodDrag = NULL;
 }
 
 WndCtrlSystem::~WndCtrlSystem()
@@ -77,25 +78,33 @@ void WndCtrlSystem::update(WPARAM wParam, LPARAM lParam)
 
 	WndCtrl* c = &wc[id];
 
+	int event = HIWORD(wParam);
+
 	switch (c->style)
 	{
 	case WndStyle_static: // none
 		break;
 	case WndStyle_button:
+		if (c->update)
+			c->update(wParam, lParam);
+		break;
 	case WndStyle_checkBox:
+		if(c->update)
+			c->update(wParam, lParam);
+		break;
 	case WndStyle_radio:
 		if(c->update)
-		c->update(wParam, lParam);
+			c->update(wParam, lParam);
 		break;
 
 	case WndStyle_comboBox:
 		if (c->update)
-		c->update(wParam, lParam);
+			c->update(wParam, lParam);
 		break;
 
 	case WndStyle_listBox:
 		if (c->update)
-		c->update(wParam, lParam);
+			c->update(wParam, lParam);
 		break;
 
 	case WndStyle_editBox:

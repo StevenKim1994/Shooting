@@ -1,6 +1,6 @@
 #include "DlgNom.h"
 #include "ScriptData.h"
-
+#include "iWindow.h"
 HWND hDlgNom;
 WndCtrlSystem* wcsNom;
 
@@ -91,9 +91,10 @@ LRESULT CALLBACK dlgNomProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_CTLCOLORSTATIC:
 	case WM_CTLCOLORBTN:
-	case WM_CTLCOLOREDIT:
 	case WM_CTLCOLORLISTBOX:
 	case WM_CTLCOLORDLG:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORSCROLLBAR:
 		result = wcsNom->color(wParam, lParam);
 		if (result)
 			return result;
@@ -218,7 +219,7 @@ void btnNomOpenUpdate(WPARAM wParam, LPARAM lParam)
 			saveDataNom(_path);
 		}
 	}
-	//SetFocus(hDlgNom);
+	SetFocus(hDlgNom);
 	//SetWindowPos(hDlg, HWND_TOPMOST, x, y, width, height, SWP_HIDEWINDOW);
 }
 
