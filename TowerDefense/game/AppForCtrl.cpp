@@ -3,6 +3,7 @@
 #include "AppForCtrl.h"
 #include "iWindow.h"
 #include "Script.h"
+#include "MapEditor.h"
 
 HINSTANCE hInstance;
 HWND hWnd;
@@ -53,7 +54,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
 
     
     setupOpenGL(true);
-    loadScript(hWnd);
+    loadMapEditor(hWnd);
+    //loadScript(hWnd);
     //testCtrlSystem(hWnd,hInstance);
 
     RECT rect;
@@ -90,8 +92,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         }
     }
 
-    
-    freeScript();
+    freeMapEditor();
+    //freeScript();
     setupOpenGL(false);
 
     DestroyWindow(hWnd);
@@ -144,7 +146,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_DROPFILES:
    
-        dragScript(wParam, lParam);
+        dragMapEditor(wParam, lParam);
+       // dragScript(wParam, lParam);
         break;
    
     case WM_CTLCOLORSTATIC:
@@ -152,7 +155,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CTLCOLORDLG:
     case WM_CTLCOLOREDIT:
     case WM_CTLCOLORLISTBOX:
-        result = colorScrip(wParam, lParam);//colorScript(wParam, lParam);
+        result = colorMapEditor(wParam, lParam);//colorScrip(wParam, lParam);//colorScript(wParam, lParam);
         if (result)
             return result;
         break;
@@ -161,8 +164,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_COMMAND:
     {
-        updateScript(wParam, lParam);
-
+        //updateScript(wParam, lParam);
+        updateMapEditor(wParam, lParam);
         int wmID = LOWORD(wParam);
 
        
@@ -211,12 +214,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     case WM_LBUTTONDOWN:
-       
+        keyMapEditor(iKeyStateBegan, iPointMake(LOWORD(lParam), HIWORD(lParam)));
         break;
     case WM_MOUSEMOVE:
+        keyMapEditor(iKeyStateMoved, iPointMake(LOWORD(lParam), HIWORD(lParam)));
        
         break;
     case WM_LBUTTONUP:
+        keyMapEditor(iKeyStateEnded, iPointMake(LOWORD(lParam), HIWORD(lParam)));
       
         break;
     case WM_KEYDOWN:

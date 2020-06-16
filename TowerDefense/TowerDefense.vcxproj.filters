@@ -234,9 +234,6 @@
     <ClInclude Include="game\TdObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="lib\AppForCtrl.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="lib\iWindow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -253,6 +250,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ctrl\DlgQuest.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="game\AppForCtrl.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl\MapEditor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -480,9 +483,6 @@
     <ClCompile Include="game\TdObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="lib\AppForCtrl.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="lib\iWindow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -499,6 +499,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ctrl\DlgQuest.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="game\AppForCtrl.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl\MapEditor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

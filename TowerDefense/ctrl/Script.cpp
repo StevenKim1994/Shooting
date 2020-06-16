@@ -86,19 +86,10 @@ void loadScript(HWND hwnd)
 
 	hBtnSaySubmit = createWndButton(100, 610, 430, 25, "Submit", NULL, btnSaySubmitUpdate);
 
-	void updateTestGL(float dt);
-
-	createOpenGL(550, 5, 200, 200, updateTestGL, 200, 200);
 
 	loadDlgNom();
 	loadDlgItem();
 	loadDlgQuest();
-}
-
-void updateTestGL(float dt)
-{
-	glClearColor(1, 0, 1, 1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void freeScript()
