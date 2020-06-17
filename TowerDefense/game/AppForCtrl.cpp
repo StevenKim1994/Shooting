@@ -190,7 +190,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_CREATE:
     {
-       
+        RECT size;
+        SetRect(&size, 0, 0, 1600, 900);
+        AdjustWindowRect(&size, WS_OVERLAPPEDWINDOW, FALSE);
+        MoveWindow(hWnd, size.left + 100, size.top+ 100, size.right - size.left, size.bottom - size.top, TRUE);
         break;
     }
 
