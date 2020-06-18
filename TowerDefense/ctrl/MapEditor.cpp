@@ -43,6 +43,17 @@ HWND* hEbTileImgSet;
 WndGL* wgTile;
 WndGL* wgMap;
 
+struct TOTAL
+{
+	Texture* tex; // 전체이미지
+	uint8* rgba; // 전체 RGBA값
+	bool* gone; // 비교햇는지...
+	iRect rt; // 선택된 영역
+	iImage* img; // 선택된 영역의 이미지의 리스트들... 일종의 sprite의 모음...
+};
+
+TOTAL* total;
+
 
 bool chkTileOnOff = false;
 
@@ -50,6 +61,9 @@ void TileOnOff(HWND hwnd);
 
 void loadMapEditor(HWND hwnd)
 {
+	total = (TOTAL*)malloc(sizeof(TOTAL));
+	const char* path = "assets/atlas0.png";
+	total->tex = NULL;//createImage(path);
 	int i;
 	initWndCtrlSystem();
 	wcsMapEditor = new WndCtrlSystem(hwnd);
@@ -135,6 +149,7 @@ void loadMapEditor(HWND hwnd)
 
 	wgTile = createOpenGL(15, 40, 270, 350, methodTileUpdate, 270, 350); //TILE OPENGL
 	wgMap = createOpenGL(300, 40, 1100, 650, methodMapUpdate, 1100, 650); //MAP OPENGL
+
 }
 
 void freeMapEditor()
@@ -162,7 +177,7 @@ void drawMapEditor(float dt)
 iRect TileRect = iRectMake(15, 40, 270, 350);
 iRect MapRect = iRectMake(300, 40, 1100, 650);
 
-iPoint SeletedPoint;
+iPoint SeletedPoint = iPointZero;
 iRect Seleted;
 
 iPoint DrawPoint;
@@ -240,6 +255,7 @@ mapRt.origin.y += yBorder; mapRt.size.height += yBorder *2;
 
 void keyMapEditor(iKeyState stat, iPoint point)
 {
+	checkOpenGLPosition(wcsMapEditor->hwndParent, wgMap->gl->hWnd, point);
 	//opengl
 
 	if (stat == iKeyStateBegan)
@@ -272,6 +288,8 @@ void keyMapEditor(iKeyState stat, iPoint point)
 			printf("point (%f , %f)\n", point.x, point.y);
 			printf("MapSelected\n");
 			setRGBA(1, 1, 1, 1);
+
+
 		}
 		
 	}
@@ -283,26 +301,116 @@ void dragMapEditor(WPARAM wParam, LPARAM lParam)
 	wcsMapEditor->dropFiles(wParam, lParam);
 }
 
+void scrollMapEditor(WPARAM wParam, LPARAM lParam)
+{
+	wcsMapEditor->scroll(wParam, lParam);
+}
+
 Texture** texs = NULL;
+Texture* Imgtex = NULL;
 
 char* strImagePath = NULL;
-
-
-
+const char* ws;
 void btnOpenImageUpdate(HWND hwnd)
 {
 	const char* path = openFileDlg(true, TEXT("Image Files(*png, *jpg)\0*.png;*.jpg\0"));
 
 	if (path)
 	{
+	
 		//to do
 		int len = strlen(path);
-
 		strImagePath = (char*)calloc(sizeof(char), 1 + len);
 		strcpy(strImagePath, path);
+		//wchar_t* ws = utf8_to_utf16(strImagePath);
+		//Bitmap* bmp = new Bitmap(ws);
+		//free(ws);
 
+		//int width, height;
+		//total->rgba = bmp2rgba(bmp, width, height);
+		//delete bmp;
+		//total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
+		
+		//total->rt = iRectMake(0, 0, 0, 0);
+		//total->img = NULL;
+		
 	}
 }
+
+int _left, _right, _up, _down; // 각 최대 마지막 값
+
+void findRect(int x, int y)
+{
+	int i, j, k;
+	int num;
+	int potW = total->tex->potWidth;
+	int potH = total->tex->potHeight;
+	int* mustGoIndex = (int*)malloc(sizeof(int) * potW * potH);
+
+	mustGoIndex[0] = potW * y + x;
+
+	int mustGoNum = 1;
+
+	while (mustGoNum)
+	{
+		num = mustGoNum;
+		for (k = 0; k < num; k++)
+		{
+			i = mustGoIndex[k] % potW;
+			j = mustGoIndex[k] / potW;
+			if (total->gone[potW * j + i] || total->rgba[potW * 4 * j + 4 * i + 3] == 0)
+				continue;
+
+			total->gone[potW * j + i] = true;
+			if (i < _left)
+				_left = i;
+			if (i > _right)
+				_right = i;
+			if (j < _up)
+				_up = j;
+			if (j > _down)
+				_down = j;
+
+
+			if (i > 0) //왼쪾으로 갈수 있음
+			{
+				mustGoIndex[mustGoNum] = mustGoIndex[k] - 1;
+				mustGoNum++;
+			}
+			if (i < potW - 1) //오른쪾으로 갈수 있음
+			{
+				mustGoIndex[mustGoNum] = mustGoIndex[k] + 1;
+				mustGoNum++;
+			}
+
+			if (j > 0) //왼쪾으로 갈수 있음
+			{
+				mustGoIndex[mustGoNum] = mustGoIndex[k] - potW;
+				mustGoNum++;
+			}
+			if (j < potH - 1) //오른쪾으로 갈수 있음
+			{
+				mustGoIndex[mustGoNum] = mustGoIndex[k] + potW;
+				mustGoNum++;
+			}
+
+
+		}
+		mustGoNum -= num;
+		for (i = 0; i < mustGoNum; i++)
+			mustGoIndex[i] = mustGoIndex[num + i];
+	}
+	//가야될 목록
+	free(mustGoIndex);
+
+}
+
+
+void dragTotal(iRect drag)
+{
+	total->rt;
+}
+
 
 
 void methodTileUpdate(float dt)
@@ -311,49 +419,148 @@ void methodTileUpdate(float dt)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	setRGBA(0, 1, 0, 1);
-	drawRect(SeletedPoint.x, SeletedPoint.y, Seleted.size.width, Seleted.size.height);
+
 
 	if (strImagePath)
 	{
-
-		int numX = getWndInt(hEbOpenImage[0]);
-		int numY = getWndInt(hEbOpenImage[1]);
-
-		if (texs)
-		{
-			int i, j = numX * numY;
-
-			for (int i = 0; i < j; i++)
-				freeImage(texs[i]);
-			free(texs);
-		}
-
-		texs = createDivideImage(numX, numY, strImagePath);
-
+		setRGBA(1, 1, 1, 1);
+		total->tex = createImage(strImagePath);
+		wchar_t* ws = utf8_to_utf16(strImagePath);
 		free(strImagePath);
 		strImagePath = NULL;
+
+		Bitmap* bmp = new Bitmap(ws);
+		free(ws);
+		
+		int width;
+		int height;
+		total->rgba = bmp2rgba(bmp, width, height);
+		delete bmp;
+		total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
+
+		
 	}
 
-	if (texs == NULL)
-		return;
 
-	setRGBA(1, 1, 1, 1);
-	int numX = getWndInt(hEbOpenImage[0]);
-	int numY = getWndInt(hEbOpenImage[1]);
-
-
-	int w = texs[0]->width;
-	int h = texs[0]->height;
-
-	for (int j = 0; j < numY; j++)
+	if (total->tex)
 	{
-		for (int i = 0; i < numX; i++)
-		{
-			drawImage(texs[numX * j + i], w * i, h * j, TOP | LEFT);
-		}
+		setRGBA(0, 0, 0, 1);
+		fillRect(0, 0, total->tex->width, total->tex->height);
+		setRGBA(1, 1, 1, 1);
+
+
+		drawImage(total->tex, 0, 0, TOP | LEFT);
+
 	}
 
-	
+	if (total->tex)
+	{
+		Texture* tex = total->tex;
+		//tex->width, tex->height, tex->potWidth, tex->potHeight;
+		uint8* rgba = total->rgba;
+		memset(total->gone, 0x00, (int)tex->potWidth * tex->potHeight);
+
+		_left = 100000000;
+		_right = -1000000000;
+		_up = 10000000000;
+		_down = -100000000;
+		findRect(SeletedPoint.x, SeletedPoint.y);
+		_left -= 2;
+		_right += 2;
+		_up -= 2;
+		_down += 2;
+
+
+		findRect(SeletedPoint.x, SeletedPoint.y); // _left, _right, _up, _down의 최대 값 구함...
+
+		// left 
+		for (int i = SeletedPoint.x; i > _left; i--)
+		{
+			bool exist = false;
+			for (int j = _up; j < _down; j++)
+			{
+				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3]) // +3을 해주는 이유는 알파값이 배열의 3번 인덱스기 떄문임.
+				{
+					exist = true;
+					break;
+				}
+			}
+
+			if (exist == false)
+			{
+				total->rt.origin.x = i + 1;
+				break;
+			}
+		}
+
+		// right
+		for (int i = SeletedPoint.x; i < _right; i++)
+		{
+			bool exist = false;
+			for (int j = _up; j < _down; j++)
+			{
+				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+				{
+					exist = true;
+					break;
+				}
+			}
+
+			if (exist == false)
+			{
+				total->rt.size.width = i - 1 - total->rt.origin.x;
+				break;
+			}
+		}
+
+		// top
+		for (int j = SeletedPoint.y; j > _up; j--)
+		{
+			bool exist = false;
+			for (int i = _left; i <= _right; i++)
+			{
+				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+				{
+					exist = true;
+					break;
+				}
+			}
+
+			if (exist == false)
+			{
+				total->rt.origin.y = j + 1;
+				break;
+			}
+		}
+
+		//bottom
+		for (int j = SeletedPoint.y; j < _down; j++)
+		{
+			bool exist = false;
+			for (int i = _left; i <= _right; i++)
+			{
+				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
+				{
+					exist = true;
+					break;
+				}
+			}
+
+			if (exist == false)
+			{
+				total->rt.size.height = j - 1 - total->rt.origin.y;
+				break;
+			}
+		}
+
+	}
+
+	if (total->rt.origin != iPointZero && total->rt.size != iSizeZero) // 선택된 영역 
+	{
+		setRGBA(0, 1, 0, 1);
+		drawRect(total->rt.origin.x, total->rt.origin.y, total->rt.size.width, total->rt.size.height);
+	}
+
 }
 
 void btnMapOpenUpdate(HWND hwmd)

@@ -11,3 +11,4 @@ void updateMapEditor(WPARAM wParam, LPARAM lParam);
 void drawMapEditor(float dt);
 void keyMapEditor(iKeyState stat, iPoint point);
 void dragMapEditor(WPARAM wParam, LPARAM lParam);
+void scrollMapEditor(WPARAM wParam, LPARAM lParam);

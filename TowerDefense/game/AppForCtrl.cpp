@@ -155,11 +155,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CTLCOLORDLG:
     case WM_CTLCOLOREDIT:
     case WM_CTLCOLORLISTBOX:
-        result = colorMapEditor(wParam, lParam);//colorScrip(wParam, lParam);//colorScript(wParam, lParam);
-        if (result)
-            return result;
-        break;
-    
+       result = colorMapEditor(wParam, lParam);//colorScrip(wParam, lParam);//colorScript(wParam, lParam);
+      if (result)
+         return result;
+#if 1
+      SetBkMode((HDC)wParam, TRANSPARENT);
+        return DefWindowProc(hWnd, message, wParam, lParam);
+#else
+      SetBkMode((HDC)wParam, TRANSPARENT);
+      return (INT_PTR)(HBRUSH)GetStockObject(NULL_BRUSH);
+#endif    
 
 
     case WM_COMMAND:
@@ -241,6 +246,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
        
         break;
 
+    case WM_HSCROLL:
+        scrollMapEditor(wParam, lParam);
     default:
         return DefWindowProc(hWnd, message, wParam, lParam); // 윈도우 화면 갱신!
     }

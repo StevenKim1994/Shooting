@@ -23,6 +23,7 @@ enum WndStyle
     WndStyle_listBox,
     WndStyle_editBox,
     WndStyle_dialog,
+    WndStyle_trackbar,
     WndStyle_opengl,
 };
 
@@ -52,6 +53,7 @@ public:
 
     LRESULT color(WPARAM wParam, LPARAM lParam); // wParam hdc / lParam hwnd
     void update(WPARAM wParam, LPARAM lParam);
+    void scroll(WPARAM wParam, LPARAM lParam);
     
 public:
     HWND hwndParent; // 부모윈도우
@@ -104,6 +106,12 @@ int countWndComboBox(HWND hwnd);
 int indexWndComboBox(HWND hwnd);
 char* getWndComboBox(HWND hwnd, int index);
 void setWndComboBox(HWND hwnd, int index);
+
+HWND createWndTrackBar(int x, int y, int width, int height, const char* str, WndCtrlColor color, WndCtrlUpdate update ,bool displayTicks);
+HWND* addWndTrackBarBuddy(HWND hwnd, const char* str);
+void setWndTrackBarRange(HWND hwnd, int MIN, int MAX);
+void setWndTrackBarPos(HWND hwnd, int POS);
+int getWndTrackBarPos(HWND hwnd);
 
 //
 // ListBox
@@ -210,3 +218,4 @@ extern iArray* arrayGL;
 void setupOpenGL(bool setup);
 WndGL* createOpenGL(int x, int y, int width, int height, MethodWndGLUpdate m, int devWidth, int devHeight);
 void updateOpenGL(float dt);
+bool checkOpenGLPosition(HWND hwndParent, HWND hwndOpengl, iPoint& point);

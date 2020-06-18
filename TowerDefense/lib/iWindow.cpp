@@ -156,9 +156,47 @@ void initWndCtrlSystem()
 
 }
 
-
 WndCtrlSystem* wcs; // 현재 사용하고 있는 컨트롤시스템
+void WndCtrlSystem::scroll(WPARAM wParam, LPARAM lParam)
+{
+	// lParam : HWND
+	// wParam : Data
 
+	int state = LOWORD(wParam);
+	HWND hwnd = (HWND)lParam;
+
+	WndCtrl* c = NULL;
+	for (int i = 0; i < wcs->wcNum; i++)
+	{
+		c = &wcs->wc[i];
+		if (wcs->wc[i].hwnd == hwnd)
+		{
+			break;
+
+		}
+	}
+
+	switch (c->style)
+	{
+	case WndStyle_static: // none
+	case WndStyle_button:
+	case WndStyle_radio:
+	case WndStyle_checkBox:
+	case WndStyle_comboBox:
+	case WndStyle_listBox:
+	case WndStyle_editBox:
+	case WndStyle_dialog:
+	case WndStyle_opengl:
+	case WndStyle_trackbar:
+		if (state == TB_ENDTRACK || state == TB_THUMBTRACK)
+		{
+			if (c->update)
+				c->update(c->hwnd);
+		}
+		break;
+	}
+
+}
 
 void setWndCtrlSystem(WndCtrlSystem* _wcs)
 {
@@ -309,6 +347,78 @@ return index;
 void setWndComboBox(HWND hwnd, int index)
 {
 	SendMessage(hwnd, CB_SETCURSEL, (WPARAM)index, (LPARAM)0);
+}
+
+HWND createWndTrackBar(int x, int y, int width, int height,
+	const char* str, WndCtrlColor color, WndCtrlUpdate update, bool displayTicks)
+{
+	int lineNum;
+	char** line = iString::getStringLine(str, lineNum);
+	int MIN = atoi(line[0]);
+	int MAX = atoi(line[1]);
+	int POS = atoi(line[2]);
+
+	bool vertical = (height > width);
+
+	HWND hwnd = CreateWindow(TRACKBAR_CLASS, NULL,
+		WS_TABSTOP |
+		WS_CHILD | WS_VISIBLE |
+		(displayTicks ? TBS_AUTOTICKS : TBS_NOTICKS) |
+		(vertical ? TBS_VERT : TBS_HORZ),
+		x, y, width, height,
+		(HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+	setWndTrackBarRange(hwnd, MIN, MAX);
+	SendMessage(hwnd, TBM_SETPAGESIZE, (WPARAM)0, (LPARAM)MAX / 10.0f);
+	SendMessage(hwnd, TBM_SETTICFREQ, (WPARAM)MAX / 10.0f, (LPARAM)0);
+	//SendMessage(hwnd, TBM_SETPAGESIZE, 0, 0);
+	//SendMessage(hwnd, TBM_SETTICFREQ, 0, 0);
+	setWndTrackBarPos(hwnd, POS);
+	wcs->add(hwnd, WndStyle_trackbar, color, update);
+
+	iString::freeStringLine(line, lineNum);
+	return hwnd;
+}
+
+HWND* addWndTrackBarBuddy(HWND hwnd, const char* str)
+{
+	RECT rt;
+	GetClientRect(hwnd, &rt);
+	bool vertical = (rt.bottom - rt.top > rt.right - rt.left);
+
+	int lineNum;
+	char** line = iString::getStringLine(str, lineNum);
+
+	int anc[4] = { SS_RIGHT, SS_LEFT, SS_CENTER, SS_CENTER };
+
+	HWND* h = (HWND*)malloc(sizeof(HWND) * 2);
+	for (int i = 0; i < 2; i++)
+	{
+		wchar_t* ws = utf8_to_utf16(line[i]);
+		h[i] = CreateWindow(WC_STATIC, ws, WS_CHILD | WS_VISIBLE | anc[2 * vertical + i],
+			0, 0, 50, 20, wcs->hwndParent, (HMENU)wcs->wcNum, wcs->hinstance, NULL);
+		wcs->add(hwnd, WndStyle_static, NULL, NULL);
+		free(ws);
+		SendMessage(hwnd, TBM_SETBUDDY, (WPARAM)(i == 0 ? TRUE : FALSE), (LPARAM)h[i]);
+	}
+
+	iString::freeStringLine(line, lineNum);
+
+	return h;
+}
+
+void setWndTrackBarRange(HWND hwnd, int MIN, int MAX)
+{
+	SendMessage(hwnd, TBM_SETRANGE, (WPARAM)TRUE, (LPARAM)MAKELONG(MIN, MAX));
+}
+
+void setWndTrackBarPos(HWND hwnd, int POS)
+{
+	SendMessage(hwnd, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)POS);
+}
+
+int getWndTrackBarPos(HWND hwnd)
+{
+	return SendMessage(hwnd, TBM_GETPOS, 0, 0);
 }
 
 HWND createWndListBox(int x, int y, int width, int height,
@@ -970,4 +1080,29 @@ void updateOpenGL(float dt)
 
 		wg->gl->swapBuffer();
 	}
+}
+
+bool checkOpenGLPosition(HWND hwndParent, HWND hwndOpengl, iPoint& point)
+{
+	RECT rt;
+	GetWindowRect(hwndParent, &rt);
+	RECT rtOpengl;
+	GetWindowRect(hwndOpengl, &rtOpengl);
+	int caption = GetSystemMetrics(SM_CYCAPTION);// 23
+	int menu = GetSystemMetrics(SM_CYMENU);// 20
+	int xframe = GetSystemMetrics(SM_CXFRAME);// 4
+	int yframe = GetSystemMetrics(SM_CYFRAME);// 4
+	int xBorder = GetSystemMetrics(SM_CXBORDER);// 1
+	int yBorder = GetSystemMetrics(SM_CYBORDER);// 1
+	iRect openglRt = iRectMake(rtOpengl.left, rtOpengl.top, rtOpengl.right - rtOpengl.left, rtOpengl.bottom - rtOpengl.top);
+	openglRt.origin.x = openglRt.origin.x - rt.left - xframe * 2;
+	openglRt.origin.y = openglRt.origin.y - rt.top - caption - menu - yframe * 2;
+	openglRt.origin.x += xBorder; openglRt.size.width += xBorder * 2;// GetClientRect
+	openglRt.origin.y += yBorder; openglRt.size.height += yBorder * 2;
+	if (containPoint(point, openglRt))
+	{
+		point -= openglRt.origin;
+		return true;
+	}
+	return false;
 }
