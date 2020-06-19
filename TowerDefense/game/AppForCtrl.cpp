@@ -141,7 +141,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     LRESULT result; 
-
+    RECT size;
     switch (message)
     {
     case WM_DROPFILES:
@@ -195,7 +195,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_CREATE:
     {
-        RECT size;
+        
         SetRect(&size, 0, 0, 1600, 900);
         AdjustWindowRect(&size, WS_OVERLAPPEDWINDOW, FALSE);
         MoveWindow(hWnd, size.left + 100, size.top+ 100, size.right - size.left, size.bottom - size.top, TRUE);
@@ -204,6 +204,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_GETMINMAXINFO:
     {
+        SetRect(&size, 0, 0, 1600, 900);
+        ((MINMAXINFO*)lParam)->ptMinTrackSize.x = size.right - size.left;
+        ((MINMAXINFO*)lParam)->ptMinTrackSize.y = size.bottom - size.top;
+        ((MINMAXINFO*)lParam)->ptMaxTrackSize.x = size.right - size.left;
+        ((MINMAXINFO*)lParam)->ptMaxTrackSize.y = size.bottom - size.top;
         break;
     }
 
@@ -248,6 +253,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_HSCROLL:
         scrollMapEditor(wParam, lParam);
+
     default:
         return DefWindowProc(hWnd, message, wParam, lParam); // 윈도우 화면 갱신!
     }

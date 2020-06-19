@@ -63,7 +63,7 @@ void loadMapEditor(HWND hwnd)
 {
 	total = (TOTAL*)malloc(sizeof(TOTAL));
 	const char* path = "assets/atlas0.png";
-	total->tex = NULL;//createImage(path);
+	total->tex = NULL;
 	int i;
 	initWndCtrlSystem();
 	wcsMapEditor = new WndCtrlSystem(hwnd);
@@ -147,6 +147,10 @@ void loadMapEditor(HWND hwnd)
 		hEbMapOffset[i] = createWndEditBox(350, 720 + 30 * i, 50, 30, "0", WndEditBoxStyle_int, NULL, NULL);
 	}
 
+	
+
+
+
 	wgTile = createOpenGL(15, 40, 270, 350, methodTileUpdate, 270, 350); //TILE OPENGL
 	wgMap = createOpenGL(300, 40, 1100, 650, methodMapUpdate, 1100, 650); //MAP OPENGL
 
@@ -190,35 +194,45 @@ int _left, _right, _up, _down; // 각 최대 마지막 값
 int goneSIZE = 0;
 void keyMapEditor(iKeyState stat, iPoint point)
 {
+	
+	
 	if (stat == iKeyStateBegan)
 	{
+	
 		if (containPoint(point, TileRect)) // Tile창 안에 마우스 포인터가 있을때
 		{
+			if (GetKeyState(VK_CONTROL)) // 이때 Tile 출력하는 OpenGL offset 변경함
+			{
+				printf("Move TileOpenGL \n");
+			}
+			
 			for (int i = 0; i < goneSIZE; i++)
 				total->gone[i] = false;
 
 			point.x -= TileRect.origin.x;
 			point.y -= TileRect.origin.y;
-			
+		
+
 			SeletedPoint = iPointMake(point.x, point.y);
-			//Seleted = iRectMake(point.x, point.y, getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
+			Seleted = iRectMake(point.x, point.y, getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
 			_left = point.x;
 			_up = point.y ;
-			_right = point.x-100;
-			_down = point.y-100;
+			_right = point.x;
+			_down = point.y;
 			
 		}
 		else if (containPoint(point, MapRect)) // Map 창 안에 마우스 포인터가 있을떄
 		{
+			if (GetKeyState(VK_CONTROL)) // 이때 Map 출력하는 OpenGL offset 변경함
+			{
+				printf("Map TileOpenGL \n");
+			}
 			point.x -= MapRect.origin.x;
 			point.y -= MapRect.origin.y;
 
 			DrawPoint = iPointMake(point.x, point.y);
 
-			printf("point (%f , %f)\n", point.x, point.y);
-			printf("MapSelected\n");
 			setRGBA(1, 1, 1, 1);
-
 
 		}
 		
@@ -247,13 +261,10 @@ void btnOpenImageUpdate(HWND hwnd)
 
 	if (path)
 	{
-	
 		//to do
 		int len = strlen(path);
 		strImagePath = (char*)calloc(sizeof(char), 1 + len);
 		strcpy(strImagePath, path);
-	
-		
 	}
 }
 
@@ -276,10 +287,8 @@ void findRect(int x, int y)
 	{
 		num = mustGoNum;
 
-	
 		for (k = 0; k < num; k++)
 		{
-		
 			i = mustGoIndex[k] % potW;
 			j = mustGoIndex[k] / potW;
 			if (total->gone[potW * j + i] || total->rgba[potW * 4 * j + 4 * i + 3] == 0)
@@ -317,22 +326,13 @@ void findRect(int x, int y)
 				mustGoIndex[mustGoNum] = mustGoIndex[k] + potW;
 				mustGoNum++;
 			}
-
-			
-			
 		}
 		mustGoNum -= num;
 		for (i = 0; i < mustGoNum; i++)
 			mustGoIndex[i] = mustGoIndex[num + i];
-
-
-
-		
 	}
 	//가야될 목록
 	free(mustGoIndex);
-
-
 
 }
 
@@ -369,24 +369,24 @@ void methodTileUpdate(float dt)
 		delete bmp;
 		total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
 		goneSIZE = nextPOT(width) * nextPOT(height);
-		printf("%d\n", nextPOT(width) * nextPOT(height));
 	}
 
 
 	if (total->tex)
 	{
-	
 		setRGBA(1, 1, 1, 1);
 		drawImage(total->tex, 0, 0, TOP | LEFT);
+		setRGBA(1, 0, 0, 1);
+		drawRect(0, 0, total->tex->width, total->tex->height);
 
 		findRect(SeletedPoint.x, SeletedPoint.y);
 		iRect rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
-		setRGBA(1, 1, 1, 1);
+		setRGBA(0,1,0,1);
 		drawRect(rt);
-		//printf("%d %d %d %d\n", _left, _up, _right - _left, _down - _up);
+		
+	
 
 	}
-
 
 }
 
@@ -419,15 +419,11 @@ void methodMapUpdate(float dt)
 	int MapSizeX = getWndInt(hEbMapNum[0]);
 	int MapSizeY = getWndInt(hEbMapNum[1]);
 
+	setRGBA(1, 0, 0, 1);
+	drawRect(0, 0, MapSizeX, MapSizeY);
 
 	if (chkTileOnOff == true)
 	{
-
-		setRGBA(1, 0, 0, 1);
-		drawRect(0, 0, MapSizeX, MapSizeY);
-
-
-
 		setRGBA(1, 1, 1, 1);
 		if (TileSizeX != 0 && TileSizeY != 0)
 		{
@@ -438,16 +434,13 @@ void methodMapUpdate(float dt)
 			{
 				for (int j = 0; j < col; j++)
 				{
-					//drawRect(iRectMake(TileSizeX * j, TileSizeY * i, TileSizeX, TileSizeY));
+					drawRect(iRectMake(TileSizeX * j, TileSizeY * i, TileSizeX, TileSizeY));
 
 				}
 			}
 
 		}
 	}
-	
-	
-
 }
 
 void TileOnOff(HWND hwnd)
