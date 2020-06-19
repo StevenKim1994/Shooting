@@ -184,98 +184,28 @@ iPoint DrawPoint;
 
 Texture* seletedTex;
 
-/*
-RECT rt;
-GetWindowRect(wcsMapEditor0>hwndParent, &rt);
-RECT rtTile;
-GetWindowRect(wgTile->gl->hWnd, &rtTile);
-RECT rtMap;
-GetWindowRect(wgMap->gl->hWnd, &rtMap);
-int caption = GetSystemMetrics(SM_CYCAPTION);
-int menu = GetSystemMetrics(SM_CYMENU);
-int xframe = GetSystemMetrics(SM_CXFRAME);
-int yfream = getSystemMetrics(SM_CYFRAME);
 
-iRect tileRt = iRectMake(rtTile.left, rtTile.top, rtTile.right - rtTile.left, rtTile.bottom - rtTile.top);
-tileRt.origin.x = titleRt.origin.x - rt.left - xfream * 2;
-tileRt.origin.y = titleRt.origin.y - rt.top - caption - menu - yframe * 2;
-tileRt.origin.x += xBorder; tileRt.size.width += xBorder * 2;
-tileRt.origin.y += yBorder; tileRt.size.height += yBorder * 2;
+int _left, _right, _up, _down; // 각 최대 마지막 값
 
-iRect mapRt = iRectMake(rtMap.left, rtMap.top, rtMap.right - rtMap.left, rtMap.bottom - rtMap.top);
-mapRt.origin.x = mapRt.origin.x - rt.left, xframe * 2;
-mapRt.origin.y = mapRt.origin.y - rt.top - caption - menu - yframe * 2;
-mapRt.origin.x += xBorder; mapRt.size.width += xBorder * 2;
-mapRt.origin.y += yBorder; mapRt.size.height += yBorder *2;
-
-///////////
-   RECT rt;
-   GetWindowRect(wcsMapEditor->hwndParent, &rt);
-   RECT rtTile;// (5, 105, 200, 200) (13(+8), 156(+51), 200, 200)
-   GetWindowRect(wgTile->gl->hWnd, &rtTile);
-   RECT rtMap;// (300, 40, 300, 300) (308(+8), 91(+51), 300, 300)
-   GetWindowRect(wgMap->gl->hWnd, &rtMap);
-   int caption = GetSystemMetrics(SM_CYCAPTION);// 23
-   int menu = GetSystemMetrics(SM_CYMENU);// 20
-   int xframe = GetSystemMetrics(SM_CXFRAME);// 4
-   int yframe = GetSystemMetrics(SM_CYFRAME);// 4
-   int xBorder = GetSystemMetrics(SM_CXBORDER);// 1
-   int yBorder = GetSystemMetrics(SM_CYBORDER);// 1
-
-   iRect tileRt = iRectMake(rtTile.left, rtTile.top, rtTile.right - rtTile.left, rtTile.bottom - rtTile.top);
-   tileRt.origin.x = tileRt.origin.x - rt.left - xframe * 2;
-   tileRt.origin.y = tileRt.origin.y - rt.top - caption - menu - yframe * 2;
-   tileRt.origin.x += xBorder; tileRt.size.width += xBorder * 2;// GetClientRect
-   tileRt.origin.y += yBorder;   tileRt.size.height += yBorder * 2;
-   iRect mapRt = iRectMake(rtMap.left, rtMap.top, rtMap.right - rtMap.left, rtMap.bottom - rtMap.top);
-   mapRt.origin.x = mapRt.origin.x - rt.left - xframe * 2;
-   mapRt.origin.y = mapRt.origin.y - rt.top - caption - menu - yframe * 2;
-   mapRt.origin.x += xBorder; mapRt.size.width += xBorder * 2;// GetClientRect
-   mapRt.origin.y += yBorder; mapRt.size.height += yBorder * 2;
-
-   //printf("rt(%d, %d, %d, %d)tile(%d, %d, %d, %d)map(%d, %d, %d, %d) (%d, %d, %d, %d) point(%f, %f)\n",
-   //   rt.left, rt.top, rt.right - rt.left, rt.bottom - rt.top,
-   //   rtTile.left, rtTile.top, rtTile.right - rtTile.left, rtTile.bottom - rtTile.top,
-   //   rtMap.left, rtMap.top, rtMap.right - rtMap.left, rtMap.bottom - rtMap.top,
-   //   caption, menu, xframe, yframe,
-   //   point.x, point.y);
-
-   if (containPoint(point, tileRt))
-   {
-	  point -= tileRt.origin;
-	  printf("tile(%f, %f)\n", point.x, point.y);
-   }
-   else if (containPoint(point, mapRt))
-   {
-	  point -= mapRt.origin;
-	  printf("map(%f, %f)\n", point.x, point.y);
-   }
-///////////
-*/
-
+int goneSIZE = 0;
 void keyMapEditor(iKeyState stat, iPoint point)
 {
-	checkOpenGLPosition(wcsMapEditor->hwndParent, wgMap->gl->hWnd, point);
-	//opengl
-
 	if (stat == iKeyStateBegan)
 	{
 		if (containPoint(point, TileRect)) // Tile창 안에 마우스 포인터가 있을때
 		{
+			for (int i = 0; i < goneSIZE; i++)
+				total->gone[i] = false;
+
 			point.x -= TileRect.origin.x;
 			point.y -= TileRect.origin.y;
-
-			printf("point (%f , %f)\n", point.x, point.y);
-			printf("TileSelected\n");
-			setRGBA(1, 1, 1, 1);
 			
 			SeletedPoint = iPointMake(point.x, point.y);
-			Seleted = iRectMake(point.x, point.y, getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
-
-			int potW = nextPOT(Seleted.size.width);
-			int potH = nextPOT(Seleted.size.height);
-			uint8* rgba = (uint8*)calloc(sizeof(uint8), potW* potH *4);
-			seletedTex = createImageWithRGBA(rgba, potW, potH);
+			//Seleted = iRectMake(point.x, point.y, getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
+			_left = point.x;
+			_up = point.y ;
+			_right = point.x-100;
+			_down = point.y-100;
 			
 		}
 		else if (containPoint(point, MapRect)) // Map 창 안에 마우스 포인터가 있을떄
@@ -322,30 +252,21 @@ void btnOpenImageUpdate(HWND hwnd)
 		int len = strlen(path);
 		strImagePath = (char*)calloc(sizeof(char), 1 + len);
 		strcpy(strImagePath, path);
-		//wchar_t* ws = utf8_to_utf16(strImagePath);
-		//Bitmap* bmp = new Bitmap(ws);
-		//free(ws);
-
-		//int width, height;
-		//total->rgba = bmp2rgba(bmp, width, height);
-		//delete bmp;
-		//total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
-		
-		//total->rt = iRectMake(0, 0, 0, 0);
-		//total->img = NULL;
+	
 		
 	}
 }
 
-int _left, _right, _up, _down; // 각 최대 마지막 값
 
 void findRect(int x, int y)
 {
+
+
 	int i, j, k;
 	int num;
 	int potW = total->tex->potWidth;
 	int potH = total->tex->potHeight;
-	int* mustGoIndex = (int*)malloc(sizeof(int) * potW * potH);
+	int* mustGoIndex = (int*)malloc(sizeof(int) *  potH * potW);
 
 	mustGoIndex[0] = potW * y + x;
 
@@ -354,8 +275,11 @@ void findRect(int x, int y)
 	while (mustGoNum)
 	{
 		num = mustGoNum;
+
+	
 		for (k = 0; k < num; k++)
 		{
+		
 			i = mustGoIndex[k] % potW;
 			j = mustGoIndex[k] / potW;
 			if (total->gone[potW * j + i] || total->rgba[potW * 4 * j + 4 * i + 3] == 0)
@@ -394,14 +318,21 @@ void findRect(int x, int y)
 				mustGoNum++;
 			}
 
-
+			
+			
 		}
 		mustGoNum -= num;
 		for (i = 0; i < mustGoNum; i++)
 			mustGoIndex[i] = mustGoIndex[num + i];
+
+
+
+		
 	}
 	//가야될 목록
 	free(mustGoIndex);
+
+
 
 }
 
@@ -431,135 +362,31 @@ void methodTileUpdate(float dt)
 
 		Bitmap* bmp = new Bitmap(ws);
 		free(ws);
-		
 		int width;
 		int height;
+
 		total->rgba = bmp2rgba(bmp, width, height);
 		delete bmp;
 		total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
-
-		
+		goneSIZE = nextPOT(width) * nextPOT(height);
+		printf("%d\n", nextPOT(width) * nextPOT(height));
 	}
 
 
 	if (total->tex)
 	{
-		setRGBA(0, 0, 0, 1);
-		fillRect(0, 0, total->tex->width, total->tex->height);
+	
 		setRGBA(1, 1, 1, 1);
-
-
 		drawImage(total->tex, 0, 0, TOP | LEFT);
 
-	}
-
-	if (total->tex)
-	{
-		Texture* tex = total->tex;
-		//tex->width, tex->height, tex->potWidth, tex->potHeight;
-		uint8* rgba = total->rgba;
-		memset(total->gone, 0x00, (int)tex->potWidth * tex->potHeight);
-
-		_left = 100000000;
-		_right = -1000000000;
-		_up = 10000000000;
-		_down = -100000000;
 		findRect(SeletedPoint.x, SeletedPoint.y);
-		_left -= 2;
-		_right += 2;
-		_up -= 2;
-		_down += 2;
-
-
-		findRect(SeletedPoint.x, SeletedPoint.y); // _left, _right, _up, _down의 최대 값 구함...
-
-		// left 
-		for (int i = SeletedPoint.x; i > _left; i--)
-		{
-			bool exist = false;
-			for (int j = _up; j < _down; j++)
-			{
-				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3]) // +3을 해주는 이유는 알파값이 배열의 3번 인덱스기 떄문임.
-				{
-					exist = true;
-					break;
-				}
-			}
-
-			if (exist == false)
-			{
-				total->rt.origin.x = i + 1;
-				break;
-			}
-		}
-
-		// right
-		for (int i = SeletedPoint.x; i < _right; i++)
-		{
-			bool exist = false;
-			for (int j = _up; j < _down; j++)
-			{
-				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
-				{
-					exist = true;
-					break;
-				}
-			}
-
-			if (exist == false)
-			{
-				total->rt.size.width = i - 1 - total->rt.origin.x;
-				break;
-			}
-		}
-
-		// top
-		for (int j = SeletedPoint.y; j > _up; j--)
-		{
-			bool exist = false;
-			for (int i = _left; i <= _right; i++)
-			{
-				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
-				{
-					exist = true;
-					break;
-				}
-			}
-
-			if (exist == false)
-			{
-				total->rt.origin.y = j + 1;
-				break;
-			}
-		}
-
-		//bottom
-		for (int j = SeletedPoint.y; j < _down; j++)
-		{
-			bool exist = false;
-			for (int i = _left; i <= _right; i++)
-			{
-				if (rgba[(int)tex->potWidth * 4 * j + 4 * i + 3])
-				{
-					exist = true;
-					break;
-				}
-			}
-
-			if (exist == false)
-			{
-				total->rt.size.height = j - 1 - total->rt.origin.y;
-				break;
-			}
-		}
+		iRect rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
+		setRGBA(1, 1, 1, 1);
+		drawRect(rt);
+		//printf("%d %d %d %d\n", _left, _up, _right - _left, _down - _up);
 
 	}
 
-	if (total->rt.origin != iPointZero && total->rt.size != iSizeZero) // 선택된 영역 
-	{
-		setRGBA(0, 1, 0, 1);
-		drawRect(total->rt.origin.x, total->rt.origin.y, total->rt.size.width, total->rt.size.height);
-	}
 
 }
 
@@ -611,7 +438,7 @@ void methodMapUpdate(float dt)
 			{
 				for (int j = 0; j < col; j++)
 				{
-					drawRect(iRectMake(TileSizeX * j, TileSizeY * i, TileSizeX, TileSizeY));
+					//drawRect(iRectMake(TileSizeX * j, TileSizeY * i, TileSizeX, TileSizeY));
 
 				}
 			}
