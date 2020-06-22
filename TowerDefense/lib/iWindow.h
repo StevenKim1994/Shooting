@@ -127,6 +127,10 @@ char* getWndListBox(HWND hwnd, int index);
 void setWndListBox(HWND hwnd, int index);
 
 
+// ScrollBar
+HWND createWndScrollBar(int x, int y, int width, int height, int style , WndCtrlColor color, WndCtrlUpdate update);
+
+
 //EditBox
 enum WndEditBoxStyle
 {

@@ -470,6 +470,12 @@ void setWndListBox(HWND hwnd, int index)
 {
 	SendMessage(hwnd, LB_SETCURSEL, (WPARAM)index, (LPARAM)0);
 }
+HWND createWndScrollBar(int x, int y, int width, int height,int style, WndCtrlColor color, WndCtrlUpdate update)
+{
+	HWND hwnd = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE | style,x,y,width, height, (HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
+
+	return hwnd;
+}
 LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, WndEditBoxStyle style);
 
 static int ebMaxLength = 10;

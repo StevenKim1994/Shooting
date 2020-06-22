@@ -47,6 +47,8 @@ iPoint tileOpenGLOff; // 타일 OpenGL 오프셋값
 iPoint MapOpenGLOff; // 맵 OpenGL 오프셋값
 
 bool checkSelect = false;
+Texture* SelectedTexture = NULL;
+
 
 
 struct TOTAL
@@ -60,7 +62,7 @@ struct TOTAL
 
 TOTAL* total;
 
-Texture* SelectTexture;
+
 
 bool chkTileOnOff = false;
 
@@ -150,19 +152,24 @@ void loadMapEditor(HWND hwnd)
 
 	const char* strOff[2] = { "가로", "세로" };
 	hEbMapOffset = (HWND*)malloc(sizeof(HWND) * 2);
-	createWndStatic(300, 700, 125, 300, "맵뷰 오프셋", NULL, NULL);
+	createWndStatic(300, 730, 125, 300, "맵뷰 오프셋", NULL, NULL);
 	for(i = 0; i<2; i++)
 	{
-		createWndStatic(300, 720 + 30 * i, 50, 30, strOff[i], NULL, NULL);
-		hEbMapOffset[i] = createWndEditBox(350, 720 + 30 * i, 50, 30, "0", WndEditBoxStyle_int, NULL, NULL);
+		createWndStatic(300, 750 + 30 * i, 50, 30, strOff[i], NULL, NULL);
+		hEbMapOffset[i] = createWndEditBox(350, 750 + 30 * i, 50, 30, "0", WndEditBoxStyle_int, NULL, NULL);
 	}
 
 	
 
 
-
 	wgTile = createOpenGL(15, 40, 270, 350, methodTileUpdate, 270, 350); //TILE OPENGL
-	wgMap = createOpenGL(300, 40, 1100, 650, methodMapUpdate, 1100, 650); //MAP OPENGL
+	createWndScrollBar(15, 390, 270, 20, SBS_HORZ, NULL, NULL); // wgTile 가로 스크롤바
+	createWndScrollBar(285, 40, 20, 350, SBS_VERT, NULL, NULL); // wgTile 세로 스크롤바
+
+
+	wgMap = createOpenGL(330, 40, 1100, 650, methodMapUpdate, 1100, 650); //MAP OPENGL
+	createWndScrollBar(330, 690, 1100, 20, SBS_HORZ, NULL, NULL); // wgMap 가로스크롤바
+	createWndScrollBar(1430, 40, 20, 650, SBS_VERT, NULL, NULL); // wgMap 세로스크롤바
 
 }
 
@@ -248,6 +255,7 @@ void keyMapEditor(iKeyState stat, iPoint point)
 			DrawPoint = iPointMake(point.x, point.y);
 
 			setRGBA(1, 1, 1, 1);
+			
 
 		}
 		
@@ -403,27 +411,24 @@ void methodTileUpdate(float dt)
 		
 	
 		setRGBA(1, 1, 1, 1);
-		if (checkSelect == false)
-		{
 		
-			int W = _right - _left;
-			int H = _down - _up;
-			int potW = nextPOT(W);
-			int potH = nextPOT(H);
+		int potW = nextPOT(_right-_left);
+		int potH = nextPOT(_down-_up);
+		uint8* rgba = (uint8*)calloc(sizeof(uint8), potW * potH * 4);
 
-			uint8* rgba = (uint8*)calloc(sizeof(uint8), potW * potH * 4);
 
-			glReadPixels(_left, _up, potW, potH, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+		for (int j = _up; j < _down; j++)
+			memcpy(&rgba[potW * 4 * (j-_up)], &total->rgba[(int)total->tex->potWidth * 4 * j + 4 * _left], 4 * (_right - _left));
 
-			if (SelectTexture)
-				freeImage(SelectTexture);
+		if (SelectedTexture)
+			freeImage(SelectedTexture);
 
-			SelectTexture = createImageWithRGBA(rgba, potW, potH);
-			saveImageFromRGBA("zzz.png", rgba, potW, potH);
-			
-			free(rgba);
-			checkSelect = true;
-		}
+		SelectedTexture = createImageWithRGBA(rgba, rt.size.width, rt.size.height);
+
+		free(rgba);
+		checkSelect = true;
+
+		
 
 	}
 
@@ -444,14 +449,11 @@ void methodMapUpdate(float dt)
 {
 	//world map
 
-	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(0, 0, 0, 1);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	setRGBA(1, 1, 1, 1);
-
-	if(seletedTex)
-		drawImage(seletedTex, DrawPoint.x, DrawPoint.y, TOP|LEFT);
-
+	
 	int TileSizeX = getWndInt(hEbTileSize[0]);
 	int TileSizeY = getWndInt(hEbTileSize[1]);
 
@@ -460,9 +462,12 @@ void methodMapUpdate(float dt)
 
 	setRGBA(1, 0, 0, 1);
 	drawRect(0, 0, MapSizeX, MapSizeY);
+	
+
 
 	if (chkTileOnOff == true)
 	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		setRGBA(1, 1, 1, 1);
 		if (TileSizeX != 0 && TileSizeY != 0)
 		{
@@ -481,14 +486,18 @@ void methodMapUpdate(float dt)
 		}
 	}
 
-	if(checkSelect == true)
+	if(checkSelect)
 	{
 		setRGBA(1, 1, 1, 1);
-			drawImage(SelectTexture, 0, 0, TOP | LEFT);
-
+		
+		drawImage(SelectedTexture, DrawPoint.x - 20, DrawPoint.y, TOP | LEFT);
+	
 		checkSelect = false;
+
 	}
 }
+
+
 
 void TileOnOff(HWND hwnd)
 {
