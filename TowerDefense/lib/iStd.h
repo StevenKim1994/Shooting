@@ -136,3 +136,36 @@ bool containRect(iRect src, iRect dst);
 
 char* loadFile(const char* filePath, int& length);
 void saveFile(const char* filePath, char* buf, int bufLength);
+
+
+struct iVertex
+{
+    iPoint p;
+    iPoint uv;
+    iColor4b c;
+};
+
+struct iQuad
+{
+    iVertex tl, tr, bl, br;
+
+};
+class iVBO
+{
+public:
+    iVBO(int qNum_ = 1000);
+    virtual ~iVBO();
+
+    void paint(float dt);
+
+public:
+    iQuad* q;
+    int qNum, _qNum;
+    short* indices;
+
+    Texture* tex;
+    GLuint vbo;
+    GLenum blendSrc, blendDst;
+
+    
+};

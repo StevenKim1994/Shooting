@@ -43,6 +43,12 @@ HWND* hEbTileImgSet;
 WndGL* wgTile;
 WndGL* wgMap;
 
+iPoint tileOpenGLOff; // 타일 OpenGL 오프셋값
+iPoint MapOpenGLOff; // 맵 OpenGL 오프셋값
+
+bool checkSelect = false;
+
+
 struct TOTAL
 {
 	Texture* tex; // 전체이미지
@@ -54,6 +60,7 @@ struct TOTAL
 
 TOTAL* total;
 
+Texture* SelectTexture;
 
 bool chkTileOnOff = false;
 
@@ -61,6 +68,9 @@ void TileOnOff(HWND hwnd);
 
 void loadMapEditor(HWND hwnd)
 {
+	tileOpenGLOff = iPointZero;
+	MapOpenGLOff = iPointZero;
+
 	total = (TOTAL*)malloc(sizeof(TOTAL));
 	const char* path = "assets/atlas0.png";
 	total->tex = NULL;
@@ -192,16 +202,21 @@ Texture* seletedTex;
 int _left, _right, _up, _down; // 각 최대 마지막 값
 
 int goneSIZE = 0;
+
+
+
 void keyMapEditor(iKeyState stat, iPoint point)
 {
 	
 	
 	if (stat == iKeyStateBegan)
 	{
-	
+		
+
+		
 		if (containPoint(point, TileRect)) // Tile창 안에 마우스 포인터가 있을때
 		{
-			if (GetKeyState(VK_CONTROL)) // 이때 Tile 출력하는 OpenGL offset 변경함
+			if (GetKeyState(VK_CONTROL)<0) // control키를 누른상태이면서 화면을 움직인다면 이때 Tile 출력하는 OpenGL offset 변경함
 			{
 				printf("Move TileOpenGL \n");
 			}
@@ -223,7 +238,7 @@ void keyMapEditor(iKeyState stat, iPoint point)
 		}
 		else if (containPoint(point, MapRect)) // Map 창 안에 마우스 포인터가 있을떄
 		{
-			if (GetKeyState(VK_CONTROL)) // 이때 Map 출력하는 OpenGL offset 변경함
+			if (GetKeyState(VK_CONTROL)<0 ) // control키를 누른상태이면서 화면을 움직인다면 이때 Map 출력하는 OpenGL offset 변경함
 			{
 				printf("Map TileOpenGL \n");
 			}
@@ -380,11 +395,35 @@ void methodTileUpdate(float dt)
 		drawRect(0, 0, total->tex->width, total->tex->height);
 
 		findRect(SeletedPoint.x, SeletedPoint.y);
+		
 		iRect rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
 		setRGBA(0,1,0,1);
 		drawRect(rt);
+
 		
 	
+		setRGBA(1, 1, 1, 1);
+		if (checkSelect == false)
+		{
+		
+			int W = _right - _left;
+			int H = _down - _up;
+			int potW = nextPOT(W);
+			int potH = nextPOT(H);
+
+			uint8* rgba = (uint8*)calloc(sizeof(uint8), potW * potH * 4);
+
+			glReadPixels(_left, _up, potW, potH, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+
+			if (SelectTexture)
+				freeImage(SelectTexture);
+
+			SelectTexture = createImageWithRGBA(rgba, potW, potH);
+			saveImageFromRGBA("zzz.png", rgba, potW, potH);
+			
+			free(rgba);
+			checkSelect = true;
+		}
 
 	}
 
@@ -440,6 +479,14 @@ void methodMapUpdate(float dt)
 			}
 
 		}
+	}
+
+	if(checkSelect == true)
+	{
+		setRGBA(1, 1, 1, 1);
+			drawImage(SelectTexture, 0, 0, TOP | LEFT);
+
+		checkSelect = false;
 	}
 }
 

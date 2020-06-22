@@ -182,8 +182,8 @@ static void keyLib(uint32& key, iKeyState stat, int c)
         case VK_UP:     key |= keyboard_up; break;
         case 's':case 'S':
         case VK_DOWN:   key |= keyboard_down; break;
-
         case VK_SPACE:  key |= keyboard_space; break;
+        case VK_CONTROL: key |= keyboard_ctrl; break;
         }
     }
     else if (stat == iKeyStateEnded)
@@ -197,8 +197,8 @@ static void keyLib(uint32& key, iKeyState stat, int c)
         case VK_UP:     key &= ~keyboard_up; break;
         case 's':case 'S':
         case VK_DOWN:   key &= ~keyboard_down; break;
-
         case VK_SPACE:  key &= ~keyboard_space; break;
+        case VK_CONTROL: key &= ~keyboard_ctrl; break;
         }
     }
 }
@@ -226,6 +226,9 @@ void resizeLib(int width, int height)
 {
     reshapeOpenGL(width, height);
 }
+
+
+
 
 iFBO::iFBO(int width, int height)
 {
@@ -1281,4 +1284,82 @@ void saveFile(const char* filePath, char* buf, int bufLength)
     fwrite(buf, bufLength, 1, pf);
 
     fclose(pf);
+}
+
+iVBO::iVBO(int qNum_)
+{
+    _qNum = qNum_;
+    qNum = 0;
+    q = (iQuad*)malloc(sizeof(iQuad) * _qNum);
+
+    indices = (short*)malloc(sizeof(short) * 6 * _qNum);
+
+    for (int i = 0; i < _qNum; i++)
+    {
+        iQuad* quad = &q[i];
+        quad->tl.uv = iPointMake(0, 0);
+        quad->tr.uv = iPointMake(1, 0);
+        quad->bl.uv = iPointMake(0, 1);
+        quad->br.uv = iPointMake(1, 1);
+                                
+        indices[6*i + 0] = 4 * i + 0;
+        indices[6*i + 1] = 4 * i + 1;
+        indices[6*i + 2] = 4 * i + 2;
+        indices[6*i + 3] = 4 * i + 1;
+        indices[6*i + 4] = 4 * i + 2;
+        indices[6*i + 5] = 4 * i + 3;
+    }
+
+    tex = NULL;
+
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(iQuad) * _qNum, NULL, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    blendSrc = GL_SRC_ALPHA;
+    blendDst = GL_ONE_MINUS_SRC_ALPHA;
+    
+
+}
+
+iVBO::~iVBO()
+{
+    free(q);
+    free(indices);
+    freeImage(tex);
+    glDeleteBuffers(1, &vbo);
+
+
+}
+
+void iVBO::paint(float dt)
+{
+    glBlendFunc(blendSrc, blendDst);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(iQuad) * qNum, q);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnable(GL_TEXTURE_2D);
+
+    glBindTexture(GL_TEXTURE_2D, tex->texID);
+    
+    glVertexPointer(2, GL_FLOAT, sizeof(iVertex), 0);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(iVertex), (GLvoid*)offsetof(iVertex, uv));
+    glColorPointer(4, GL_FLOAT, sizeof(iVertex), (GLvoid*)offsetof(iVertex, c));
+
+    glDrawElements(GL_TRIANGLES, 6 * qNum, GL_UNSIGNED_SHORT, indices);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
