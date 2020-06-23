@@ -25,6 +25,7 @@ enum WndStyle
     WndStyle_dialog,
     WndStyle_trackbar,
     WndStyle_opengl,
+    WndStyle_scrollbar,
 };
 
 typedef void (*WndDrag)(const char* path);

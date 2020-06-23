@@ -46,6 +46,12 @@ WndGL* wgMap;
 iPoint tileOpenGLOff; // 타일 OpenGL 오프셋값
 iPoint MapOpenGLOff; // 맵 OpenGL 오프셋값
 
+HWND* tileOpenGLScroll;
+HWND* MapOpenGLScroll;
+
+void scrollTileOpenGL(HWND hwnd);
+void scrollMapOpenGL(HWND hwnd);
+
 bool checkSelect = false;
 Texture* SelectedTexture = NULL;
 
@@ -161,21 +167,25 @@ void loadMapEditor(HWND hwnd)
 
 	
 
+	tileOpenGLScroll = (HWND*)malloc(sizeof(HWND) * 2);
 
 	wgTile = createOpenGL(15, 40, 270, 350, methodTileUpdate, 270, 350); //TILE OPENGL
-	createWndScrollBar(15, 390, 270, 20, SBS_HORZ, NULL, NULL); // wgTile 가로 스크롤바
-	createWndScrollBar(285, 40, 20, 350, SBS_VERT, NULL, NULL); // wgTile 세로 스크롤바
+	tileOpenGLScroll[0] = createWndScrollBar(15, 390, 270, 20, SBS_HORZ, NULL, scrollTileOpenGL); // wgTile 가로 스크롤바
+	tileOpenGLScroll[1] = createWndScrollBar(285, 40, 20, 350, SBS_VERT, NULL, scrollTileOpenGL); // wgTile 세로 스크롤바
 
+	MapOpenGLScroll = (HWND*)malloc(sizeof(HWND) * 2);
 
 	wgMap = createOpenGL(330, 40, 1100, 650, methodMapUpdate, 1100, 650); //MAP OPENGL
-	createWndScrollBar(330, 690, 1100, 20, SBS_HORZ, NULL, NULL); // wgMap 가로스크롤바
-	createWndScrollBar(1430, 40, 20, 650, SBS_VERT, NULL, NULL); // wgMap 세로스크롤바
+	MapOpenGLScroll[0] = createWndScrollBar(330, 690, 1100, 20, SBS_HORZ, NULL, scrollMapOpenGL); // wgMap 가로스크롤바
+	MapOpenGLScroll[1] = createWndScrollBar(1430, 40, 20, 650, SBS_VERT, NULL, scrollMapOpenGL); // wgMap 세로스크롤바
 
 }
 
 void freeMapEditor()
 {
 	delete wcsMapEditor;
+	free(tileOpenGLScroll);
+	free(MapOpenGLScroll);
 }
 
 
@@ -253,7 +263,7 @@ void keyMapEditor(iKeyState stat, iPoint point)
 			point.y -= MapRect.origin.y;
 
 			DrawPoint = iPointMake(point.x, point.y);
-
+			
 			setRGBA(1, 1, 1, 1);
 			
 
@@ -392,22 +402,35 @@ void methodTileUpdate(float dt)
 		delete bmp;
 		total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
 		goneSIZE = nextPOT(width) * nextPOT(height);
+		
+		SetScrollRange(tileOpenGLScroll[0], SB_CTL, 0, max(0, total->tex->width - TileRect.size.width), TRUE); // 타일이미지스크롤바 설정
+		SetScrollRange(tileOpenGLScroll[1], SB_CTL, 0, max(0, total->tex->height - TileRect.size.height), TRUE);  // 타일이미지 스크롤바 설정
 	}
 
 
 	if (total->tex)
 	{
+		iRect rt;
 		setRGBA(1, 1, 1, 1);
 		drawImage(total->tex, 0, 0, TOP | LEFT);
 		setRGBA(1, 0, 0, 1);
-		drawRect(0, 0, total->tex->width, total->tex->height);
+		//drawRect(0, 0, total->tex->width, total->tex->height);
 
-		findRect(SeletedPoint.x, SeletedPoint.y);
 		
-		iRect rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
+
+		if (GetKeyState(VK_CONTROL) < 0)
+		{
+			rt = iRectMake(SeletedPoint.x, SeletedPoint.y, getWndInt(hEbTileSize[0]), getWndInt(hEbTileSize[1]));
+		}
+
+		else
+		{
+			findRect(SeletedPoint.x, SeletedPoint.y);
+			rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
+		}
+
 		setRGBA(0,1,0,1);
 		drawRect(rt);
-
 		
 	
 		setRGBA(1, 1, 1, 1);
@@ -429,7 +452,6 @@ void methodTileUpdate(float dt)
 		checkSelect = true;
 
 		
-
 	}
 
 }
@@ -452,6 +474,8 @@ void methodMapUpdate(float dt)
 	//glClearColor(0, 0, 0, 1);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+
 	setRGBA(1, 1, 1, 1);
 	
 	int TileSizeX = getWndInt(hEbTileSize[0]);
@@ -460,8 +484,12 @@ void methodMapUpdate(float dt)
 	int MapSizeX = getWndInt(hEbMapNum[0]);
 	int MapSizeY = getWndInt(hEbMapNum[1]);
 
+
+	SetScrollRange(MapOpenGLScroll[0], SB_CTL, 0, max(0, MapSizeX - MapRect.size.width), TRUE); // 타일이미지스크롤바 설정
+	SetScrollRange(MapOpenGLScroll[1], SB_CTL, 0, max(0, MapSizeY - MapRect.size.height), TRUE);  // 타일이미지 스크롤바 설정
+
 	setRGBA(1, 0, 0, 1);
-	drawRect(0, 0, MapSizeX, MapSizeY);
+	//drawRect(0, 0, MapSizeX, MapSizeY);
 	
 
 
@@ -491,10 +519,46 @@ void methodMapUpdate(float dt)
 		setRGBA(1, 1, 1, 1);
 		
 		drawImage(SelectedTexture, DrawPoint.x - 20, DrawPoint.y, TOP | LEFT);
-	
+		
 		checkSelect = false;
 
 	}
+}
+
+
+
+void scrollTileOpenGL(HWND hwnd)
+{
+	
+	printf("tile move!\n");
+
+	if (hwnd == tileOpenGLScroll[0])
+	{
+		tileOpenGLOff.x = GetScrollPos(hwnd, SB_CTL);
+	
+	}
+	else if (hwnd == tileOpenGLScroll[1])
+	{
+		tileOpenGLOff.y = GetScrollPos(hwnd, SB_CTL);
+	}
+
+	printf("tile off : %f %f \n", tileOpenGLOff.x, tileOpenGLOff.y);
+}
+
+void scrollMapOpenGL(HWND hwnd)
+{
+	printf("map move!\n");
+
+	if (hwnd == MapOpenGLScroll[0])
+	{
+		MapOpenGLOff.x = GetScrollPos(hwnd, SB_CTL);
+	}
+	else if (hwnd == MapOpenGLScroll[1])
+	{
+		MapOpenGLOff.y = GetScrollPos(hwnd, SB_CTL);
+	}
+	
+	printf("tile off : %f %f \n", MapOpenGLOff.x, MapOpenGLOff.y);
 }
 
 

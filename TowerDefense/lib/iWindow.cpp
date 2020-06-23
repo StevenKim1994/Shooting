@@ -157,6 +157,14 @@ void initWndCtrlSystem()
 }
 
 WndCtrlSystem* wcs; // 현재 사용하고 있는 컨트롤시스템
+
+
+extern HWND* tileOpenGLScroll;
+extern HWND* MapOpenGLScroll;
+int tileOpenGL = 0;
+int MapOpenGL = 0;
+
+
 void WndCtrlSystem::scroll(WPARAM wParam, LPARAM lParam)
 {
 	// lParam : HWND
@@ -174,10 +182,36 @@ void WndCtrlSystem::scroll(WPARAM wParam, LPARAM lParam)
 			break;
 
 		}
-	}
+	}    
 
 	switch (c->style)
 	{
+	case WndStyle_scrollbar:
+		if (state == SB_THUMBTRACK || state == SB_THUMBPOSITION)
+		{
+			SetScrollPos(hwnd, SB_CTL, HIWORD(wParam), TRUE);
+		}
+		else if (state == SB_LINELEFT)
+		{
+			SetScrollPos(hwnd, SB_CTL, GetScrollPos(hwnd, SB_CTL) - 10, TRUE);
+		}
+		else if (state == SB_LINERIGHT)
+		{
+			SetScrollPos(hwnd, SB_CTL, GetScrollPos(hwnd, SB_CTL) + 10, TRUE);
+		}
+		else if (state == SB_PAGELEFT)
+		{
+			SetScrollPos(hwnd, SB_CTL, GetScrollPos(hwnd, SB_CTL) - 1, TRUE);
+		}
+		else if (state == SB_PAGERIGHT)
+		{
+			SetScrollPos(hwnd, SB_CTL, GetScrollPos(hwnd, SB_CTL) + 1, TRUE);
+		}
+
+		if (c->update)
+			c->update(c->hwnd);
+
+		break;
 	case WndStyle_static: // none
 	case WndStyle_button:
 	case WndStyle_radio:
@@ -473,7 +507,8 @@ void setWndListBox(HWND hwnd, int index)
 HWND createWndScrollBar(int x, int y, int width, int height,int style, WndCtrlColor color, WndCtrlUpdate update)
 {
 	HWND hwnd = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE | style,x,y,width, height, (HWND)wcs->hwndParent, (HMENU)wcs->wcNum, (HINSTANCE)wcs->hinstance, NULL);
-
+	
+	wcs->add(hwnd, WndStyle_scrollbar, color, update);
 	return hwnd;
 }
 LRESULT CALLBACK WndEditBoxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, WndEditBoxStyle style);

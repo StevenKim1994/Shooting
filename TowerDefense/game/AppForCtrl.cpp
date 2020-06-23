@@ -251,9 +251,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
        
         break;
 
-    case WM_HSCROLL:
+    case WM_VSCROLL: // 세로스크롤
         scrollMapEditor(wParam, lParam);
+        break;
 
+    case WM_HSCROLL: // 가로스크롤
+        scrollMapEditor(wParam, lParam);
+        break;
+        
     default:
         return DefWindowProc(hWnd, message, wParam, lParam); // 윈도우 화면 갱신!
     }
