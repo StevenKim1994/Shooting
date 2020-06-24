@@ -231,13 +231,9 @@ void keyMapEditor(iKeyState stat, iPoint point)
 	{
 		
 
-		
 		if (containPoint(point, TileRect)) // Tile창 안에 마우스 포인터가 있을때
 		{
-			if (GetKeyState(VK_CONTROL)<0) // control키를 누른상태이면서 화면을 움직인다면 이때 Tile 출력하는 OpenGL offset 변경함
-			{
-				printf("Move TileOpenGL \n");
-			}
+	
 			
 			for (int i = 0; i < goneSIZE; i++)
 				total->gone[i] = false;
@@ -256,10 +252,7 @@ void keyMapEditor(iKeyState stat, iPoint point)
 		}
 		else if (containPoint(point, MapRect)) // Map 창 안에 마우스 포인터가 있을떄
 		{
-			if (GetKeyState(VK_CONTROL)<0 ) // control키를 누른상태이면서 화면을 움직인다면 이때 Map 출력하는 OpenGL offset 변경함
-			{
-				printf("Map TileOpenGL \n");
-			}
+		
 			point.x -= MapRect.origin.x;
 			point.y -= MapRect.origin.y;
 
@@ -304,158 +297,60 @@ void btnOpenImageUpdate(HWND hwnd)
 }
 
 
-void findRect(int x, int y)
-{
-
-
-	int i, j, k;
-	int num;
-	int potW = total->tex->potWidth;
-	int potH = total->tex->potHeight;
-	int* mustGoIndex = (int*)malloc(sizeof(int) *  potH * potW);
-
-	mustGoIndex[0] = potW * y + x;
-
-	int mustGoNum = 1;
-
-	while (mustGoNum)
-	{
-		num = mustGoNum;
-
-		for (k = 0; k < num; k++)
-		{
-			i = mustGoIndex[k] % potW;
-			j = mustGoIndex[k] / potW;
-			if (total->gone[potW * j + i] || total->rgba[potW * 4 * j + 4 * i + 3] == 0)
-				continue;
-
-			total->gone[potW * j + i] = true;
-			if (i < _left)
-				_left = i;
-			if (i > _right)
-				_right = i;
-			if (j < _up)
-				_up = j;
-			if (j > _down)
-				_down = j;
-
-
-			if (i > 0) //왼쪾으로 갈수 있음
-			{
-				mustGoIndex[mustGoNum] = mustGoIndex[k] - 1;
-				mustGoNum++;
-			}
-			if (i < potW - 1) //오른쪾으로 갈수 있음
-			{
-				mustGoIndex[mustGoNum] = mustGoIndex[k] + 1;
-				mustGoNum++;
-			}
-
-			if (j > 0) //왼쪾으로 갈수 있음
-			{
-				mustGoIndex[mustGoNum] = mustGoIndex[k] - potW;
-				mustGoNum++;
-			}
-			if (j < potH - 1) //오른쪾으로 갈수 있음
-			{
-				mustGoIndex[mustGoNum] = mustGoIndex[k] + potW;
-				mustGoNum++;
-			}
-		}
-		mustGoNum -= num;
-		for (i = 0; i < mustGoNum; i++)
-			mustGoIndex[i] = mustGoIndex[num + i];
-	}
-	//가야될 목록
-	free(mustGoIndex);
-
-}
-
-
-void dragTotal(iRect drag)
-{
-	total->rt;
-}
-
-
-
 void methodTileUpdate(float dt)
 {
-	glClearColor(0, 0, 0, 1);
+	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	setRGBA(0, 1, 0, 1);
 
-
 	if (strImagePath)
 	{
-		setRGBA(1, 1, 1, 1);
-		total->tex = createImage(strImagePath);
-		wchar_t* ws = utf8_to_utf16(strImagePath);
+
+		int numX = getWndInt(hEbOpenImage[0]);
+		int numY = getWndInt(hEbOpenImage[1]);
+
+		if (texs)
+		{
+			int i, j = numX * numY;
+
+			for (int i = 0; i < j; i++)
+				freeImage(texs[i]);
+			free(texs);
+		}
+
+		Texture* texSize = createImage(strImagePath);
+		texs = createDivideImage(numX, numY, strImagePath);
+
 		free(strImagePath);
 		strImagePath = NULL;
 
-		Bitmap* bmp = new Bitmap(ws);
-		free(ws);
-		int width;
-		int height;
 
-		total->rgba = bmp2rgba(bmp, width, height);
-		delete bmp;
-		total->gone = (bool*)calloc(sizeof(bool), nextPOT(width) * nextPOT(height));
-		goneSIZE = nextPOT(width) * nextPOT(height);
-		
-		SetScrollRange(tileOpenGLScroll[0], SB_CTL, 0, max(0, total->tex->width - TileRect.size.width), TRUE); // 타일이미지스크롤바 설정
-		SetScrollRange(tileOpenGLScroll[1], SB_CTL, 0, max(0, total->tex->height - TileRect.size.height), TRUE);  // 타일이미지 스크롤바 설정
+		SetScrollRange(tileOpenGLScroll[0], SB_CTL, 0, max(0, texSize->width - TileRect.size.width), TRUE); // 타일이미지스크롤바 설정
+		SetScrollRange(tileOpenGLScroll[1], SB_CTL, 0, max(0, texSize->height - TileRect.size.height), TRUE);  // 타일이미지 스크롤바 설정
 	}
 
+	if (texs == NULL)
+		return;
 
-	if (total->tex)
+	setRGBA(1, 1, 1, 1);
+	int numX = getWndInt(hEbOpenImage[0]);
+	int numY = getWndInt(hEbOpenImage[1]);
+
+
+	int w = texs[0]->width;
+	int h = texs[0]->height;
+
+	for (int j = 0; j < numY; j++)
 	{
-		iRect rt;
-		setRGBA(1, 1, 1, 1);
-		drawImage(total->tex, 0 - tileOpenGLOff.x, 0 - tileOpenGLOff.y, TOP | LEFT);
-		setRGBA(1, 0, 0, 1);
-		//drawRect(0, 0, total->tex->width, total->tex->height);
-
-		
-
-		if (GetKeyState(VK_CONTROL) < 0)
+		for (int i = 0; i < numX; i++)
 		{
-			rt = iRectMake(SeletedPoint.x , SeletedPoint.y, getWndInt(hEbTileSize[0]), getWndInt(hEbTileSize[1]));
+			setRGBA(1, 1, 1, 1);
+			drawImage(texs[numX * j + i], w * i, h * j, TOP | LEFT);
+			setRGBA(0, 1, 0, 1);
+			drawRect(iRectMake(w * i, h * j, w, h));
 		}
-
-		else
-		{
-			findRect(SeletedPoint.x  , SeletedPoint.y );
-			rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
-		}
-
-		setRGBA(0,1,0,1);
-		drawRect(rt);
-		
-	
-		setRGBA(1, 1, 1, 1);
-		
-		int potW = nextPOT(_right-_left);
-		int potH = nextPOT(_down-_up);
-		uint8* rgba = (uint8*)calloc(sizeof(uint8), potW * potH * 4);
-
-
-		for (int j = _up; j < _down; j++)
-			memcpy(&rgba[potW * 4 * (j-_up)], &total->rgba[(int)total->tex->potWidth * 4 * j + 4 * _left], 4 * (_right - _left));
-
-		if (SelectedTexture)
-			freeImage(SelectedTexture);
-
-		SelectedTexture = createImageWithRGBA(rgba, rt.size.width, rt.size.height);
-
-		free(rgba);
-		checkSelect = true;
-
-		
 	}
-
 }
 
 void btnMapOpenUpdate(HWND hwmd)
@@ -473,9 +368,8 @@ void methodMapUpdate(float dt)
 {
 	//world map
 
-	//glClearColor(0, 0, 0, 1);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	glClearColor(1, 1, 1, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 	setRGBA(1, 1, 1, 1);
@@ -491,40 +385,8 @@ void methodMapUpdate(float dt)
 	SetScrollRange(MapOpenGLScroll[1], SB_CTL, 0, max(0, MapSizeY - MapRect.size.height), TRUE);  // 타일이미지 스크롤바 설정
 
 	setRGBA(1, 0, 0, 1);
-	//drawRect(0, 0, MapSizeX, MapSizeY);
 	
 
-
-	if (chkTileOnOff == true)
-	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		setRGBA(1, 1, 1, 1);
-		if (TileSizeX != 0 && TileSizeY != 0)
-		{
-			int row = MapSizeY / TileSizeY;
-			int col = MapSizeX / TileSizeX;
-
-			for (int i = 0; i < row; i++)
-			{
-				for (int j = 0; j < col; j++)
-				{
-					drawRect(iRectMake(TileSizeX * j, TileSizeY * i, TileSizeX, TileSizeY));
-
-				}
-			}
-
-		}
-	}
-
-	if(checkSelect)
-	{
-		setRGBA(1, 1, 1, 1);
-		
-		drawImage(SelectedTexture, DrawPoint.x - 20 - MapOpenGLOff.x, DrawPoint.y - MapOpenGLOff.y, TOP | LEFT);
-		
-		checkSelect = false;
-
-	}
 }
 
 
