@@ -142,10 +142,11 @@ void loadMapEditor(HWND hwnd)
 	const char* strCollition[3] = { "모두이동불가", "공중이동불가", "모두이동가능" };
 
 
+	const char* strMapSize[2] = { "1920" ,"1080" };
 	createWndStatic(800, 5, 125, 25, "맵 크기:", NULL, NULL);
 	hEbMapNum = (HWND*)malloc(sizeof(HWND) * 2);
 	for (i = 0; i < 2; i++)
-		hEbMapNum[i] = createWndEditBox(1000 + 100 * i, 5, 70, 25, "150", WndEditBoxStyle_int, NULL, NULL);
+		hEbMapNum[i] = createWndEditBox(1000 + 100 * i, 5, 70, 25, strMapSize[i], WndEditBoxStyle_int, NULL, NULL);
 	createWndStatic(1080, 5, 10, 25, "x", NULL, NULL);
 	createWndStatic(650, 5, 50, 25, "맵 뷰", NULL, NULL);
 
@@ -245,10 +246,10 @@ void keyMapEditor(iKeyState stat, iPoint point)
 			point.y -= TileRect.origin.y;
 		
 
-			SeletedPoint = iPointMake(point.x, point.y);
-			Seleted = iRectMake(point.x, point.y, getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
-			_left = point.x;
-			_up = point.y ;
+			SeletedPoint = iPointMake(point.x , point.y );
+			Seleted = iRectMake(point.x , point.y , getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
+			_left = point.x - tileOpenGLOff.x;
+			_up = point.y -tileOpenGLOff.y ;
 			_right = point.x;
 			_down = point.y;
 			
@@ -262,7 +263,8 @@ void keyMapEditor(iKeyState stat, iPoint point)
 			point.x -= MapRect.origin.x;
 			point.y -= MapRect.origin.y;
 
-			DrawPoint = iPointMake(point.x, point.y);
+			DrawPoint = iPointMake(point.x - MapOpenGLOff.x, point.y - MapOpenGLOff.y);
+			DrawPoint = iPointMake(point.x - MapOpenGLOff.x, point.y - MapOpenGLOff.y);
 			
 			setRGBA(1, 1, 1, 1);
 			
@@ -412,7 +414,7 @@ void methodTileUpdate(float dt)
 	{
 		iRect rt;
 		setRGBA(1, 1, 1, 1);
-		drawImage(total->tex, 0, 0, TOP | LEFT);
+		drawImage(total->tex, 0 - tileOpenGLOff.x, 0 - tileOpenGLOff.y, TOP | LEFT);
 		setRGBA(1, 0, 0, 1);
 		//drawRect(0, 0, total->tex->width, total->tex->height);
 
@@ -420,12 +422,12 @@ void methodTileUpdate(float dt)
 
 		if (GetKeyState(VK_CONTROL) < 0)
 		{
-			rt = iRectMake(SeletedPoint.x, SeletedPoint.y, getWndInt(hEbTileSize[0]), getWndInt(hEbTileSize[1]));
+			rt = iRectMake(SeletedPoint.x , SeletedPoint.y, getWndInt(hEbTileSize[0]), getWndInt(hEbTileSize[1]));
 		}
 
 		else
 		{
-			findRect(SeletedPoint.x, SeletedPoint.y);
+			findRect(SeletedPoint.x  , SeletedPoint.y );
 			rt = iRectMake(_left  , _up  ,_right- _left,_down-_up);
 		}
 
@@ -518,7 +520,7 @@ void methodMapUpdate(float dt)
 	{
 		setRGBA(1, 1, 1, 1);
 		
-		drawImage(SelectedTexture, DrawPoint.x - 20, DrawPoint.y, TOP | LEFT);
+		drawImage(SelectedTexture, DrawPoint.x - 20 - MapOpenGLOff.x, DrawPoint.y - MapOpenGLOff.y, TOP | LEFT);
 		
 		checkSelect = false;
 
@@ -531,6 +533,10 @@ void scrollTileOpenGL(HWND hwnd)
 {
 	
 	printf("tile move!\n");
+	_left = 0;
+	_right = 0;
+	_up = 0;
+	_down = 0;
 
 	if (hwnd == tileOpenGLScroll[0])
 	{
@@ -548,6 +554,10 @@ void scrollTileOpenGL(HWND hwnd)
 void scrollMapOpenGL(HWND hwnd)
 {
 	printf("map move!\n");
+	_left = 0;
+	_right = 0;
+	_up = 0;
+	_down = 0;
 
 	if (hwnd == MapOpenGLScroll[0])
 	{

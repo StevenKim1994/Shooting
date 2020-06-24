@@ -167,7 +167,7 @@ int MapOpenGL = 0;
 
 void WndCtrlSystem::scroll(WPARAM wParam, LPARAM lParam)
 {
-	// lParam : HWND
+	// lParam :  HWND
 	// wParam : Data
 
 	int state = LOWORD(wParam);
