@@ -107,6 +107,8 @@ void checkScreenshot()
     }
 }
 
+
+
 void drawLib(Method_Paint method)
 {
     DWORD d = GetTickCount();
@@ -167,7 +169,36 @@ void drawLib(Method_Paint method)
         0, 0, tex->width, tex->height, BOTTOM | RIGHT,
         0.2f, 0.2f, 2, 0, REVERSE_HEIGHT);
 #endif
+
+    void drawTest();
+    drawTest();
 }
+
+void drawTest()
+{
+    extern GLuint programID;
+
+    glUseProgram(programID);
+
+    GLuint positionAttr = glGetAttribLocation(programID, "position");
+
+    glEnableVertexAttribArray(positionAttr);
+    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)0);
+
+    GLuint resolutionLocation = glGetUniformLocation(programID, "resolution");
+    glUniform2f(resolutionLocation, devSize.width, devSize.height);
+    
+    float position[16] =
+    {
+        -1,devSize.height, -1,1,   devSize.width,devSize.height,-1,1,
+        -1,-1, -1,1,   devSize.width,-1,-1,1,
+    };
+
+    glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), position, GL_STATIC_DRAW);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    glDisableVertexAttribArray(positionAttr);         
+}      
 
 static void keyLib(uint32& key, iKeyState stat, int c)
 {

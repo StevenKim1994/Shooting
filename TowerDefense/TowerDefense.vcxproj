@@ -103,7 +103,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TOOL=1;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TOOL=0;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GDIPVER=0x0110;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\TowerDefense\ctrl;..\TowerDefense\openal\include;..\TowerDefense\spine-c\include;..\TowerDefense\lib;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\spine-c\include\spine;C:\Users\user\Desktop\BGA %2832%29\TowerDefense\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -319,6 +319,10 @@
     <ClCompile Include="spine-c\src\spine\Triangulator.c" />
     <ClCompile Include="spine-c\src\spine\VertexAttachment.c" />
     <ClCompile Include="spine-c\src\spine\VertexEffect.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shader\std.frag" />
+    <None Include="assets\shader\std.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

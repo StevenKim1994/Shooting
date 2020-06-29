@@ -1,7 +1,9 @@
 #pragma once
 
+#include <windows.h>
 // GLEW_STATIC 전처리기에 정의.
 #include <GL/glew.h>
+#include <gl/wglew.h>
 //#include <GL/GL.h>
 //#include <GL/GLU.h>
 
@@ -9,7 +11,6 @@
 
 #pragma comment(lib, "opengl32.lib")
 
-#include <windows.h>
 void setupOpenGL(bool setup, HDC hDC);
 bool startGLEW();
 void initOpenGL();

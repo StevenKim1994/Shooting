@@ -17,11 +17,29 @@ void setupOpenGL(bool setup, HDC hDC)
 		pfd.dwFlags =	PFD_DRAW_TO_WINDOW |
 						PFD_SUPPORT_OPENGL |
 						PFD_DOUBLEBUFFER;
-
+	
 		int pixelFormat = ChoosePixelFormat(hDC, &pfd);
 		SetPixelFormat(hDC, pixelFormat, &pfd);
 
 		hRC = wglCreateContext(hDC);
+	
+
+		if (wglewIsSupported("WGL_ARB_create_context"))
+		{
+			int attr[] =
+			{
+				WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+				WGL_CONTEXT_MINOR_VERSION_ARB, 2,
+				WGL_CONTEXT_FLAGS_ARB, 0,
+				0,
+			};
+			hRC = wglCreateContextAttribsARB(hDC, NULL, attr);
+
+		}
+		else
+		{
+			hRC = wglCreateContext(hDC);
+		}
 		wglMakeCurrent(hDC, hRC);
 	}
 	else
@@ -40,8 +58,13 @@ bool startGLEW()
 	return true;
 }
 
+void loadShader();
+void freeShader();
+
 void initOpenGL()
 {
+	loadShader();
+
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 	// GL_MODULATE / GL_BLEND_SRC
@@ -210,3 +233,120 @@ Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height)
 }
 
 // glDeleteTextures(1, &texID);    // destroy texture
+
+GLuint vertexObject, vertexBuffer;
+
+GLuint createShader(const char* str, GLuint flag); //flag = frag , vert 구분자
+void destroyShader(GLuint id);
+void checkShaderID(GLuint id);
+GLuint createProgramID(GLuint vertID, GLuint fragID);
+void checkProgramID(GLuint id);
+
+GLuint programID;
+void checkShaderID(GLuint id)
+{
+	GLint result = GL_FALSE;
+	int length = 0;
+
+	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+
+	if (result != GL_TRUE)
+	{
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+		char* s = (char*)calloc(sizeof(char), length + 1);
+		glGetShaderInfoLog(id, length, NULL, s);
+		
+		wchar_t* ws = utf8_to_utf16(s);
+
+		MessageBox(NULL, ws, TEXT("glCreateShader error"), MB_OK);
+		free(ws);
+		free(s);
+
+	}
+}
+void loadShader()
+{
+	//vao
+	glGenVertexArrays(1, &vertexObject);
+	glBindVertexArray(vertexObject);
+
+	//vbo
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(iVertex) * 4, NULL, GL_STATIC_DRAW);
+
+	int length;
+	char* str = loadFile("assets/shader/std.vert", length);
+	GLuint vertID = createShader(str, GL_VERTEX_SHADER);
+	str = loadFile("assets/shader/std.frag", length);
+	GLuint fragID = createShader(str, GL_FRAGMENT_SHADER);
+
+	programID = createProgramID(vertID, fragID);
+
+	destroyShader(vertID);
+	destroyShader(fragID);
+}
+
+void freeShader()
+{
+	//vao
+	glDeleteVertexArrays(1, &vertexObject);
+
+	//vbo
+	glDeleteBuffers(1, &vertexBuffer);
+}
+
+GLuint createShader(const char* str, GLuint flag)
+{
+	GLuint id = glCreateShader(flag);
+
+	glShaderSource(id, 1, &str, NULL);
+	glCompileShader(id);
+
+	checkShaderID(id);
+
+	return id;
+}
+void destroyShader(GLuint id)
+{
+	glDeleteShader(id);
+}
+
+
+GLuint createProgramID(GLuint vertID, GLuint fragID)
+{
+	GLuint id = glCreateProgram();
+
+	glAttachShader(id, vertID);
+	glAttachShader(id, fragID);
+
+	glLinkProgram(id);
+
+	glDetachShader(id, vertID);
+	glDetachShader(id, fragID);
+
+	checkProgramID(id);
+
+	return id;
+}
+
+void checkProgramID(GLuint id)
+{
+	GLint result = GL_FALSE;
+	int length = 0;
+
+	glGetProgramiv(id, GL_LINK_STATUS, &result);
+
+	if (result != GL_TRUE)
+	{
+		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &length);
+		char* s = (char*)calloc(sizeof(char), length + 1);
+		glGetProgramInfoLog(id, length, NULL, s);
+
+		wchar_t* ws = utf8_to_utf16(s);
+
+		MessageBox(NULL, ws, TEXT("glCreateProgramID error"), MB_OK);
+		free(ws);
+		free(s);
+	}
+}

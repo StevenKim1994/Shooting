@@ -160,13 +160,13 @@ void loadMapEditor(HWND hwnd)
 	const char* strOff[2] = { "가로", "세로" };
 	hEbMapOffset = (HWND*)malloc(sizeof(HWND) * 2);
 	createWndStatic(300, 730, 125, 300, "맵뷰 오프셋", NULL, NULL);
-	for(i = 0; i<2; i++)
+	for (i = 0; i < 2; i++)
 	{
 		createWndStatic(300, 750 + 30 * i, 50, 30, strOff[i], NULL, NULL);
 		hEbMapOffset[i] = createWndEditBox(350, 750 + 30 * i, 50, 30, "0", WndEditBoxStyle_int, NULL, NULL);
 	}
 
-	
+
 
 	tileOpenGLScroll = (HWND*)malloc(sizeof(HWND) * 2);
 
@@ -225,45 +225,45 @@ int goneSIZE = 0;
 
 void keyMapEditor(iKeyState stat, iPoint point)
 {
-	
-	
+
+
 	if (stat == iKeyStateBegan)
 	{
-		
+
 
 		if (containPoint(point, TileRect)) // Tile창 안에 마우스 포인터가 있을때
 		{
-	
-			
+
+
 			for (int i = 0; i < goneSIZE; i++)
 				total->gone[i] = false;
 
 			point.x -= TileRect.origin.x;
 			point.y -= TileRect.origin.y;
-		
 
-			SeletedPoint = iPointMake(point.x , point.y );
-			Seleted = iRectMake(point.x , point.y , getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
+
+			SeletedPoint = iPointMake(point.x, point.y);
+			Seleted = iRectMake(point.x, point.y, getWndInt(hEbTileImgSet[0]), getWndInt(hEbTileImgSet[1]));
 			_left = point.x - tileOpenGLOff.x;
-			_up = point.y -tileOpenGLOff.y ;
+			_up = point.y - tileOpenGLOff.y;
 			_right = point.x;
 			_down = point.y;
-			
+
 		}
 		else if (containPoint(point, MapRect)) // Map 창 안에 마우스 포인터가 있을떄
 		{
-		
+
 			point.x -= MapRect.origin.x;
 			point.y -= MapRect.origin.y;
 
 			DrawPoint = iPointMake(point.x - MapOpenGLOff.x, point.y - MapOpenGLOff.y);
 			DrawPoint = iPointMake(point.x - MapOpenGLOff.x, point.y - MapOpenGLOff.y);
-			
+
 			setRGBA(1, 1, 1, 1);
-			
+
 
 		}
-		
+
 	}
 
 }
@@ -346,11 +346,13 @@ void methodTileUpdate(float dt)
 		for (int i = 0; i < numX; i++)
 		{
 			setRGBA(1, 1, 1, 1);
-			drawImage(texs[numX * j + i], w * i, h * j, TOP | LEFT);
-			setRGBA(0, 1, 0, 1);
-			drawRect(iRectMake(w * i, h * j, w, h));
+			drawImage(texs[numX * j + i], w * i - tileOpenGLOff.x, h  * j  - tileOpenGLOff.y, TOP | LEFT);
+			setRGBA(0, 0, 0, 1);
+			drawRect(iRectMake(w * i - tileOpenGLOff.x, h * j - tileOpenGLOff.y, w, h));
 		}
 	}
+
+	
 }
 
 void btnMapOpenUpdate(HWND hwmd)
@@ -358,10 +360,10 @@ void btnMapOpenUpdate(HWND hwmd)
 	bool open = (hBtnMapOpen[0] == hwmd);
 	const char* path = openFileDlg(open, TEXT("Mao Files(*.map)\0*.map\0"));
 
-		if (path)
-		{
-			// to do
-		}
+	if (path)
+	{
+		// to do
+	}
 }
 
 void methodMapUpdate(float dt)
@@ -373,7 +375,7 @@ void methodMapUpdate(float dt)
 
 
 	setRGBA(1, 1, 1, 1);
-	
+
 	int TileSizeX = getWndInt(hEbTileSize[0]);
 	int TileSizeY = getWndInt(hEbTileSize[1]);
 
@@ -385,7 +387,7 @@ void methodMapUpdate(float dt)
 	SetScrollRange(MapOpenGLScroll[1], SB_CTL, 0, max(0, MapSizeY - MapRect.size.height), TRUE);  // 타일이미지 스크롤바 설정
 
 	setRGBA(1, 0, 0, 1);
-	
+
 
 }
 
@@ -393,7 +395,7 @@ void methodMapUpdate(float dt)
 
 void scrollTileOpenGL(HWND hwnd)
 {
-	
+
 	printf("tile move!\n");
 	_left = 0;
 	_right = 0;
@@ -403,7 +405,7 @@ void scrollTileOpenGL(HWND hwnd)
 	if (hwnd == tileOpenGLScroll[0])
 	{
 		tileOpenGLOff.x = GetScrollPos(hwnd, SB_CTL);
-	
+
 	}
 	else if (hwnd == tileOpenGLScroll[1])
 	{
@@ -429,7 +431,7 @@ void scrollMapOpenGL(HWND hwnd)
 	{
 		MapOpenGLOff.y = GetScrollPos(hwnd, SB_CTL);
 	}
-	
+
 	printf("tile off : %f %f \n", MapOpenGLOff.x, MapOpenGLOff.y);
 }
 

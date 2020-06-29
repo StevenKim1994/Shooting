@@ -508,4 +508,8 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shader\std.frag" />
+    <None Include="assets\shader\std.vert" />
+  </ItemGroup>
 </Project>
