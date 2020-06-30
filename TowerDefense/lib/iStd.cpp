@@ -174,30 +174,77 @@ void drawLib(Method_Paint method)
     drawTest();
 }
 
+
+
 void drawTest()
 {
     extern GLuint programID;
+    static Texture* tex = createImage("assets/ex.png");
+    float x = 0, y = 0;
+    float dx = x + tex->width; 
+    float dy = y + tex->height;
+    float s = tex->width / tex->potWidth;
+    float t = tex->height / tex->potHeight;
 
     glUseProgram(programID);
-
     GLuint positionAttr = glGetAttribLocation(programID, "position");
+    GLuint texCoordAttr = glGetAttribLocation(programID, "texCoord");
+    GLuint colorAttr = glGetAttribLocation(programID, "color");
 
     glEnableVertexAttribArray(positionAttr);
-    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)0);
+    glEnableVertexAttribArray(texCoordAttr);
+    glEnableVertexAttribArray(colorAttr);
 
-    GLuint resolutionLocation = glGetUniformLocation(programID, "resolution");
-    glUniform2f(resolutionLocation, devSize.width, devSize.height);
+    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, sizeof(xVertex), (const void*)0);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, sizeof(xVertex), (const void*)offsetof(xVertex, uv));
+    glVertexAttribPointer(colorAttr, 4, GL_FLOAT, GL_FALSE, sizeof(xVertex), (const void*)offsetof(xVertex, c));
+
+    GLuint mp = glGetUniformLocation(programID, "mProjection");
+    glUniformMatrix4fv(mp, 1, false, mProjection->d());
+    float m[16]; // backup
+    memcpy(m, mModelview->d(), sizeof(float) * 16);
+    mModelview->translate(20, 100, 0);
+    GLuint mm = glGetUniformLocation(programID, "mModelview");
+    glUniformMatrix4fv(mm, 1, false, mModelview->d());
     
+    GLuint tid = glGetUniformLocation(programID, "texID");
+    glUniform1i(tid,0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex->texID);
+
+ 
+#if 0
+    GLuint resolutionLocation = glGetUniformLocation(programID, "resolution");
+    RECT rt;
+    extern HWND hWnd;
+    GetClientRect(hWnd, &rt);
+
+    glUniform2f(resolutionLocation, rt.right-rt.left, rt.bottom - rt.top);
+#endif
     float position[16] =
     {
-        -1,devSize.height, -1,1,   devSize.width,devSize.height,-1,1,
-        -1,-1, -1,1,   devSize.width,-1,-1,1,
+        0, devSize.height, 0, 1,     devSize.width , devSize.height, 0,1,
+        0, 0, 0,1,                   devSize.width , 0, 0,1,
     };
 
-    glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), position, GL_STATIC_DRAW);
+    float r, g, b, a;
+    getRGBA(r, g, b, a);
+
+    xVertex v[4] =
+    {
+        {{x,dy,0,1},{0,t}, {r,g,b,a}} , {{dx,dy,0,1},{s,t}, {r,g,b,a}},
+        {{x,y,0,1},{0,0}, {r,g,b,a}} , {{dx,y,0,1},{s,0}, {r,g,b,a}},
+
+    };
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(v), &v, GL_STATIC_DRAW);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
-    glDisableVertexAttribArray(positionAttr);         
+    glDisableVertexAttribArray(positionAttr);    
+    glDisableVertexAttribArray(texCoordAttr);
+    glDisableVertexAttribArray(colorAttr);
+
+    memcpy(mModelview->d(), m, sizeof(float) * 16);
 }      
 
 static void keyLib(uint32& key, iKeyState stat, int c)

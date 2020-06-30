@@ -1,10 +1,21 @@
 #include "iOpenGL.h"
 
+#include "iStd.h"
 HGLRC hRC;
+
+iMatrix* mProjection;
+iMatrix* mModelview;
+
+
 void setupOpenGL(bool setup, HDC hDC)
 {
 	if (setup)
 	{
+		mProjection = new iMatrix;
+		mModelview = new iMatrix;
+
+
+
 		PIXELFORMATDESCRIPTOR pfd;
 		memset(&pfd, 0x00, sizeof(PIXELFORMATDESCRIPTOR));
 
@@ -20,9 +31,6 @@ void setupOpenGL(bool setup, HDC hDC)
 	
 		int pixelFormat = ChoosePixelFormat(hDC, &pfd);
 		SetPixelFormat(hDC, pixelFormat, &pfd);
-
-		hRC = wglCreateContext(hDC);
-	
 
 		if (wglewIsSupported("WGL_ARB_create_context"))
 		{
@@ -41,11 +49,18 @@ void setupOpenGL(bool setup, HDC hDC)
 			hRC = wglCreateContext(hDC);
 		}
 		wglMakeCurrent(hDC, hRC);
+
+		mProjection = new iMatrix;
+		mModelview = new iMatrix;
 	}
 	else
 	{
+
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hRC);
+		
+		delete mProjection;
+		delete mModelview;
 	}
 }
 
@@ -157,11 +172,9 @@ void reshapeOpenGL(int width, int height)
 
 	glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, devSize.width, devSize.height, 0, -1000, 1000);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	mProjection->loadIdentity();
+	mProjection->ortho(0, devSize.width, devSize.height, 0, -1000, 1000);
+	mModelview->loadIdentity();
 }
 
 GLuint nextPOT(GLuint x)
@@ -273,7 +286,7 @@ void loadShader()
 	//vbo
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(iVertex) * 4, NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(xVertex) * 4, NULL, GL_STATIC_DRAW);
 
 	int length;
 	char* str = loadFile("assets/shader/std.vert", length);

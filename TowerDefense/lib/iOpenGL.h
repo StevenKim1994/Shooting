@@ -11,6 +11,11 @@
 
 #pragma comment(lib, "opengl32.lib")
 
+#include "iMatrix.h"
+
+extern iMatrix* mProjection;
+extern iMatrix* mModelview;
+
 void setupOpenGL(bool setup, HDC hDC);
 bool startGLEW();
 void initOpenGL();

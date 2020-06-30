@@ -6,17 +6,22 @@ precision mediump float;
 
 #endif
 
-//in != uniform
+uniform mat4 mProjection, mModelview;
+
 in vec4 position;
-//float p[16] = { // x,x,0,1 = 0,1 is vec2 to vec4 defulat value
-//0,1,0,1			1,1,0,1
-//0,0,0,1			1,0,0,1
-//};
+in vec2 texCoord;
+in vec4 color;
+
+out vec2 texCoordV;
+out vec4 colorV;
 
 void main()
 {
 	// bottom left, 0,0, bottom right 1, 0 , top right 1,1 top left 1,0
-	gl_Position = position; 
+	gl_Position = mProjection * mModelview * position; 
+	
+	colorV = color;
+	texCoordV = texCoord;
 
 }
 

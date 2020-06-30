@@ -6,29 +6,24 @@ precision mediump float;
 
 #endif
 
-out vec4 fragColor;
+
+in vec2 texCoordV;
+in vec4 colorV;
+
 
 // uniform == only one in
 uniform vec2 resolution;
 uniform sampler2D texID;
 
+out vec4 fragColor;
 
 void main()
 {
-	vec2 uv = gl_FragCoord.xy / resolution; // world => st (uv)
+	vec4 c = texture(texID, texCoordV) * colorV;
+	//float grey = 0.299*c.r + 0.578 * c.g + 0.114 * c.b;
+	//fragColor = vec4(grey, grey, grey, c.a);
+	fragColor = c.yzzw;
 
-	if(uv.x < 0.5)
-	{	if(uv.y < 0.5)
-			fragColor = vec4(1,0,0,1);
-		else
-			fragColor = vec4(0,1,0,1);
-	}
-	else
-	{
-		if(uv.y <0.5)
-			fragColor = vec4(0,0,1,1);
-		else
-			fragColor = vec4(1,1,1,1);
-	}
+	fragColor = vec4(1.);
 }
 

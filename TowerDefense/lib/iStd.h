@@ -138,6 +138,16 @@ char* loadFile(const char* filePath, int& length);
 void saveFile(const char* filePath, char* buf, int bufLength);
 
 
+struct xVertex
+{
+    
+    float p[4];
+
+    iPoint uv;
+    iColor4f c;
+};
+
+//vbo용
 struct iVertex
 {
     iPoint p;
