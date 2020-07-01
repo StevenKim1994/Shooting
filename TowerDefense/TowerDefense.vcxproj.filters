@@ -517,5 +517,11 @@
   <ItemGroup>
     <None Include="assets\shader\std.frag" />
     <None Include="assets\shader\std.vert" />
+    <None Include="assets\shader\aura.vert" />
+    <None Include="assets\shader\aura.frag" />
+    <None Include="assets\shader\blizzard.frag" />
+    <None Include="assets\shader\blizzard.vert" />
+    <None Include="assets\shader\pangram.vert" />
+    <None Include="assets\shader\pangram.frag" />
   </ItemGroup>
 </Project>

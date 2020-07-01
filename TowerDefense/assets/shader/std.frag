@@ -19,11 +19,12 @@ out vec4 fragColor;
 
 void main()
 {
-	vec4 c = texture(texID, texCoordV) * colorV;
-	//float grey = 0.299*c.r + 0.578 * c.g + 0.114 * c.b;
+	vec4 c = texture(texID, texCoordV) * colorV/ 255.;
+	///float grey = 0.299*c.r + 0.578 * c.g + 0.114 * c.b;
 	//fragColor = vec4(grey, grey, grey, c.a);
-	fragColor = c.yzzw;
+	//fragColor = c.yzzw;
 
-	fragColor = vec4(1.);
+	fragColor = c;
+	//fragColor = vec4(1.);
 }
 

@@ -286,12 +286,15 @@ void loadShader()
 	//vbo
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(xVertex) * 4, NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(iVertex) * 4, NULL, GL_STATIC_DRAW);
+
+#define str_vert "assets/shader/pangram.vert"
+#define str_frag "assets/shader/pangram.frag"
 
 	int length;
-	char* str = loadFile("assets/shader/std.vert", length);
+	char* str = loadFile(str_vert, length);
 	GLuint vertID = createShader(str, GL_VERTEX_SHADER);
-	str = loadFile("assets/shader/std.frag", length);
+	str = loadFile(str_frag, length);
 	GLuint fragID = createShader(str, GL_FRAGMENT_SHADER);
 
 	programID = createProgramID(vertID, fragID);

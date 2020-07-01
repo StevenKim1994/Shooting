@@ -323,6 +323,12 @@
     <ClCompile Include="spine-c\src\spine\VertexEffect.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shader\aura.frag" />
+    <None Include="assets\shader\aura.vert" />
+    <None Include="assets\shader\blizzard.frag" />
+    <None Include="assets\shader\blizzard.vert" />
+    <None Include="assets\shader\pangram.frag" />
+    <None Include="assets\shader\pangram.vert" />
     <None Include="assets\shader\std.frag" />
     <None Include="assets\shader\std.vert" />
   </ItemGroup>

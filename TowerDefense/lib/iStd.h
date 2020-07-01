@@ -138,19 +138,10 @@ char* loadFile(const char* filePath, int& length);
 void saveFile(const char* filePath, char* buf, int bufLength);
 
 
-struct xVertex
-{
-    
-    float p[4];
-
-    iPoint uv;
-    iColor4f c;
-};
-
 //vbo용
 struct iVertex
 {
-    iPoint p;
+    float p[4]; // always  : [2] = 0, [3] = 1
     iPoint uv;
     iColor4b c;
 };
@@ -176,6 +167,6 @@ public:
     Texture* tex;
     GLuint vbo;
     GLenum blendSrc, blendDst;
-
+    GLuint programID;
     
 };
