@@ -288,8 +288,8 @@ void loadShader()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(iVertex) * 4, NULL, GL_STATIC_DRAW);
 
-#define str_vert "assets/shader/pangram.vert"
-#define str_frag "assets/shader/pangram.frag"
+#define str_vert "assets/shader/aura.vert"
+#define str_frag "assets/shader/aura.frag"
 
 	int length;
 	char* str = loadFile(str_vert, length);

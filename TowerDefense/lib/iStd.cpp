@@ -177,7 +177,7 @@ void drawLib(Method_Paint method)
 
 iVBO* gVbo = NULL;
 
-
+float iMouse[4] = {0, 0,0,0};
 
 
 void drawTest()
@@ -197,22 +197,38 @@ void drawTest()
     glEnableVertexAttribArray(positionAttr);
     glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
 
-    GLuint uResolution = glGetUniformLocation(programID, "iResolution");
     RECT rt;
     extern HWND hWnd;
     GetClientRect(hWnd, &rt);
-    glUniform2f(uResolution, rt.right-rt.left, rt.bottom-rt.top);
+    GLuint uResolution = glGetUniformLocation(programID, "iResolution");
+    iSize resolution = iSizeMake(rt.right - rt.left, rt.bottom - rt.top);
+    glUniform2fv(uResolution, 1, (float*)&resolution);
 
     GLuint uTime = glGetUniformLocation(programID, "iTime");
     static float delta = 0.0f;
     delta += 0.015;
     glUniform1f(uTime, delta);
 
+    GLuint uMouse = glGetUniformLocation(programID, "iMouse");
+    //glUniform4f(uMouse, iMouse[0], iMouse[1], iMouse[2], iMouse[3]); 밑과 같은 기능임
+    glUniform4fv(uMouse, 1, iMouse);
+
+    GLuint tid = glGetUniformLocation(programID, "iChannel0");
+    glUniform1i(tid, 0);
+    glActiveTexture(GL_TEXTURE0);
+    static Texture* tex = createImage("assets/shader/stone.jpg");
+    glBindTexture(GL_TEXTURE_2D, tex->texID);
+    setTexture(REPEAT, MIPMAP);
+
+
     uint8 indices[6] = {0, 1, 2, 1, 2, 3};
 
     glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
 
     glDisableVertexAttribArray(positionAttr);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     return;
 
     if (gVbo == NULL)
@@ -223,7 +239,7 @@ void drawTest()
     }
     iQuad* q = &gVbo->q[0];
 
-    Texture* tex = gVbo->tex;
+   // Texture* tex = gVbo->tex;
     float x = 0, y = 0;
     float dx = x + tex->width; 
     float dy = y + tex->height;
