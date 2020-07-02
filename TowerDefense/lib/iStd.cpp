@@ -296,43 +296,7 @@ void drawTest()
 void drawCircle(int x, int y, int radius)
 {
     
-    iPoint cen = iPointMake(x, y);
-    extern GLuint circleID;
   
-    glUseProgram(circleID);
-    float p[4][4] =
-    {
-        {-1,1, 0,1 }, { 1, 1, 0,1 },
-        {-1, -1, 0,1}, {1,-1,0,1,},
-    };
-
-
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 16, p);
-    GLuint positionAttr = glGetAttribLocation(circleID, "position");
-    glEnableVertexAttribArray(positionAttr);
-    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
-
-    RECT rt;
-    extern HWND hWnd;
-    GetClientRect(hWnd, &rt);
-    GLuint uResolution = glGetUniformLocation(circleID, "iResolution");
-    iSize resolution = iSizeMake(32,32);
-    glUniform2fv(uResolution, 1, (float*)&resolution);
-
-    GLuint uCenter = glGetUniformLocation(circleID, "center");
-    GLuint uRadius = glGetUniformLocation(circleID, "radius");
-
-    glUniform2fv(uCenter, 1, (float*)&cen);
-    glUniform1f(uRadius, radius);
-
-    uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
-
-    glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
-
-   // glDisableVertexAttribArray(positionAttr);
-
-    //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -1069,7 +1033,7 @@ void drawImage(Texture* tex, int x, int y,
         }
     }
 
-    iMatrix* b = mModelview; // backup
+    iMatrix* backup = mModelview; // backup
 
     glPushMatrix();
     if (degree)
@@ -1090,44 +1054,48 @@ void drawImage(Texture* tex, int x, int y,
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glEnable(GL_TEXTURE_2D);
+
     glBindTexture(GL_TEXTURE_2D, fbo->tex->texID);
+    gVbo->tex = tex;
     
-    GLuint positionAttr = glGetAttribLocation(getProgramID(), "position");
-    GLuint texBlend = glGetUniformLocation(getProgramID(), "texBlend");
-    GLuint texBase = glGetUniformLocation(getProgramID(), "texBase");
+    iQuad* q = &gVbo->q[0];
 
-    glEnableVertexAttribArray(positionAttr);
-    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
+
+    float dx = x + tex->width;
+    float dy = y + tex->height;
+    float s = tex->width / tex->potWidth;
+    float t = tex->height / tex->potHeight;
+
+    float r, g, b, a;
+    getRGBA(r, g, b, a);
+
+    iColor4b c = iColor4bMake(r * 0xff, g * 0xff, b * 0xff, a * 0xff);
+
+    memcpy(q->tl.p, &iPointMake(x, dy), sizeof(float) * 2);
+    memcpy(&q->tl.uv, &iPointMake(0, t), sizeof(iPoint));
+    memcpy(&q->tl.c, &c, sizeof(iColor4b));
+
+    memcpy(q->tr.p, &iPointMake(dx, dy), sizeof(float) * 2);
+    memcpy(&q->tr.uv, &iPointMake(s, t), sizeof(iPoint));
+    memcpy(&q->tr.c, &c, sizeof(iColor4b));
+
+    memcpy(q->bl.p, &iPointMake(x, y), sizeof(float) * 2);
+    memcpy(&q->bl.uv, &iPointMake(0, 0), sizeof(iPoint));
+    memcpy(&q->bl.c, &c, sizeof(iColor4b));
+
+    memcpy(q->br.p, &iPointMake(dx, y), sizeof(float) * 2);
+    memcpy(&q->br.uv, &iPointMake(s, 0), sizeof(iPoint));
+    memcpy(&q->br.c, &c, sizeof(iColor4b));
+
+    gVbo->qNum = 1;
+
+
+    gVbo->paint(0.0);
    
-    glUniform1i(texBase, fbo->tex->texID);
-    glUniform1i(texBlend, tex);
    
 
-   
-    glVertexPointer(2, GL_FLOAT, 0, position);
-    glTexCoordPointer(2, GL_FLOAT, 0, coordinate);
-    glColorPointer(4, GL_FLOAT, 0, color);
+    mModelview = backup; // backup 되돌리기
 
-#if 1
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-#elif 1
-    uint8 indices[4] = { 0, 1, 2, 3 };
-    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
-#else
-    
-    uint8 indices[6] = { 0, 1, 2,  1, 2, 3 };
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
-#endif
-
-    mModelview = b; // backup 되돌리기
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glPopMatrix();
 }
 
 void setClip(int x, int y, int width, int height)

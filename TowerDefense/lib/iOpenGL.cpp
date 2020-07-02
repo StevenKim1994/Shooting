@@ -5,6 +5,10 @@ HGLRC hRC;
 
 iMatrix* mProjection;
 iMatrix* mModelview;
+GLuint* programIDs;
+GLuint programID;
+
+
 
 void loadShader();
 void freeShader();
@@ -264,9 +268,6 @@ void destroyShader(GLuint id);
 void checkShaderID(GLuint id);
 GLuint createProgramID(GLuint vertID, GLuint fragID);
 void checkProgramID(GLuint id);
-
-GLuint* programIDs;
-GLuint programID;
 
 void checkShaderID(GLuint id)
 {

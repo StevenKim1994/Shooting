@@ -22,7 +22,7 @@ out vec4 fragColor;
 void main()
 {
 	vec2 size = textureSize(texBase, 0);
-	vec2 uv = gl_FragCoord.xy / size);
+	vec2 uv = gl_FragCoord.xy / size;
 	vec4 base = texture(texBase, uv);
 
 	fragColor =  texture(texID, texCoordV) * colorV;	
