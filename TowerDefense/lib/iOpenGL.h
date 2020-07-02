@@ -21,11 +21,28 @@ bool startGLEW();
 void initOpenGL();
 void reshapeOpenGL(int width, int height);
 
+GLuint createShader(const char* str, GLuint flag); //flag = frag , vert 구분자
+void destroyShader(GLuint id);
+GLuint createProgramID(GLuint vertID, GLuint fragID);
+
 void setAntiAliasParameters(bool anti);
+
+enum iBlend
+{
+	iBlendAlpha = 0,
+	iBlendGrey,
+	iBlendAdd,
+
+	iBlendMax,
+};
+void setGLBlend(iBlend blend);
+GLuint getProgramID();
 
 GLuint nextPOT(GLuint x);
 struct Texture;
 Texture* createImageWithRGBA(GLubyte* rgba, GLuint width, GLuint height);
+
+
 
 /*
 	라이브러리 접근방법

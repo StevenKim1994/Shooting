@@ -6,6 +6,8 @@ HGLRC hRC;
 iMatrix* mProjection;
 iMatrix* mModelview;
 
+void loadShader();
+void freeShader();
 
 void setupOpenGL(bool setup, HDC hDC)
 {
@@ -73,8 +75,6 @@ bool startGLEW()
 	return true;
 }
 
-void loadShader();
-void freeShader();
 
 void initOpenGL()
 {
@@ -177,6 +177,16 @@ void reshapeOpenGL(int width, int height)
 	mModelview->loadIdentity();
 }
 
+void setGLBlend(iBlend blend)
+{
+	programID = programIDs[blend];
+}
+
+GLuint getProgramID()
+{
+	return programID;
+}
+
 GLuint nextPOT(GLuint x)
 {
 	x = x - 1;
@@ -255,7 +265,9 @@ void checkShaderID(GLuint id);
 GLuint createProgramID(GLuint vertID, GLuint fragID);
 void checkProgramID(GLuint id);
 
+GLuint* programIDs;
 GLuint programID;
+
 void checkShaderID(GLuint id)
 {
 	GLint result = GL_FALSE;
@@ -288,19 +300,26 @@ void loadShader()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(iVertex) * 4, NULL, GL_STATIC_DRAW);
 
-#define str_vert "assets/shader/aura.vert"
-#define str_frag "assets/shader/aura.frag"
+	programIDs = (GLuint*)malloc(sizeof(GLuint) * iBlendMax);
 
 	int length;
-	char* str = loadFile(str_vert, length);
+	char* str = loadFile("assets/shader/std.vert", length);
 	GLuint vertID = createShader(str, GL_VERTEX_SHADER);
-	str = loadFile(str_frag, length);
-	GLuint fragID = createShader(str, GL_FRAGMENT_SHADER);
 
-	programID = createProgramID(vertID, fragID);
+	const char* strVertList[iBlendMax] = { "alpha", "grey", "add" };
 
+	for (int i = 0; i < iBlendMax; i++)
+	{
+		char s[256];
+		sprintf(s, "%s", strVertList[i]);
+		str = loadFile(s, length);
+		GLuint fragID = createShader(str, GL_FRAGMENT_SHADER);
+		programIDs[i] = createProgramID(vertID, fragID);
+		destroyShader(fragID);
+	}
 	destroyShader(vertID);
-	destroyShader(fragID);
+
+	setGLBlend(iBlendAlpha);
 }
 
 void freeShader()

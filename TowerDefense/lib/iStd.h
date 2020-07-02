@@ -68,6 +68,8 @@ public:
 };
 extern iFBO* fbo;
 
+
+
 uint8 float2uint8(float f);
 void setRGBA(float r, float g, float b, float a);
 void getRGBA(float& r, float& g, float& b, float& a);

@@ -185,7 +185,7 @@ void drawTest()
     extern GLuint programID;
 
     glUseProgram(programID);
-
+#if 0
     float p[4][4] =
     {
         {-1,1, 0,1 }, { 1, 1, 0,1 },
@@ -230,16 +230,33 @@ void drawTest()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     return;
-
+#endif
     if (gVbo == NULL)
     {
         gVbo = new iVBO();
         gVbo->programID = programID;
+#if 1
         gVbo->tex = createImage("assets/ex.png");
+#else
+        
+        int width = 32, height = 32;
+        int potW = nextPOT(width), potH = nextPOT(height);
+
+        Texture* tex = createTexture(width, height);
+        
+        fbo->bind(tex);
+
+        void drawCircle(int x, int y, int radius);
+        drawCircle(16, 16, 16);
+        
+        fbo->unbind();
+        gVbo->tex = tex;
+
+#endif
     }
     iQuad* q = &gVbo->q[0];
 
-   // Texture* tex = gVbo->tex;
+    Texture* tex = gVbo->tex;
     float x = 0, y = 0;
     float dx = x + tex->width; 
     float dy = y + tex->height;
@@ -275,6 +292,49 @@ void drawTest()
     gVbo->paint(0.0f);
     memcpy(mModelview->d(), m, sizeof(float) * 16);
 }      
+
+void drawCircle(int x, int y, int radius)
+{
+    
+    iPoint cen = iPointMake(x, y);
+    extern GLuint circleID;
+  
+    glUseProgram(circleID);
+    float p[4][4] =
+    {
+        {-1,1, 0,1 }, { 1, 1, 0,1 },
+        {-1, -1, 0,1}, {1,-1,0,1,},
+    };
+
+
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 16, p);
+    GLuint positionAttr = glGetAttribLocation(circleID, "position");
+    glEnableVertexAttribArray(positionAttr);
+    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
+
+    RECT rt;
+    extern HWND hWnd;
+    GetClientRect(hWnd, &rt);
+    GLuint uResolution = glGetUniformLocation(circleID, "iResolution");
+    iSize resolution = iSizeMake(32,32);
+    glUniform2fv(uResolution, 1, (float*)&resolution);
+
+    GLuint uCenter = glGetUniformLocation(circleID, "center");
+    GLuint uRadius = glGetUniformLocation(circleID, "radius");
+
+    glUniform2fv(uCenter, 1, (float*)&cen);
+    glUniform1f(uRadius, radius);
+
+    uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
+
+    glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
+
+   // glDisableVertexAttribArray(positionAttr);
+
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, 0);
+
+}
 
 static void keyLib(uint32& key, iKeyState stat, int c)
 {
@@ -1009,27 +1069,41 @@ void drawImage(Texture* tex, int x, int y,
         }
     }
 
+    iMatrix* b = mModelview; // backup
+
     glPushMatrix();
     if (degree)
     {
         iPoint t = iPointMake(x + width / 2, y + height / 2);
         for (int i = 0; i < 4; i++)
             position[i] -= t;
-        glTranslatef(t.x, t.y, 0);
+        mModelview->translate(t.x, t.y, 0);
 
         float _xyz[3] = {0, 0, 0};
         _xyz[xyz] = 1.0f;
         while (degree > 360) degree -= 360;
         degree = 360 - degree;
-        glRotatef(degree, _xyz[0], _xyz[1], _xyz[2]);
+       mModelview->rotate(degree, _xyz[0], _xyz[1], _xyz[2]);
     }
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, tex->texID);
+    glBindTexture(GL_TEXTURE_2D, fbo->tex->texID);
+    
+    GLuint positionAttr = glGetAttribLocation(getProgramID(), "position");
+    GLuint texBlend = glGetUniformLocation(getProgramID(), "texBlend");
+    GLuint texBase = glGetUniformLocation(getProgramID(), "texBase");
 
+    glEnableVertexAttribArray(positionAttr);
+    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
+   
+    glUniform1i(texBase, fbo->tex->texID);
+    glUniform1i(texBlend, tex);
+   
+
+   
     glVertexPointer(2, GL_FLOAT, 0, position);
     glTexCoordPointer(2, GL_FLOAT, 0, coordinate);
     glColorPointer(4, GL_FLOAT, 0, color);
@@ -1040,9 +1114,12 @@ void drawImage(Texture* tex, int x, int y,
     uint8 indices[4] = { 0, 1, 2, 3 };
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
 #else
+    
     uint8 indices[6] = { 0, 1, 2,  1, 2, 3 };
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
 #endif
+
+    mModelview = b; // backup 되돌리기
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);

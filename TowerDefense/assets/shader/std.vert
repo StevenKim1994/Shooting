@@ -20,7 +20,7 @@ void main()
 	// bottom left, 0,0, bottom right 1, 0 , top right 1,1 top left 1,0
 	gl_Position = mProjection * mModelview * position; 
 	
-	colorV = color;
+	colorV = color / 255.;
 	texCoordV = texCoord;
 
 }

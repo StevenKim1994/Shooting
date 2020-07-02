@@ -323,13 +323,14 @@
     <ClCompile Include="spine-c\src\spine\VertexEffect.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shader\add.frag" />
     <None Include="assets\shader\aura.frag" />
     <None Include="assets\shader\aura.vert" />
-    <None Include="assets\shader\blizzard.frag" />
-    <None Include="assets\shader\blizzard.vert" />
+    <None Include="assets\shader\grey.frag" />
+    <None Include="assets\shader\multiply.frag" />
     <None Include="assets\shader\pangram.frag" />
     <None Include="assets\shader\pangram.vert" />
-    <None Include="assets\shader\std.frag" />
+    <None Include="assets\shader\alpha.frag" />
     <None Include="assets\shader\std.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
