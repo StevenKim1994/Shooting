@@ -23,10 +23,10 @@ void main()
 	// glBlendFunc(gl_src_alpha, gl_one);
 
 	vec2 size = textureSize(texBase, 0);
-	vec2 uv = gl_FragCoord.xy / size);
+	vec2 uv = gl_FragCoord.xy / size;
 	vec4 base = texture(texBase, uv);
 
-	vec4 blend = texture(texID, texCoordV);
+	vec4 blend = texture(texBlend, texCoordV);
 
 	fragColor =  vec4(base.rgb + blend.rgb * blend.a, base.a);	
 }

@@ -83,6 +83,12 @@ void drawRect(iRect rt, float radius = 0.0f);
 void fillRect(float x, float y, float width, float height, float radius=0.0f);
 void fillRect(iRect rt, float radius=0.0f);
 
+void drawCircle(float x, float y, float radius);
+void drawCircle(iPoint p, float radius);
+
+void fillCircle(iPoint p, float radius);
+void fillCircle(float x, float y, float radius);
+
 void saveImageFromRGBA(const char* path, uint8* rgba, int width, int height);
 uint8* bmp2rgba(Bitmap* bmp, int& width, int& height);
 

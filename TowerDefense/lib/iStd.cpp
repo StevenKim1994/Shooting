@@ -291,6 +291,11 @@ void drawTest()
     mModelview->translate(20, 100, 0);
     gVbo->paint(0.0f);
     memcpy(mModelview->d(), m, sizeof(float) * 16);
+
+   
+    setRGBA(1, 0, 1, 1);
+  
+    fillCircle(30,30,15);
 }      
 
 void drawCircle(int x, int y, int radius)
@@ -542,6 +547,91 @@ void fillRect(float x, float y, float width, float height, float radius)
 void fillRect(iRect rt, float radius)
 {
     fillRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, radius);
+}
+
+void drawCircle(float x, float y, float radius)
+{
+}
+
+void drawCircle(iPoint p, float radius)
+{
+    drawCircle(p.x, p.y, radius);
+}
+
+void fillCircle(iPoint p, float radius)
+{
+    fillCircle(p.x, p.y, radius);
+}
+
+void fillCircle(float x, float y, float radius)
+{
+    static GLuint pid = 0;
+
+    
+    if (pid == 0)
+    {
+        int length;
+        char* str = loadFile("assets/shader/gdi/gdi.vert", length);
+       GLuint vid = createShader(str, GL_VERTEX_SHADER);
+       str = loadFile("assets/shader/gdi/circle.frag", length);
+       GLuint fid = createShader(str, GL_FRAGMENT_SHADER);
+       pid = createProgramID(vid, fid);
+       destroyShader(vid);
+       destroyShader(fid);
+    }
+    glUseProgram(pid);
+
+    float p[4][4] =
+    {
+        {x - radius, y + radius, 0, 1} , { x + radius, y + radius, 0,1},
+        {x - radius, y - radius, 0, 1}, { x +radius, y- radius, 0,1}
+    };
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 16, p);
+
+    GLuint positionAttr = glGetAttribLocation(pid, "position");
+    glEnableVertexAttribArray(positionAttr);
+    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
+
+    GLuint mp = glGetUniformLocation(pid, "mProjection");
+    glUniformMatrix4fv(mp, 1, false, mProjection->d());
+
+    GLuint mm = glGetUniformLocation(pid, "mModelview");
+    glUniformMatrix4fv(mm, 1, false, mModelview->d());
+
+    GLuint uCenter = glGetUniformLocation(pid,"center");
+    x = x / devSize.width * viewport.size.width - viewport.origin.x;
+    y = y / devSize.height * viewport.size.height - viewport.origin.y;
+    y = viewport.size.height - y;
+    glUniform2f(uCenter, x, y);
+
+    float r0 = viewport.size.width / devSize.width;
+    float r1 = viewport.size.height / devSize.height;
+
+    GLuint uRadius = glGetUniformLocation(pid, "radius");
+    glUniform1f(uRadius, radius * (r0 < r1 ? r0 : r1));
+
+
+
+    GLuint uColor = glGetUniformLocation(pid, "color");
+    glUniform4f(uColor, _r, _g, _b, _a);
+
+
+    GLuint uViewport = glGetUniformLocation(pid, "viewport");
+    glUniform4fv(uViewport, 1, (float*)&viewport);
+
+    GLuint uDevSize = glGetUniformLocation(pid, "devSize");
+    glUniform2fv(uDevSize, 1, (float*)&devSize);
+
+    uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
+    glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
+
+
+    glDisableVertexAttribArray(positionAttr);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 }
 
 Texture* createTexture(int width, int height, bool rgba32f)
@@ -973,6 +1063,7 @@ void drawImage(Texture* tex, int x, int y,
     float ratX, float ratY,
     int xyz, float degree, int reverse)
 {
+    return;
     int width = tex->width * ratX;
     int height = tex->height * ratY;
     switch (anc) {
@@ -1088,6 +1179,8 @@ void drawImage(Texture* tex, int x, int y,
     memcpy(&q->br.c, &c, sizeof(iColor4b));
 
     gVbo->qNum = 1;
+
+   
 
 
     gVbo->paint(0.0);

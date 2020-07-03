@@ -21,6 +21,8 @@ bool startGLEW();
 void initOpenGL();
 void reshapeOpenGL(int width, int height);
 
+extern GLuint vertexObject, vertexBuffer;
+
 GLuint createShader(const char* str, GLuint flag); //flag = frag , vert 구분자
 void destroyShader(GLuint id);
 GLuint createProgramID(GLuint vertID, GLuint fragID);

@@ -312,7 +312,7 @@ void loadShader()
 	for (int i = 0; i < iBlendMax; i++)
 	{
 		char s[256];
-		sprintf(s, "%s", strVertList[i]);
+		sprintf(s, "assets/shader/%s.frag", strVertList[i]);
 		str = loadFile(s, length);
 		GLuint fragID = createShader(str, GL_FRAGMENT_SHADER);
 		programIDs[i] = createProgramID(vertID, fragID);

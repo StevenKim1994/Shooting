@@ -15,6 +15,7 @@ in vec4 color;
 out vec2 texCoordV;
 out vec4 colorV;
 
+
 void main()
 {
 	// bottom left, 0,0, bottom right 1, 0 , top right 1,1 top left 1,0
