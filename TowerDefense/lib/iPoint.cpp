@@ -149,7 +149,7 @@ float iPointAngle(const iPoint& v1, const iPoint& v2, const iPoint& v3)
 		degree -= 360;
 
 		
-	
+
 
 	return degree;
 

@@ -25,6 +25,10 @@ bool getKeyDown(uint32 key) { return keyDown & key; }
 uint32 getKeyStat() { return keyStat; }
 bool getKeyStat(uint32 key) { return keyStat & key; }
 
+
+iVBO* gVbo = NULL;
+Texture** texGdi;
+
 void loadLib(HDC hDC)
 {
     setupOpenGL(true, hDC);
@@ -59,6 +63,38 @@ void loadLib(HDC hDC)
     srand(time(NULL));
     void sRandom();
     sRandom();
+
+    gVbo = new iVBO();
+    texGdi = (Texture**)malloc(sizeof(Texture*) * 2);
+
+    Texture* tex = createTexture(32, 32);
+    setTexture(CLAMP, MIPMAP);
+    fbo->bind(tex);
+   // fbo->clear(1, 0, 1, 1);
+    iSize s = devSize;
+
+    devSize = iSizeMake(32, 32);
+    iRect v = viewport;
+    viewport = iRectMake(0, 0, 32, 32);
+    float m[16];
+    memcpy(m, mProjection->d(), sizeof(float) * 16);
+    mProjection->loadIdentity();
+    mProjection->ortho(0.0, 32.0, 32.0, 0, -1000, 1000);
+
+    fillCircle(16, 16, 16);
+    devSize = s;
+    memcpy(mProjection->d(),m, sizeof(float) * 16);
+    viewport = v;
+    fbo->unbind();
+    texGdi[0] = tex;
+
+    tex = createTexture(32, 32);
+    fbo->bind(tex);
+    fbo->clear(1, 1, 1, 1);
+    fbo->unbind();
+
+    texGdi[1] = tex;
+   
 }
 
 void freeLib()
@@ -68,6 +104,12 @@ void freeLib()
     setupOpenGL(false, NULL);
 
     free(keys);
+
+    delete gVbo;
+
+    for (int i = 0; i < 2; i++)
+        freeImage(texGdi[i]);
+    free(texGdi);
 }
 
 bool takeScreenshot = false;
@@ -170,134 +212,27 @@ void drawLib(Method_Paint method)
         0.2f, 0.2f, 2, 0, REVERSE_HEIGHT);
 #endif
 
-    void drawTest();
-    drawTest();
+    setRGBA(1, 0, 0, 1);
+    drawCircle(50, 50, 15);
+    drawCircle(50, 50, 5);
+
+    setRGBA(1, 1, 1, 1);
+    static Texture* t = createImage("assets/ex.png");
+
+   // setRGBA(1, 0, 1, 1);
+    drawLine(10, 10, 50, 50);
+
+    drawImage(t, 0, 0, TOP | LEFT);
+
+    drawImage(texGdi[0], 110, 10, TOP | LEFT);
+    drawImage(texGdi[1], 150, 50, TOP | LEFT);
+
 }
 
 
-iVBO* gVbo = NULL;
 
 float iMouse[4] = {0, 0,0,0};
-
-
-void drawTest()
-{
-    extern GLuint programID;
-
-    glUseProgram(programID);
-#if 0
-    float p[4][4] =
-    {
-        {-1,1, 0,1 }, { 1, 1, 0,1 },
-        {-1, -1, 0,1}, {1,-1,0,1,},
-    };
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 16, p);
-
-    GLuint positionAttr = glGetAttribLocation(programID, "position");
-    glEnableVertexAttribArray(positionAttr);
-    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
-
-    RECT rt;
-    extern HWND hWnd;
-    GetClientRect(hWnd, &rt);
-    GLuint uResolution = glGetUniformLocation(programID, "iResolution");
-    iSize resolution = iSizeMake(rt.right - rt.left, rt.bottom - rt.top);
-    glUniform2fv(uResolution, 1, (float*)&resolution);
-
-    GLuint uTime = glGetUniformLocation(programID, "iTime");
-    static float delta = 0.0f;
-    delta += 0.015;
-    glUniform1f(uTime, delta);
-
-    GLuint uMouse = glGetUniformLocation(programID, "iMouse");
-    //glUniform4f(uMouse, iMouse[0], iMouse[1], iMouse[2], iMouse[3]); 밑과 같은 기능임
-    glUniform4fv(uMouse, 1, iMouse);
-
-    GLuint tid = glGetUniformLocation(programID, "iChannel0");
-    glUniform1i(tid, 0);
-    glActiveTexture(GL_TEXTURE0);
-    static Texture* tex = createImage("assets/shader/stone.jpg");
-    glBindTexture(GL_TEXTURE_2D, tex->texID);
-    setTexture(REPEAT, MIPMAP);
-
-
-    uint8 indices[6] = {0, 1, 2, 1, 2, 3};
-
-    glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
-
-    glDisableVertexAttribArray(positionAttr);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    return;
-#endif
-    if (gVbo == NULL)
-    {
-        gVbo = new iVBO();
-        gVbo->programID = programID;
-#if 1
-        gVbo->tex = createImage("assets/ex.png");
-#else
-        
-        int width = 32, height = 32;
-        int potW = nextPOT(width), potH = nextPOT(height);
-
-        Texture* tex = createTexture(width, height);
-        
-        fbo->bind(tex);
-
-        void drawCircle(int x, int y, int radius);
-        drawCircle(16, 16, 16);
-        
-        fbo->unbind();
-        gVbo->tex = tex;
-
-#endif
-    }
-    iQuad* q = &gVbo->q[0];
-
-    Texture* tex = gVbo->tex;
-    float x = 0, y = 0;
-    float dx = x + tex->width; 
-    float dy = y + tex->height;
-    float s = tex->width / tex->potWidth;
-    float t = tex->height / tex->potHeight;
-
-    float r, g, b, a;
-    getRGBA(r, g, b, a);
-   
-    iColor4b c = iColor4bMake(r * 0xff, g * 0xff, b * 0xff, a * 0xff);
-
-    memcpy(q->tl.p, &iPointMake(x, dy), sizeof(float) * 2);
-    memcpy(&q->tl.uv, &iPointMake(0, t), sizeof(iPoint));
-    memcpy(&q->tl.c, &c, sizeof(iColor4b));
-
-    memcpy(q->tr.p, &iPointMake(dx, dy), sizeof(float) * 2);
-    memcpy(&q->tr.uv, &iPointMake(s, t), sizeof(iPoint));
-    memcpy(&q->tr.c, &c, sizeof(iColor4b));
-
-    memcpy(q->bl.p, &iPointMake(x, y), sizeof(float) * 2);
-    memcpy(&q->bl.uv, &iPointMake(0, 0), sizeof(iPoint));
-    memcpy(&q->bl.c, &c, sizeof(iColor4b));
-
-    memcpy(q->br.p, &iPointMake(dx, y), sizeof(float) * 2);
-    memcpy(&q->br.uv, &iPointMake(s, 0), sizeof(iPoint));
-    memcpy(&q->br.c, &c, sizeof(iColor4b));
-        
-    gVbo->qNum = 1;
-
-    float m[16];
-    memcpy(m, mModelview->d(), sizeof(float) * 16);
-    mModelview->translate(20, 100, 0);
-    gVbo->paint(0.0f);
-    memcpy(mModelview->d(), m, sizeof(float) * 16);
-
-   
-    setRGBA(1, 0, 1, 1);
-    setLineWidth(5);
-    fillCircle(30,30,20);
-    drawCircle(100,30,20);
-}      
+  
 float _lineWidth = 1.0f;
 
 void drawCircle(float x, float y, float radius)
@@ -555,17 +490,76 @@ void setLineWidth(float lineWidth)
 }
 void drawLine(iPoint sp, iPoint ep)
 {
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
+   float theta = iPointAngle(iPointMake(1, 0), iPointZero, ep - sp);
+   //float theta = iPointAngle(iPointMake(sp.x + 1, sp.y), sp, sp);
 
-    iPoint position[2] = { sp, ep };
-    float color[2][4] = { {_r, _g, _b, _a}, {_r, _g, _b, _a} };
-    glVertexPointer(2, GL_FLOAT, 0, position);
-    glColorPointer(4, GL_FLOAT, 0, color);
-    glDrawArrays(GL_LINES, 0, 2);
+   float cosT = _cos(theta);
+   float sinT = _sin(theta);
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
+   float lw = _lineWidth / 2;
+   iPoint tl = iPointMake(-lw*cosT+lw*sinT, -lw*sinT-lw*cosT);//sp + iPointMake(-lw, -lw);
+   iPoint tc = iPointMake(lw * sinT ,- lw * cosT);// , x* sinT + y * cosT);//sp + iPointMake(0, -lw);
+   iPoint tr = iPointMake(lw*cosT + lw*sinT, lw*sinT-lw*cosT);//sp + iPointMake(lw, -lw);
+   
+   iPoint bl = iPointMake(-lw*cosT-lw*sinT, -lw*sinT+lw*cosT);//sp + iPointMake(-lw, lw);
+   iPoint bc = iPointMake(-lw*sinT ,lw*cosT);//sp + iPointMake(0, lw);
+   iPoint br = iPointMake(lw*cosT-lw*sinT, lw*sinT+lw*cosT);//sp + iPointMake(lw, lw);
+
+   gVbo->tex = texGdi[0];
+ 
+   gVbo->programID = getProgramID();
+
+   gVbo->qNum = 3;
+   iColor4b c = iColor4bMake(_r * 255, _g * 255, _b * 255, _a * 255);
+
+   iQuad* q = &gVbo->q[0];
+
+   memcpy(&q->tl.p, &(sp + tl), sizeof(iPoint));
+   memcpy(&q->tr.p, &(sp + tc), sizeof(iPoint));
+   memcpy(&q->bl.p, &(sp + bl), sizeof(iPoint));
+   memcpy(&q->br.p, &(sp + bc), sizeof(iPoint));
+
+   q->tl.uv = iPointMake(0, 0);
+   q->tr.uv = iPointMake(0.5, 0);
+   q->bl.uv = iPointMake(0, 1);
+   q->br.uv = iPointMake(0.5, 1);
+
+   q->tl.c = c;
+   q->tr.c = c;
+   q->bl.c = c;
+   q->br.c = c;
+   q = &gVbo->q[1];
+   memcpy(&q->tl.p, &(sp + tc), sizeof(iPoint));
+   memcpy(&q->tr.p, &(sp + bc), sizeof(iPoint));
+   memcpy(&q->bl.p, &(ep + tc), sizeof(iPoint));
+   memcpy(&q->br.p, &(ep + bc), sizeof(iPoint));
+
+   q->tl.uv = iPointMake(0.5, 0);
+   q->tr.uv = iPointMake(0.5, 0);
+   q->bl.uv = iPointMake(0.5, 1);
+   q->br.uv = iPointMake(0.5, 1);
+
+   q->tl.c = c;
+   q->tr.c = c;
+   q->bl.c = c;
+   q->br.c = c;
+   q = &gVbo->q[2];
+   memcpy(&q->tl.p, &(ep + tc), sizeof(iPoint));
+   memcpy(&q->tr.p, &(ep + bc), sizeof(iPoint));
+   memcpy(&q->bl.p, &(ep + tr), sizeof(iPoint));
+   memcpy(&q->br.p, &(ep + br), sizeof(iPoint));
+
+   q->tl.uv = iPointMake(0.5, 0);
+   q->tr.uv = iPointMake(1, 0);
+   q->bl.uv = iPointMake(0.5, 1);
+   q->br.uv = iPointMake(1, 1);
+
+   q->tl.c = c;
+   q->tr.c = c;
+   q->bl.c = c;
+   q->br.c = c;
+ 
+   gVbo->paint(0.0f);
 }
 
 void drawLine(float x0, float y0, float x1, float y1)
@@ -1137,7 +1131,7 @@ void drawImage(Texture* tex, int x, int y,
     float ratX, float ratY,
     int xyz, float degree, int reverse)
 {
-    return;
+ 
     int width = tex->width * ratX;
     int height = tex->height * ratY;
     switch (anc) {
@@ -1150,118 +1144,71 @@ void drawImage(Texture* tex, int x, int y,
     case BOTTOM | LEFT:                     y -= height;     break;
     case BOTTOM | HCENTER:  x -= width / 2; y -= height;     break;
     case BOTTOM | RIGHT:    x -= width;     y -= height;     break; }
+    gVbo->qNum = 1;
+    iQuad* q = &gVbo->q[0];
+    q->tl.p[0] = x,         q->tl.p[1] = y;
+    q->tr.p[0] = x+ width,  q->tr.p[1] = y;
+    q->bl.p[0] = x,         q->bl.p[1] = y + height;
+    q->br.p[0] = x+ width,  q->br.p[1] = y + height;
 
-    iPoint position[4] = {
-        {x, y},             // top|left
-        {x, y+height},      // bottom|left,  
-        {x+width, y},       // top|right
-        {x+width, y+height} // bottom|right
-    };
-#if 0
-    iPoint coordinate[4] = {
-        {0.0, 0.0},
-        {0.0, tex->height / tex->potHeight},
-        {tex->width / tex->potWidth, 0.0},
-        {tex->width / tex->potWidth, tex->height / tex->potHeight}
-    };
-#else
-    iPoint coordinate[4] = {
-        {ix / tex->potWidth, iy / tex->potHeight},
-        {ix / tex->potWidth, (iy + ih) / tex->potHeight},
-        {(ix + iw) / tex->potWidth, iy / tex->potHeight},
-        {(ix + iw) / tex->potWidth, (iy + ih) / tex->potHeight}
-    };
-#endif
-    float color[4][4] = {
-        {_r, _g, _b, _a},
-        {_r, _g, _b, _a},
-        {_r, _g, _b, _a },
-        {_r, _g, _b, _a} };
+    q->tl.uv.x = ix / tex->potWidth, q->tl.uv.y = iy / tex->potHeight;
+    q->tr.uv.x = (ix + iw) / tex->potWidth, q->tr.uv.y = iy / tex->potHeight;
+    q->bl.uv.x = ix / tex->potWidth, q->bl.uv.y = (iy + ih) / tex->potHeight;
+    q->br.uv.x = (ix + iw) / tex->potWidth, q->br.uv.y = (iy + ih) / tex->potHeight;
+
+    iColor4b c = iColor4bMake(_r * 0xff, _g * 0xff, _b * 0xff, _a * 0xff);
+    q->tl.c = c;
+    q->tr.c = c;
+    q->bl.c = c;
+    q->br.c = c;
+
     if (reverse == REVERSE_WIDTH)
     {
-        iPoint t;
-        for (int i = 0; i < 2; i++)
-        {
-            t = position[i];
-            position[i] = position[i+2];
-            position[i+2] = t;
-        }
+        float t = q->tl.p[0];
+        q->tl.p[0] = q->tr.p[0];
+        q->tr.p[0] = t;
+
+        t = q->bl.p[0];
+        q->bl.p[0] = q->br.p[0];
+        q->br.p[0] = t;
     }
     else if (reverse == REVERSE_HEIGHT)
     {
-        iPoint t;
-        for (int i = 0; i < 2; i++)
-        {
-            t = position[2 * i];
-            position[2 * i] = position[2 * i + 1];
-            position[2 * i + 1] = t;
-        }
+        float t = q->tl.p[1];
+        q->tl.p[1] = q->bl.p[1];
+        q->bl.p[1] = t;
+
+        t = q->tr.p[1];
+        q->tr.p[1] = q->br.p[1];
+        q->br.p[1] = t;
+      
     }
 
-    iMatrix* backup = mModelview; // backup
-
-    glPushMatrix();
+    float m[16];
+    memcpy(m, mModelview->d(), sizeof(float) * 16);
+   
     if (degree)
     {
         iPoint t = iPointMake(x + width / 2, y + height / 2);
-        for (int i = 0; i < 4; i++)
-            position[i] -= t;
+        q->tl.p[0] -= t.x, q->tl.p[1] -= t.y;
+        q->tr.p[0] -= t.x, q->tr.p[1] -= t.y;
+        q->bl.p[0] -= t.x, q->bl.p[1] -= t.y;
+        q->br.p[0] -= t.x, q->br.p[1] -= t.y;
         mModelview->translate(t.x, t.y, 0);
 
         float _xyz[3] = {0, 0, 0};
         _xyz[xyz] = 1.0f;
         while (degree > 360) degree -= 360;
         degree = 360 - degree;
-       mModelview->rotate(degree, _xyz[0], _xyz[1], _xyz[2]);
+       mModelview->rotate( _xyz[0], _xyz[1], _xyz[2], degree);
     }
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnable(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, fbo->tex->texID);
     gVbo->tex = tex;
-    
-    iQuad* q = &gVbo->q[0];
-
-
-    float dx = x + tex->width;
-    float dy = y + tex->height;
-    float s = tex->width / tex->potWidth;
-    float t = tex->height / tex->potHeight;
-
-    float r, g, b, a;
-    getRGBA(r, g, b, a);
-
-    iColor4b c = iColor4bMake(r * 0xff, g * 0xff, b * 0xff, a * 0xff);
-
-    memcpy(q->tl.p, &iPointMake(x, dy), sizeof(float) * 2);
-    memcpy(&q->tl.uv, &iPointMake(0, t), sizeof(iPoint));
-    memcpy(&q->tl.c, &c, sizeof(iColor4b));
-
-    memcpy(q->tr.p, &iPointMake(dx, dy), sizeof(float) * 2);
-    memcpy(&q->tr.uv, &iPointMake(s, t), sizeof(iPoint));
-    memcpy(&q->tr.c, &c, sizeof(iColor4b));
-
-    memcpy(q->bl.p, &iPointMake(x, y), sizeof(float) * 2);
-    memcpy(&q->bl.uv, &iPointMake(0, 0), sizeof(iPoint));
-    memcpy(&q->bl.c, &c, sizeof(iColor4b));
-
-    memcpy(q->br.p, &iPointMake(dx, y), sizeof(float) * 2);
-    memcpy(&q->br.uv, &iPointMake(s, 0), sizeof(iPoint));
-    memcpy(&q->br.c, &c, sizeof(iColor4b));
-
-    gVbo->qNum = 1;
+    gVbo->programID = getProgramID();
+    gVbo->paint(0.0f);
 
    
-
-
-    gVbo->paint(0.0);
-   
-   
-
-    mModelview = backup; // backup 되돌리기
+    memcpy(mModelview->d(), m, sizeof(float) * 16);
 
 }
 

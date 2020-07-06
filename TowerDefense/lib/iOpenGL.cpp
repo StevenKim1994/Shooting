@@ -8,8 +8,6 @@ iMatrix* mModelview;
 GLuint* programIDs;
 GLuint programID;
 
-
-
 void loadShader();
 void freeShader();
 
@@ -321,6 +319,8 @@ void loadShader()
 	destroyShader(vertID);
 
 	setGLBlend(iBlendAlpha);
+
+	
 }
 
 void freeShader()
@@ -330,6 +330,7 @@ void freeShader()
 
 	//vbo
 	glDeleteBuffers(1, &vertexBuffer);
+
 }
 
 GLuint createShader(const char* str, GLuint flag)
