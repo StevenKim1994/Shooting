@@ -294,14 +294,87 @@ void drawTest()
 
    
     setRGBA(1, 0, 1, 1);
-    setLineWidth(3);
-    fillCircle(30,30,10);
+    setLineWidth(5);
+    fillCircle(30,30,20);
+    drawCircle(100,30,20);
 }      
+float _lineWidth = 1.0f;
 
-void drawCircle(int x, int y, int radius)
+void drawCircle(float x, float y, float radius)
 {
     
-  
+    static GLuint pid = 0;
+
+
+    if (pid == 0)
+    {
+        int length;
+        char* str = loadFile("assets/shader/gdi/gdi.vert", length);
+        GLuint vid = createShader(str, GL_VERTEX_SHADER);
+        str = loadFile("assets/shader/gdi/circle.frag", length);
+        GLuint fid = createShader(str, GL_FRAGMENT_SHADER);
+        pid = createProgramID(vid, fid);
+        destroyShader(vid);
+        destroyShader(fid);
+    }
+    glUseProgram(pid);
+
+    float p[4][4] =
+    {
+        {x - radius - _lineWidth / 2, y + radius + _lineWidth / 2, 0, 1} , { x + radius + _lineWidth / 2 , y + radius + _lineWidth / 2, 0,1},
+        {x - radius - _lineWidth / 2, y - radius - _lineWidth / 2, 0, 1}, { x + radius + _lineWidth / 2, y - radius - _lineWidth / 2, 0,1}
+    };
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 16, p);
+
+    GLuint positionAttr = glGetAttribLocation(pid, "position");
+    glEnableVertexAttribArray(positionAttr);
+    glVertexAttribPointer(positionAttr, 4, GL_FLOAT, GL_FALSE, 0, (const void*)0);
+
+    GLuint mp = glGetUniformLocation(pid, "mProjection");
+    glUniformMatrix4fv(mp, 1, false, mProjection->d());
+
+    GLuint mm = glGetUniformLocation(pid, "mModelview");
+    glUniformMatrix4fv(mm, 1, false, mModelview->d());
+
+    GLuint uCenter = glGetUniformLocation(pid, "center");
+    x = x / devSize.width * viewport.size.width - viewport.origin.x;
+    y = y / devSize.height * viewport.size.height - viewport.origin.y;
+    y = viewport.size.height - y;
+    glUniform2f(uCenter, x, y);
+
+    GLuint uLineWidth = glGetUniformLocation(pid, "lineWidth");
+    glUniform1f(uLineWidth, _lineWidth);
+
+    float r0 = viewport.size.width / devSize.width;
+    float r1 = viewport.size.height / devSize.height;
+
+    GLuint uRadius = glGetUniformLocation(pid, "radius");
+    glUniform1f(uRadius, radius * (r0 < r1 ? r0 : r1));
+
+
+
+    GLuint uColor = glGetUniformLocation(pid, "color");
+    glUniform4f(uColor, _r, _g, _b, _a);
+
+
+    GLuint uViewport = glGetUniformLocation(pid, "viewport");
+    glUniform4fv(uViewport, 1, (float*)&viewport);
+
+    GLuint uDevSize = glGetUniformLocation(pid, "devSize");
+    glUniform2fv(uDevSize, 1, (float*)&devSize);
+
+    uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
+    glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
+
+
+    glDisableVertexAttribArray(positionAttr);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
 
 }
 
@@ -474,7 +547,6 @@ void getRGBA(float& r, float& g, float& b, float& a)
     b = _b;
     a = _a;
 }
-float _lineWidth = 1.0f;
 
 void setLineWidth(float lineWidth)
 {
@@ -551,9 +623,6 @@ void fillRect(iRect rt, float radius)
     fillRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, radius);
 }
 
-void drawCircle(float x, float y, float radius)
-{
-}
 
 void drawCircle(iPoint p, float radius)
 {
@@ -575,7 +644,7 @@ void fillCircle(float x, float y, float radius)
         int length;
         char* str = loadFile("assets/shader/gdi/gdi.vert", length);
        GLuint vid = createShader(str, GL_VERTEX_SHADER);
-       str = loadFile("assets/shader/gdi/circle.frag", length);
+       str = loadFile("assets/shader/gdi/circle2.frag", length);
        GLuint fid = createShader(str, GL_FRAGMENT_SHADER);
        pid = createProgramID(vid, fid);
        destroyShader(vid);

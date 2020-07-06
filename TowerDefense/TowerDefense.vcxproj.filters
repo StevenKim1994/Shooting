@@ -526,6 +526,6 @@
     <None Include="assets\shader\add.frag" />
     <None Include="assets\shader\gdi\circle.frag" />
     <None Include="assets\shader\gdi\gdi.vert" />
-    <None Include="assets\shader\gdi\circle.2.frag" />
+    <None Include="assets\shader\gdi\circle2.frag" />
   </ItemGroup>
 </Project>

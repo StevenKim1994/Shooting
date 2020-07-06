@@ -326,7 +326,7 @@
     <None Include="assets\shader\add.frag" />
     <None Include="assets\shader\aura.frag" />
     <None Include="assets\shader\aura.vert" />
-    <None Include="assets\shader\gdi\circle.2.frag" />
+    <None Include="assets\shader\gdi\circle2.frag" />
     <None Include="assets\shader\gdi\circle.frag" />
     <None Include="assets\shader\gdi\gdi.vert" />
     <None Include="assets\shader\grey.frag" />

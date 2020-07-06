@@ -15,14 +15,16 @@ uniform vec4 color;
 //uniform vec4 viewport;
 //uniform vec2 devSize;
 
+uniform float lineWidth;
+
 out vec4 fragColor;
 
 void main()
 {
-	
-	
+
+//drawCircle
 	float d = length(gl_FragCoord.xy - center);
-	d = clamp(radius-d, 0.1, 1.0); // d = 1.0 clamp(d /radius, 0.0, 1.0);
+	d = clamp(radius-d, 0.0, 1.0); // d = 1.0 clamp(d /radius, 0.0, 1.0);
 	fragColor = vec4(color.rgb, color.a * d);
 
 
