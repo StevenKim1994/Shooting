@@ -27,7 +27,6 @@ void loadMenu()
 	createPopSettings();
 
 	showPopPress(true);
-
 	texTable = createImage("assets/menu/tableBg.jpg");
 	rtTable = iRectMake(devSize.width / 3, devSize.height / 3, devSize.width / 3, devSize.height / 3);
 	offTable = iPointMake(0, 0);
@@ -51,18 +50,18 @@ void drawMenu(float dt)
 	float r0 = devSize.width / texBg->width;
 	float r1 = devSize.height / texBg->height;
 	float r = max(r0, r1);
-	drawImage(texBg, devSize.width / 2, devSize.height / 2,
+	/*drawImage(texBg, devSize.width / 2, devSize.height / 2,
 		0, 0, texBg->width, texBg->height, VCENTER | HCENTER,
 		r, r, 2, 0, REVERSE_NONE);
 
 	drawImage(texTitle, devSize.width / 2, 50,
 		0, 0, texTitle->width, texTitle->height, TOP | HCENTER,
 		0.6f, 0.6f, 2, 0, REVERSE_NONE);
-
-	drawPopPress(dt);
-	drawPopMenu(dt);
-	drawPopSlot(dt);
-	drawPopSettings(dt);
+		*/
+	//drawPopPress(dt);
+	//drawPopMenu(dt);
+	//drawPopSlot(dt);
+	//drawPopSettings(dt);
 
 #if 0
 	setClip(rtTable.origin.x, rtTable.origin.y,
