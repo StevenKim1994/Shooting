@@ -11,6 +11,7 @@
 
 #include "iSort.h"
 #include "iShortestPath.h"
+#include "iShaderToy.h"
 #include "iFPS.h"
 
 #include "iOpenAL.h"
@@ -78,10 +79,10 @@ void setLineWidth(float lineWidth);
 void drawLine(iPoint sp, iPoint ep);
 void drawLine(float x0, float y0, float x1, float y1);
 
-void drawRect(float x, float y, float width, float height, float radius=0.0f);
-void drawRect(iRect rt, float radius = 0.0f);
-void fillRect(float x, float y, float width, float height, float radius=0.0f);
-void fillRect(iRect rt, float radius=0.0f);
+void drawRect(float x, float y, float width, float height, float radius=0.0f , float degree = 0);
+void drawRect(iRect rt, float radius = 0.0f, float degree = 0);
+void fillRect(float x, float y, float width, float height, float radius=0.0f, float degree =0);
+void fillRect(iRect rt, float radius=0.0f, float degree =0);
 
 void drawCircle(float x, float y, float radius);
 void drawCircle(iPoint p, float radius);

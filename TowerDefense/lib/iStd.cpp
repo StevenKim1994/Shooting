@@ -189,24 +189,51 @@ void drawLib(Method_Paint method)
 
 }
 
+iShaderToy* shadertoy = NULL;
+void testShadertoy(float dt)
+{
+    if (shadertoy == NULL)
+    {
+        STInput si[5] =
+        {
+
+            { // bufA
+                "assets/shader/etc/main.vert",
+                "assets/shader/etc/BufA.frag",
+            },
+            { // bufB
+                "assets/shader/etc/main.vert",
+                "assets/shader/etc/BufB.frag",
+            },
+            { //bufC
+                "assets/shader/etc/main.vert",
+                "assets/shader/etc/BufC.frag",
+            },
+            { //bufD
+                "assets/shader/etc/main.vert",
+                "assets/shader/etc/BufD.frag",
+            },
+            { //main
+                "assets/shader/etc/main.vert",
+                "assets/shader/etc/main.frag",
+                {
+                    {-1, "assets/ex.png", CLAMP, LINEAR, false,},
+                    {1, NULL, CLAMP, LINEAR, false,},
+                    {2, NULL, CLAMP, LINEAR, false,},
+                    {3, NULL, CLAMP, LINEAR, false,},
+                }
+            },
+        };
+        shadertoy = new iShaderToy(si);
+    }
+
+    shadertoy->paint(dt);
+}
+
 void tttr(float dt)
 {
-    setLineWidth(2);
-    setRGBA(1, 0, 0, 1);
-    drawCircle(devSize.width /2, devSize.height/2, 155);
-  
-    setRGBA(1, 1, 1, 1);
+    testShadertoy(dt);
     
-    fillCircle(300, 300, 35);
-
-    setRGBA(1, 0, 0, 1);
-    fillRect(100, 100, 500, 500, 30);
-    setRGBA(1, 1, 1, 1);
-
-    
-    setLineWidth(30);
-    setRGBA(1, 0, 0, 1);
-    drawLine(iPointMake(100,30), iPointMake(devSize.width, devSize.height-100));
 }
 
 
@@ -460,82 +487,7 @@ void setLineWidth(float lineWidth)
    // glLineWidth(lineWidth);
     _lineWidth = lineWidth;
 }
-/*
-void drawLine(iPoint sp, iPoint ep)
-{
-   float theta = iPointAngle(iPointMake(1, 0), iPointZero, ep - sp);
-   //float theta = iPointAngle(iPointMake(sp.x + 1, sp.y), sp, sp);
 
-   float cosT = _cos(theta);
-   float sinT = _sin(theta);
-
-   float lw = _lineWidth / 2;
-   iPoint tl = iPointMake(-lw*cosT+lw*sinT, -lw*sinT-lw*cosT);//sp + iPointMake(-lw, -lw);
-   iPoint tc = iPointMake(lw * sinT ,- lw * cosT);// , x* sinT + y * cosT);//sp + iPointMake(0, -lw);
-   iPoint tr = iPointMake(lw*cosT + lw*sinT, lw*sinT-lw*cosT);//sp + iPointMake(lw, -lw);
-   
-   iPoint bl = iPointMake(-lw*cosT-lw*sinT, -lw*sinT+lw*cosT);//sp + iPointMake(-lw, lw);
-   iPoint bc = iPointMake(-lw*sinT ,lw*cosT);//sp + iPointMake(0, lw);
-   iPoint br = iPointMake(lw*cosT-lw*sinT, lw*sinT+lw*cosT);//sp + iPointMake(lw, lw);
-
-   gVbo->tex = texGdi[0];
- 
-   gVbo->programID = getProgramID();
-
-   gVbo->qNum = 3;
-   iColor4b c = iColor4bMake(_r * 255, _g * 255, _b * 255, _a * 255);
-
-   iQuad* q = &gVbo->q[0];
-
-   memcpy(&q->tl.p, &(sp + tl), sizeof(iPoint));
-   memcpy(&q->tr.p, &(sp + tc), sizeof(iPoint));
-   memcpy(&q->bl.p, &(sp + bl), sizeof(iPoint));
-   memcpy(&q->br.p, &(sp + bc), sizeof(iPoint));
-
-   q->tl.uv = iPointMake(0, 0);
-   q->tr.uv = iPointMake(0.5, 0);
-   q->bl.uv = iPointMake(0, 1);
-   q->br.uv = iPointMake(0.5, 1);
-
-   q->tl.c = c;
-   q->tr.c = c;
-   q->bl.c = c;
-   q->br.c = c;
-   q = &gVbo->q[1];
-   memcpy(&q->tl.p, &(sp + tc), sizeof(iPoint));
-   memcpy(&q->tr.p, &(sp + bc), sizeof(iPoint));
-   memcpy(&q->bl.p, &(ep + tc), sizeof(iPoint));
-   memcpy(&q->br.p, &(ep + bc), sizeof(iPoint));
-
-   q->tl.uv = iPointMake(0.5, 0);
-   q->tr.uv = iPointMake(0.5, 0);
-   q->bl.uv = iPointMake(0.5, 1);
-   q->br.uv = iPointMake(0.5, 1);
-
-   q->tl.c = c;
-   q->tr.c = c;
-   q->bl.c = c;
-   q->br.c = c;
-   q = &gVbo->q[2];
-   memcpy(&q->tl.p, &(ep + tc), sizeof(iPoint));
-   memcpy(&q->tr.p, &(ep + bc), sizeof(iPoint));
-   memcpy(&q->bl.p, &(ep + tr), sizeof(iPoint));
-   memcpy(&q->br.p, &(ep + br), sizeof(iPoint));
-
-   q->tl.uv = iPointMake(0.5, 0);
-   q->tr.uv = iPointMake(1, 0);
-   q->bl.uv = iPointMake(0.5, 1);
-   q->br.uv = iPointMake(1, 1);
-
-   q->tl.c = c;
-   q->tr.c = c;
-   q->bl.c = c;
-   q->br.c = c;
- 
-   gVbo->paint(0.0f);
-}
-
-*/
 void drawLine(float x0, float y0, float x1, float y1)
 {
     drawLine(iPointMake(x0, y0), iPointMake(x1, y1));
@@ -605,7 +557,7 @@ void drawLine(iPoint sp, iPoint ep)
 
 
 
-void drawRect(float x, float y, float width, float height, float radius)
+void drawRect(float x, float y, float width, float height, float radius, float degree)
 {
 
     static GLuint pid = 0;
@@ -615,7 +567,7 @@ void drawRect(float x, float y, float width, float height, float radius)
         int length;
         char* str = loadFile("assets/shader/gdi/gdi.vert", length);
         GLuint vid = createShader(str, GL_VERTEX_SHADER);
-        str = loadFile("assets/shader/gdi/rect.frag", length);
+        str = loadFile("assets/shader/gdi/rect2.frag", length);
         GLuint fid = createShader(str, GL_FRAGMENT_SHADER);
         pid = createProgramID(vid, fid);
         destroyShader(vid);
@@ -648,6 +600,7 @@ void drawRect(float x, float y, float width, float height, float radius)
     glUniform1f(glGetUniformLocation(pid, "radius"), radius);
     glUniform4f(glGetUniformLocation(pid, "color"), _r, _g, _b, _a);
     glUniform1f(glGetUniformLocation(pid, "lineWidth"), _lineWidth);
+    glUniform1f(glGetUniformLocation(pid, "degree"), degree);
 
     uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
     glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
@@ -657,12 +610,12 @@ void drawRect(float x, float y, float width, float height, float radius)
   
  
 }
-void drawRect(iRect rt, float radius)
+void drawRect(iRect rt, float radius, float degree)
 {
-    drawRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height);
+    drawRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, degree);
 }
 
-void fillRect(float x, float y, float width, float height, float radius)
+void fillRect(float x, float y, float width, float height, float radius, float degree)
 {
 
 
@@ -705,6 +658,7 @@ void fillRect(float x, float y, float width, float height, float radius)
     glUniform4f(glGetUniformLocation(pid, "rect"), x, devSize.height-y, width, height);
     glUniform1f(glGetUniformLocation(pid, "radius"), radius);
     glUniform4f(glGetUniformLocation(pid, "color"), _r, _g, _b, _a);
+    glUniform1f(glGetUniformLocation(pid, "degree"), degree);
 
     uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
     glDrawElements(GL_TRIANGLES, 6 * 1, GL_UNSIGNED_BYTE, indices);
@@ -713,9 +667,9 @@ void fillRect(float x, float y, float width, float height, float radius)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void fillRect(iRect rt, float radius)
+void fillRect(iRect rt, float radius, float degree)
 {
-    fillRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, radius);
+    fillRect(rt.origin.x, rt.origin.y, rt.size.width, rt.size.height, radius, degree);
 }
 
 

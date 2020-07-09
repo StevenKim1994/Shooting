@@ -367,6 +367,11 @@ GLuint createProgramID(GLuint vertID, GLuint fragID)
 	return id;
 }
 
+void destroyProgram(GLuint programID)
+{
+	glDeleteProgram(programID);
+}
+
 void checkProgramID(GLuint id)
 {
 	GLint result = GL_FALSE;

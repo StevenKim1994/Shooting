@@ -20,10 +20,7 @@ out vec4 fragColor;
 
 void main()
 {
-
-//fillCircle
 	float d = length(gl_FragCoord.xy - center);
 	d = clamp(1.0- abs(radius-d)/lineWidth, 0.0, 1.0) ; // d = 1.0 clamp(d /radius, 0.0, 1.0);
 	fragColor = vec4(color.rgb, color.a * d);
-
 }

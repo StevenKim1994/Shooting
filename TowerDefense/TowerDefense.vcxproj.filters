@@ -261,6 +261,9 @@
     <ClInclude Include="lib\iMatrix.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="lib\iShaderToy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc">
@@ -513,6 +516,9 @@
     <ClCompile Include="lib\iMatrix.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="lib\iShaderToy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shader\std.vert" />
@@ -530,5 +536,11 @@
     <None Include="assets\shader\gdi\line.frag" />
     <None Include="assets\shader\gdi\rect.frag" />
     <None Include="assets\shader\gdi\rect2.frag" />
+    <None Include="assets\shader\etc\main.vert" />
+    <None Include="assets\shader\etc\main.frag" />
+    <None Include="assets\shader\etc\bufA.frag" />
+    <None Include="assets\shader\etc\bufB.frag" />
+    <None Include="assets\shader\etc\bufC.frag" />
+    <None Include="assets\shader\etc\bufD.frag" />
   </ItemGroup>
 </Project>

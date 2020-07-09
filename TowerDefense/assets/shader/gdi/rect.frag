@@ -8,6 +8,7 @@ precision mediump float;
 uniform vec4 rect;
 uniform vec4 color;
 uniform float radius;
+ 
 
 out vec4 fragColor;
 

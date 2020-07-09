@@ -182,6 +182,7 @@
     <ClInclude Include="lib\iPoint.h" />
     <ClInclude Include="lib\iPopup.h" />
     <ClInclude Include="lib\iRect.h" />
+    <ClInclude Include="lib\iShaderToy.h" />
     <ClInclude Include="lib\iShortestPath.h" />
     <ClInclude Include="lib\iSize.h" />
     <ClInclude Include="lib\iSort.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="lib\iPoint.cpp" />
     <ClCompile Include="lib\iPopup.cpp" />
     <ClCompile Include="lib\iRect.cpp" />
+    <ClCompile Include="lib\iShaderToy.cpp" />
     <ClCompile Include="lib\iShortestPath.cpp" />
     <ClCompile Include="lib\iSize.cpp" />
     <ClCompile Include="lib\iSort.cpp" />
@@ -326,6 +328,12 @@
     <None Include="assets\shader\add.frag" />
     <None Include="assets\shader\aura.frag" />
     <None Include="assets\shader\aura.vert" />
+    <None Include="assets\shader\etc\bufA.frag" />
+    <None Include="assets\shader\etc\bufB.frag" />
+    <None Include="assets\shader\etc\bufC.frag" />
+    <None Include="assets\shader\etc\bufD.frag" />
+    <None Include="assets\shader\etc\main.frag" />
+    <None Include="assets\shader\etc\main.vert" />
     <None Include="assets\shader\gdi\circle2.frag" />
     <None Include="assets\shader\gdi\circle.frag" />
     <None Include="assets\shader\gdi\gdi.vert" />

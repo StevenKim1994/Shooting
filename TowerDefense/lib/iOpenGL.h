@@ -26,6 +26,7 @@ extern GLuint vertexObject, vertexBuffer;
 GLuint createShader(const char* str, GLuint flag); //flag = frag , vert 구분자
 void destroyShader(GLuint id);
 GLuint createProgramID(GLuint vertID, GLuint fragID);
+void destroyProgram(GLuint programID);
 
 void setAntiAliasParameters(bool anti);
 
