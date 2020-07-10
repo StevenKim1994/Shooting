@@ -194,37 +194,88 @@ void testShadertoy(float dt)
 {
     if (shadertoy == NULL)
     {
-        STInput si[5] =
+        STInput si[2] =
         {
+        {
+              NULL,
+            {
+                { // bufA
+                    "assets/shader/etc/main.vert",
+                    "assets/shader/etc/BufA.frag",
+                },
+                { // bufB
+                    "assets/shader/etc/main.vert",
+                    "assets/shader/etc/BufB.frag",
+                },
+                { //bufC
+                    "assets/shader/etc/main.vert",
+                    "assets/shader/etc/BufC.frag",
+                },
+                { //bufD
+                    "assets/shader/etc/main.vert",
+                    "assets/shader/etc/BufD.frag",
+                },
+                { //main
+                    "assets/shader/etc/main.vert",
+                    "assets/shader/etc/main.frag",
+                    {
+                        {-1, "assets/ex.png", CLAMP, LINEAR, false,},
+                        {1, NULL, CLAMP, LINEAR, false,},
+                        {2, NULL, CLAMP, LINEAR, false,},
+                        {3, NULL, CLAMP, LINEAR, false,},
+                    },
+                },
+            }
+            },
 
+        {
+            
+              "assets/shader/etc/CrossyCommon.frag",
+          
             { // bufA
-                "assets/shader/etc/main.vert",
-                "assets/shader/etc/BufA.frag",
+                {
+                "assets/shader/etc/mainCrossy.vert",
+                "assets/shader/etc/CrossyBufA.frag",
+                 {
+                    {0, NULL, CLAMP, NEAREST, false},
+                    {-1, NULL, CLAMP, LINEAR, false,},
+                    {-1, NULL, CLAMP, LINEAR, false,},
+                    {-1, "assets/rand.png", CLAMP, NEAREST, false,},
+                },
             },
             { // bufB
-                "assets/shader/etc/main.vert",
-                "assets/shader/etc/BufB.frag",
+                "assets/shader/etc/mainCrossy.vert",
+                "assets/shader/etc/CrossyBufB.frag",
+                 {
+                   {0, NULL, CLAMP, NEAREST, false},
+                    {-1, NULL, CLAMP, LINEAR, false,},
+                    {-1, NULL, CLAMP, LINEAR, false,},
+                    {-1, "assets/rand.png", CLAMP, NEAREST, false,},
+                },
             },
-            { //bufC
-                "assets/shader/etc/main.vert",
-                "assets/shader/etc/BufC.frag",
+            {
             },
-            { //bufD
-                "assets/shader/etc/main.vert",
-                "assets/shader/etc/BufD.frag",
+            {
             },
             { //main
-                "assets/shader/etc/main.vert",
-                "assets/shader/etc/main.frag",
+                "assets/shader/etc/mainCrossy.vert",
+                "assets/shader/etc/mainCrossy.frag",
                 {
-                    {-1, "assets/ex.png", CLAMP, LINEAR, false,},
+                   {0, NULL, CLAMP, NEAREST, false},
                     {1, NULL, CLAMP, LINEAR, false,},
-                    {2, NULL, CLAMP, LINEAR, false,},
-                    {3, NULL, CLAMP, LINEAR, false,},
-                }
+                    {-1, NULL, CLAMP, LINEAR, false,},
+                    {-1, NULL, CLAMP, LINEAR, false,},
+                },
             },
+            
+            }
+        }
+
         };
-        shadertoy = new iShaderToy(si);
+   
+        
+
+        shadertoy = new iShaderToy(&si[1]);
     }
 
     shadertoy->paint(dt);

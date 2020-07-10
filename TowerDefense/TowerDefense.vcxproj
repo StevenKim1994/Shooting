@@ -332,8 +332,13 @@
     <None Include="assets\shader\etc\bufB.frag" />
     <None Include="assets\shader\etc\bufC.frag" />
     <None Include="assets\shader\etc\bufD.frag" />
+    <None Include="assets\shader\etc\CrossyBufA.frag" />
+    <None Include="assets\shader\etc\CrossyBufB.frag" />
+    <None Include="assets\shader\etc\CrossyCommon.frag" />
     <None Include="assets\shader\etc\main.frag" />
     <None Include="assets\shader\etc\main.vert" />
+    <None Include="assets\shader\etc\mainCrossy.frag" />
+    <None Include="assets\shader\etc\mainCrossy.vert" />
     <None Include="assets\shader\gdi\circle2.frag" />
     <None Include="assets\shader\gdi\circle.frag" />
     <None Include="assets\shader\gdi\gdi.vert" />

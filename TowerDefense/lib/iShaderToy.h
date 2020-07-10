@@ -3,20 +3,27 @@
 #include "iType.h"
 #include "iOpenGL.h"
 
-struct STChannel // 외부에서 입력하는 것
+struct STChannel
 {
-	int buf = -1; // img이거나 비어잇을시 : -1 , 그다음꺼부터 0시작함 
-	const char* strPath = NULL; 
+	int buf = -1;// bufX(-1) bufA(0), bufB(1), bufC(2), bufD(3)
+	const char* strPath = NULL;// NULL, path
 	TextureWrap wrap = CLAMP;
 	TextureFilter filter = LINEAR;
-	bool vFlip = false; // 상하반전
+	bool vFlip = false;
+};
+
+struct STBuf
+{
+	
+	const char* strVertPath = NULL;
+	const char* strFragPath = NULL;
+	STChannel channel[4];
 };
 
 struct STInput
 {
-	const char* strVertPath = NULL;
-	const char* strFragPath = NULL;
-	STChannel channel[4];
+	const char* strCommonPath;
+	STBuf sb[5];
 };
 
 class iShaderToy
@@ -29,14 +36,13 @@ public:
 	void key(iKeyState stat, iPoint point);
 
 public:
-	Texture** texBuf; // 4 for using FBO
-	GLuint* programID; 
-	Texture*** texBufChannel; // 5 * 4 
+	Texture** texBuf;// 4 for using fbo...
+	GLuint* programID;// 5
+	Texture*** texBufChannel;// 5 x 4
+	GLenum*** settingBufChannel;// 5 x 4 x 2
 
 	float takeTime;
 	int frame;
-
 	float mouse[4];
-	
-
+	int keyboard[5];
 };
