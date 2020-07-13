@@ -1125,5 +1125,5 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     uv.x *= aspect;    
 
     RenderUI(fragColor, fragCoord, uv, aspect);
-    fragColor.a = 1.0f;
+
 }

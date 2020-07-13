@@ -1033,5 +1033,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	//RenderSceneDebug(fragColor, fragCoord, uv * 0.75);
     RenderScene(fragColor, fragCoord, uv);
     fragColor.a = 1.0f;
+    
 }
 

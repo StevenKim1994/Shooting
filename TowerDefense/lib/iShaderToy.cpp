@@ -6,9 +6,11 @@ iShaderToy::iShaderToy(STInput* si)
 	int i;
 
 	programID = (GLuint*)calloc(sizeof(GLuint), 5);
-	texBuf = (Texture**)calloc(sizeof(Texture*), 4);
+	texBuf = (Texture***)calloc(sizeof(Texture**), 4);
 	texBufChannel = (Texture***)calloc(sizeof(Texture**), 5);
 	settingBufChannel = (GLenum***)malloc(sizeof(GLenum**) * 5);
+	bufIndex = (int8**)malloc(sizeof(int8*) * 5);
+
 
 	int lenCommon;
 	char* strCommon = loadFile(si->strCommonPath, lenCommon);
@@ -58,7 +60,10 @@ iShaderToy::iShaderToy(STInput* si)
 
 		if (i < 4)
 		{
-			texBuf[i] = createTexture(devSize.width, devSize.height);
+			texBuf[i] = (Texture**)malloc(sizeof(Texture*) * 2);
+
+			for(int j = 0; j < 2; j++)
+				texBuf[i][j] = createTexture(devSize.width, devSize.height,true);
 			// supply runtime.....
 			//setTexture(input->channel[i].wrap, input->channel[i].filter);
 			//input->channel[i].vFlip;
@@ -72,17 +77,20 @@ iShaderToy::iShaderToy(STInput* si)
 			input->strFragPath == NULL) continue;
 
 		texBufChannel[i] = (Texture**)calloc(sizeof(Texture*), 4);
-		settingBufChannel[i] = (GLenum**)malloc(sizeof(GLenum*) * 4);
+		settingBufChannel[i] = (GLenum**)calloc(sizeof(GLenum*),4);
+		bufIndex[i] = (int8*)malloc(sizeof(int8) * 4);
 		for (int j = 0; j < 4; j++)
 		{
-			int buf = input->channel[j].buf;
-			if (buf != -1)
+			bufIndex[i][j] = input->channel[j].buf;
+			if (bufIndex[i][j] != -1)
 			{
-				texBufChannel[i][j] = texBuf[buf];
-				texBuf[buf]->retainCount++;
+				//bufIndex[i][j] = buf;
+				//texBufChannel[i][j] = texBuf[buf];
+				//texBuf[buf]->retainCount++;
 			}
 			else if (input->channel[j].strPath)
 			{
+				//bufIndex[i][j] = -1;
 				texBufChannel[i][j] = createImage(input->channel[j].strPath);
 			}
 
@@ -94,7 +102,7 @@ iShaderToy::iShaderToy(STInput* si)
 		}
 	}
 
-
+	toggle = false;
 
 
 	takeTime = 0.0f;
@@ -112,8 +120,12 @@ iShaderToy::~iShaderToy()
 			destroyProgram(programID[i]);
 		if (i < 4)
 		{
-			if (texBuf[i])
-				freeImage(texBuf[i]);
+			for (j = 0; j < 2; j++)
+			{
+				if (texBuf[i])
+					freeImage(texBuf[i][j]);
+			}
+			free(texBuf[i]);
 		}
 
 		for (j = 0; j < 4; j++)
@@ -122,9 +134,11 @@ iShaderToy::~iShaderToy()
 				freeImage(texBufChannel[i][j]);
 		}
 		free(texBufChannel[i]);
+		free(bufIndex[i]);
 	}
 	free(programID);
 	free(texBuf);
+	free(bufIndex);
 	free(texBufChannel);
 }
 
@@ -139,7 +153,7 @@ void iShaderToy::paint(float dt)
 		if (pid == 0) continue;
 
 		if (i < 4)
-			fbo->bind(texBuf[i]);
+			fbo->bind(texBuf[i][toggle]); // bind 하는게 toggle 변수에 따라 달라짐
 
 		glViewport(0, 0, devSize.width, devSize.height);
 		glClearColor(1, 0, 0, 1);
@@ -160,14 +174,20 @@ void iShaderToy::paint(float dt)
 		// glGetUniformLocation != -1, 실행
 		glUniform3f(glGetUniformLocation(pid, "iResolution"), devSize.width, devSize.height, 0);
 		glUniform1f(glGetUniformLocation(pid, "iTime"), takeTime);
-		takeTime += dt;
+		takeTime += dt * 0.5;
+	
 		glUniform1f(glGetUniformLocation(pid, "iTimeDelta"), dt);
 		glUniform1i(glGetUniformLocation(pid, "iFrame"), frame);
 		frame++;
 		glUniform4fv(glGetUniformLocation(pid, "iMouse"), 1, mouse);
 		for (j = 0; j < 4; j++)
 		{
-			Texture* tex = texBufChannel[i][j];
+			Texture* tex;// = texBufChannel[i][j];
+			if (bufIndex[i][j] != -1)
+				tex = texBuf[bufIndex[i][j]][!toggle];
+			else
+				tex = texBufChannel[i][j];
+
 			float channelResolution[3] = { 0,0,0 };
 			if (tex)
 			{
@@ -215,19 +235,20 @@ void iShaderToy::paint(float dt)
 	// key
 	//getkeyStat
 
-	uint32 key = getKeyStat();
-	
-	if (key & keyboard_up)
-		keyboard[0] = 1;
-	if (key & keyboard_left)
-		keyboard[1] = 1;
-	if (key & keyboard_right)
-		keyboard[2] = 1;
-	if (key & keyboard_down)
-		keyboard[3] = 1;
-	if (key & keyboard_space)
-		keyboard[4] = 1;
+	toggle = !toggle;
 
+	uint32 key = getKeyDown();
+	
+	keyboard[0] = (key & keyboard_left);
+	keyboard[1] = (key & keyboard_right);
+	keyboard[2] = (key & keyboard_up);
+	keyboard[3] = (key & keyboard_down);
+	keyboard[4] = (key & keyboard_space);
+
+	keyboard[5] = 0;
+	keyboard[6] = 0;
+	keyboard[7] = 0;
+	keyboard[8] = 0;
 }
 
 void iShaderToy::key(iKeyState stat, iPoint point)

@@ -14,7 +14,7 @@ uniform sampler2D iChannel1;
 uniform sampler2D iChannel2;
 uniform sampler2D iChannel3;
 uniform vec3 iChannelResolution[4];
-uniform int ikeyboard[5];                  
+uniform int ikeyboard[9];                  
 
 out vec4 fragColor;
 

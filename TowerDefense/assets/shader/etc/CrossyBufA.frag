@@ -377,8 +377,8 @@ float SampleKey(float key)
 vec2 SampleAxes()
 {
     vec2 axes;
-    axes.x = SampleKey(kKeyRight) - SampleKey(kKeyLeft);
-    axes.y = (axes.x == 0.0)? SampleKey(kKeyUp) - SampleKey(kKeyDown) : 0.0;
+    axes.x = ikeyboard[1] - ikeyboard[0];//SampleKey(kKeyRight) - SampleKey(kKeyLeft);
+    axes.y = (axes.x == 0.0)? ikeyboard[2] - ikeyboard[3] : 0.0;//SampleKey(kKeyUp) - SampleKey(kKeyDown) : 0.0;
     return axes;
 }
 
@@ -504,19 +504,19 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
             GameRestart(kStateTitle);
     }
  
-    if(ikeyboard[0] == 1)
+    if(ikeyboard[5] == 1)
         gFbScale = 1.0;
     
-     if(ikeyboard[1] == 1)
+     if(ikeyboard[6] == 1)
         gFbScale = 0.75;
     
-      if(ikeyboard[2] == 1)
+      if(ikeyboard[7] == 1)
         gFbScale = 0.5;
     
-      if(ikeyboard[3] == 1)
+      if(ikeyboard[8] == 1)
         gFbScale = 0.25;
     
    	gGameStateTime += iTimeDelta;
     StoreState(fragColor, fragCoord);
-    fragColor.a = 1.0f;
+   
 }

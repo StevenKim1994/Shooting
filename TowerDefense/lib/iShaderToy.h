@@ -36,13 +36,16 @@ public:
 	void key(iKeyState stat, iPoint point);
 
 public:
-	Texture** texBuf;// 4 for using fbo...
+	Texture*** texBuf;// 4 x 2  for using fbo...
 	GLuint* programID;// 5
 	Texture*** texBufChannel;// 5 x 4
+	int8** bufIndex; // 5 x 4
 	GLenum*** settingBufChannel;// 5 x 4 x 2
+
+	bool toggle;
 
 	float takeTime;
 	int frame;
 	float mouse[4];
-	int keyboard[5];
+	bool keyboard[9];
 };

@@ -163,10 +163,10 @@ void drawLib(Method_Paint method)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     method(delta);
-    keyDown = 0;
-
     void tttr(float dt);
     tttr(delta);
+    keyDown = 0;
+
 
     checkScreenshot();
     fbo->unbind();// ------------------
@@ -274,11 +274,12 @@ void testShadertoy(float dt)
         };
    
         
-
         shadertoy = new iShaderToy(&si[1]);
     }
-
+    
+    glDisable(GL_BLEND);
     shadertoy->paint(dt);
+    glEnable(GL_BLEND);
 }
 
 void tttr(float dt)
